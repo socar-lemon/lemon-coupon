@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>얼리버드 판매 전략 리포트</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Apple SD Gothic Neo',-apple-system,sans-serif;background:#0c0e14;color:#d0d0d0;padding:40px;max-width:1360px;margin:0 auto}
+.header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:10px}.header h1{font-size:26px;font-weight:800;color:#fff;letter-spacing:-.5px}.header .meta{text-align:right}.header .meta .date{font-size:12px;color:#666}.header .meta .update{font-size:11px;color:#444;margin-top:2px}.divider{height:1px;background:linear-gradient(90deg,#2a2d3a,transparent);margin-bottom:28px}
+.exec-summary{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px}.exec-card{padding:20px 24px;border-radius:14px}.exec-card.verdict{background:linear-gradient(135deg,rgba(96,165,250,0.08),rgba(34,197,94,0.06));border:1px solid rgba(96,165,250,0.2)}.exec-card.action{background:rgba(250,204,21,0.06);border:1px solid rgba(250,204,21,0.18)}.exec-card h2{font-size:14px;font-weight:700;color:#fff;margin-bottom:10px}.exec-card p{font-size:13px;line-height:1.8;color:#bbb}.exec-card p strong{color:#fff}.exec-card .big-num{font-size:36px;font-weight:800;margin:8px 0}
+.section{margin-bottom:36px}.sec-head{display:flex;align-items:center;gap:10px;margin-bottom:16px}.sec-head h2{font-size:16px;font-weight:700;color:#fff}.tag{font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;letter-spacing:.5px}.tag-blue{background:rgba(96,165,250,0.12);color:#60a5fa}.tag-green{background:rgba(34,197,94,0.12);color:#22c55e}.tag-yellow{background:rgba(250,204,21,0.12);color:#facc15}.tag-red{background:rgba(239,68,68,0.12);color:#ef4444}.sec-sub{font-size:11px;color:#555;margin-left:auto}
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.kpi{background:#14161e;border-radius:12px;padding:18px;border:1px solid #1e2130}.kpi .label{font-size:11px;color:#777;margin-bottom:6px}.kpi .val{font-size:22px;font-weight:800;color:#fff}.kpi .delta{font-size:11px;margin-top:4px}
+.blue{color:#60a5fa}.green{color:#22c55e}.red{color:#ef4444}.yellow{color:#facc15}.gray{color:#777}
+.card{background:#14161e;border-radius:12px;padding:22px;border:1px solid #1e2130}.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}thead th{text-align:left;color:#555;font-weight:600;padding:10px 12px;border-bottom:2px solid #1e2130;font-size:11px;letter-spacing:.3px}tbody td{padding:10px 12px;border-bottom:1px solid #1a1c26}tbody tr:last-child td{border-bottom:none}tbody tr:hover{background:rgba(96,165,250,0.03)}.r{text-align:right;font-variant-numeric:tabular-nums}.row-label{font-weight:600;color:#ccc;white-space:nowrap}.row-highlight{background:rgba(96,165,250,0.04)}
+.chart-box{position:relative;height:270px}
+.gauge-wrap{margin-top:14px}.gauge-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}.gauge-label{font-size:11px;min-width:80px}.gauge-bar{flex:1;height:7px;background:#0c0e14;border-radius:4px;overflow:hidden}.gauge-fill{height:100%;border-radius:4px}.gauge-val{font-size:12px;font-weight:700;min-width:55px;text-align:right}
+.scenario{background:#14161e;border-radius:12px;padding:20px;border:1px solid #1e2130;position:relative;overflow:hidden}.scenario::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}.scenario.s-red::before{background:#ef4444}.scenario.s-yellow::before{background:#facc15}.scenario.s-green::before{background:#22c55e}.scenario.active{border-color:rgba(239,68,68,0.4);box-shadow:0 0 24px rgba(239,68,68,0.05)}.s-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.s-label{font-size:11px;font-weight:700;letter-spacing:.8px}.s-status{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600}.s-metric{font-size:26px;font-weight:800;margin:6px 0}.s-desc{font-size:12px;color:#888;line-height:1.6}.s-action{margin-top:10px;padding:10px;background:rgba(255,255,255,0.02);border-radius:6px;font-size:12px;color:#aaa;line-height:1.6}.s-action strong{color:#ddd}
+.transform{display:grid;grid-template-columns:1fr 40px 1fr;gap:0;align-items:stretch;margin-bottom:16px}.t-side{padding:20px;border-radius:12px}.t-side.old{background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.12)}.t-side.new{background:rgba(34,197,94,0.04);border:1px solid rgba(34,197,94,0.12)}.t-arrow{display:flex;align-items:center;justify-content:center;font-size:20px;color:#444}.t-side h4{font-size:13px;font-weight:700;margin-bottom:10px}.t-side p,.t-side ul{font-size:12px;color:#aaa;line-height:1.8}.t-side ul{padding-left:16px}.t-side li strong{color:#fff}
+.footer{text-align:center;color:#333;font-size:10px;margin-top:48px;padding-top:14px;border-top:1px solid #1a1c26}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>얼리버드 판매 전략 리포트</h1>
+  <div class="meta">
+    <div class="date">데이터 기준: 2026.01.01 ~ 2026.03.24 (반납 기준)</div>
+    <div class="update">마지막 갱신: 2026.03.25 09:00</div>
+  </div>
+</div>
+<div class="divider"></div>
+
+<!-- Executive Summary -->
+<div class="exec-summary">
+  <div class="exec-card verdict">
+    <h2>핵심 판단</h2>
+    <div class="big-num green">GPM 30.3%</div>
+    <p>
+      미리예약 GPM(순이익률)이 전체 평균(15.9%)보다 <strong>14.4%p 높아</strong>, 확대할수록 전체 수익성이 개선되는 구조.<br>
+      당일최저가(GPM -29.3%)는 구조적 적자. <strong>현 GPM 수준에서는 미리예약을 끌 이유가 없습니다.</strong>
+    </p>
+  </div>
+  <div class="exec-card action">
+    <h2>3월 현황 및 액션</h2>
+    <div class="big-num red">기여도 1.5%</div>
+    <p>
+      3월 매출 기여도 1.5%로 <strong>Case 2(공급 부족)</strong> 해당.<br>
+      2월 6.6%에서 급감 → 쿠폰 노출 확대 필요.<br>
+      3월 GPM 33.6%(최고치) 유지 중 → <strong>물량 확대해도 수익성 안전</strong>.
+    </p>
+  </div>
+</div>
+
+<!-- KPI -->
+<div class="section">
+  <div class="sec-head">
+    <h2>핵심 지표</h2>
+    <span class="tag tag-blue">1~3월 누적</span>
+  </div>
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="label">미리예약 예약건수</div>
+      <div class="val">14,689</div>
+      <div class="delta gray">전체 791K건 중 1.9%</div>
+    </div>
+    <div class="kpi">
+      <div class="label">미리예약 매출</div>
+      <div class="val">23.7억</div>
+      <div class="delta gray">전체 612.0억 중 3.9%</div>
+    </div>
+    <div class="kpi">
+      <div class="label">미리예약 GPM</div>
+      <div class="val green">30.3%</div>
+      <div class="delta green">당일최저가 대비 +59.6%p</div>
+    </div>
+    <div class="kpi">
+      <div class="label">미리예약 공헌이익률</div>
+      <div class="val blue">66.9%</div>
+      <div class="delta green">당일최저가(51.8%) 대비 +15.1%p</div>
+    </div>
+    <div class="kpi">
+      <div class="label">미리예약 순이익</div>
+      <div class="val green">+7.17억</div>
+      <div class="delta red">당일최저가 -3.62억</div>
+    </div>
+  </div>
+
+  <!-- GPM & CM Gauge -->
+  <div class="g2" style="margin-top:14px;">
+    <div class="card">
+      <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:4px;">GPM 비교 (Profit / Revenue)</div>
+      <div style="font-size:11px;color:#555;margin-bottom:12px;">미리예약 GPM > 전체 평균 → 확대할수록 수익성 개선</div>
+      <div class="gauge-wrap">
+        <div class="gauge-row"><div class="gauge-label green">미리예약</div><div class="gauge-bar"><div class="gauge-fill" style="width:60%;background:linear-gradient(90deg,#16a34a,#22c55e);"></div></div><div class="gauge-val green">30.3%</div></div>
+        <div class="gauge-row"><div class="gauge-label gray">전체 평균</div><div class="gauge-bar"><div class="gauge-fill" style="width:32%;background:linear-gradient(90deg,#555,#888);"></div></div><div class="gauge-val gray">15.9%</div></div>
+        <div class="gauge-row"><div class="gauge-label red">당일최저가</div><div class="gauge-bar"><div class="gauge-fill" style="width:0%;background:#ef4444;"></div></div><div class="gauge-val red">-29.3%</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:4px;">공헌이익률 비교 (CM / Revenue)</div>
+      <div style="font-size:11px;color:#555;margin-bottom:12px;">변동비 차감 후 이익률 — 상품 자체의 수익 효율</div>
+      <div class="gauge-wrap">
+        <div class="gauge-row"><div class="gauge-label blue">미리예약</div><div class="gauge-bar"><div class="gauge-fill" style="width:66.9%;background:linear-gradient(90deg,#3b82f6,#60a5fa);"></div></div><div class="gauge-val blue">66.9%</div></div>
+        <div class="gauge-row"><div class="gauge-label gray">전체 평균</div><div class="gauge-bar"><div class="gauge-fill" style="width:63%;background:linear-gradient(90deg,#555,#888);"></div></div><div class="gauge-val gray">63.0%</div></div>
+        <div class="gauge-row"><div class="gauge-label yellow">당일최저가</div><div class="gauge-bar"><div class="gauge-fill" style="width:51.8%;background:linear-gradient(90deg,#ca8a04,#facc15);"></div></div><div class="gauge-val yellow">51.8%</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 미리예약 OFF 기준 -->
+<div class="section">
+  <div class="sec-head">
+    <h2>미리예약, 언제 꺼야 하나?</h2>
+    <span class="tag tag-red">STOP-LOSS 기준</span>
+  </div>
+  <div class="card">
+    <table>
+      <thead>
+        <tr><th>비교 대상</th><th class="r">GPM</th><th class="r">공헌이익률</th><th>의미</th></tr>
+      </thead>
+      <tbody>
+        <tr class="row-highlight">
+          <td class="row-label" style="color:#22c55e;">미리예약 (현재)</td>
+          <td class="r green" style="font-weight:700;">30.3%</td>
+          <td class="r blue">66.9%</td>
+          <td>전체 평균보다 월등히 높음 → <strong class="green">확대 유리</strong></td>
+        </tr>
+        <tr>
+          <td class="row-label">전체 평균 (쿠폰 제외)</td>
+          <td class="r" style="font-weight:700;">16.3%</td>
+          <td class="r">63.1%</td>
+          <td class="yellow">이 선 아래로 내려오면 전체를 깎아먹기 시작</td>
+        </tr>
+        <tr>
+          <td class="row-label" style="color:#facc15;">당일최저가</td>
+          <td class="r red" style="font-weight:700;">-29.3%</td>
+          <td class="r yellow">51.8%</td>
+          <td>구조적 적자 → 미리예약으로 대체가 유리</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top:18px;padding:16px 18px;background:rgba(34,197,94,0.05);border-radius:10px;border-left:3px solid #22c55e;">
+      <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:8px;">결론: 미리예약 OFF 기준</div>
+      <div style="font-size:13px;color:#bbb;line-height:1.8;">
+        <strong class="red">GPM이 16.3%(전체 평균) 아래로 2주 연속 하락할 때</strong>가 미리예약이 전체 수익을 훼손하는 시점.<br>
+        현재 미리예약 GPM은 <strong class="green">30.3%</strong>로, 임계점(16.3%)까지 <strong style="color:#fff;">14.0%p 여유</strong>.<br>
+        2월 물량 2.6배 급증 시에도 GPM 30.8% 유지 → <strong class="green">물량 증가가 GPM을 훼손하지 않는 구조</strong>.<br>
+        기여도 10%, 20%로 올라가더라도 <strong style="color:#fff;">GPM만 16.3% 이상이면 끄지 않는 것이 유리</strong>.
+      </div>
+    </div>
+
+    <div style="margin-top:14px;padding:14px 18px;background:rgba(250,204,21,0.04);border-radius:10px;border-left:3px solid #facc15;">
+      <div style="font-size:12px;color:#ccc;line-height:1.8;">
+        <strong class="yellow">모니터링 포인트:</strong>
+        물량 급증 시점에 GPM 주간 추이 확인.
+        GPM 20% 이하 진입 시 경고, 16.3% 이하 2주 연속 시 할인율 축소 또는 쿠폰 Off.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 월별 성과 -->
+<div class="section">
+  <div class="sec-head">
+    <h2>월별 성과 비교</h2>
+    <span class="tag tag-blue">DETAIL</span>
+    <span class="sec-sub">미리예약 vs 당일최저가</span>
+  </div>
+  <div class="card">
+    <table>
+      <thead>
+        <tr>
+          <th>항목</th>
+          <th class="r" style="color:#60a5fa;">1월 미리예약</th><th class="r" style="color:#facc15;">1월 당일최저가</th>
+          <th class="r" style="color:#60a5fa;">2월 미리예약</th><th class="r" style="color:#facc15;">2월 당일최저가</th>
+          <th class="r" style="color:#60a5fa;">3월 미리예약</th><th class="r" style="color:#facc15;">3월 당일최저가</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="row-label">예약 건수</td>
+          <td class="r">3,664</td><td class="r">13,918</td>
+          <td class="r blue">9,630</td><td class="r">10,398</td>
+          <td class="r">1,395</td><td class="r">7,340</td>
+        </tr>
+        <tr>
+          <td class="row-label">매출 (억)</td>
+          <td class="r">6.22</td><td class="r">5.26</td>
+          <td class="r blue">14.99</td><td class="r">4.07</td>
+          <td class="r">2.48</td><td class="r">3.03</td>
+        </tr>
+        <tr>
+          <td class="row-label">공헌이익 (억)</td>
+          <td class="r">4.10</td><td class="r">2.66</td>
+          <td class="r blue">10.00</td><td class="r">2.18</td>
+          <td class="r">1.75</td><td class="r">1.56</td>
+        </tr>
+        <tr>
+          <td class="row-label">순이익 (억)</td>
+          <td class="r green">+1.72</td><td class="r red">-1.83</td>
+          <td class="r green">+4.62</td><td class="r red">-0.93</td>
+          <td class="r green">+0.83</td><td class="r red">-0.86</td>
+        </tr>
+        <tr class="row-highlight">
+          <td class="row-label">GPM (Profit/Revenue)</td>
+          <td class="r green" style="font-weight:700;">27.6%</td><td class="r red">-34.8%</td>
+          <td class="r green" style="font-weight:700;">30.8%</td><td class="r red">-22.8%</td>
+          <td class="r green" style="font-weight:700;">33.6%</td><td class="r red">-28.5%</td>
+        </tr>
+        <tr class="row-highlight">
+          <td class="row-label">공헌이익률 (CM/Revenue)</td>
+          <td class="r blue" style="font-weight:700;">65.9%</td><td class="r">50.6%</td>
+          <td class="r blue" style="font-weight:700;">66.8%</td><td class="r">53.5%</td>
+          <td class="r blue" style="font-weight:700;">70.8%</td><td class="r">51.4%</td>
+        </tr>
+        <tr>
+          <td class="row-label">건당 매출</td>
+          <td class="r">169,726</td><td class="r">37,793</td>
+          <td class="r">155,619</td><td class="r">39,141</td>
+          <td class="r">177,620</td><td class="r">41,252</td>
+        </tr>
+        <tr>
+          <td class="row-label">건당 이용시간</td>
+          <td class="r">30.4h</td><td class="r">7.5h</td>
+          <td class="r">36.0h</td><td class="r">7.4h</td>
+          <td class="r">36.3h</td><td class="r">7.8h</td>
+        </tr>
+        <tr>
+          <td class="row-label">할인율</td>
+          <td class="r">60.9%</td><td class="r red">72.7%</td>
+          <td class="r">61.2%</td><td class="r red">70.6%</td>
+          <td class="r">59.3%</td><td class="r red">70.9%</td>
+        </tr>
+        <tr>
+          <td class="row-label">매출 기여도</td>
+          <td class="r">2.9%</td><td class="r">2.4%</td>
+          <td class="r blue">6.6%</td><td class="r">1.8%</td>
+          <td class="r">1.5%</td><td class="r">1.8%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 주간 추이 -->
+<div class="section">
+  <div class="sec-head">
+    <h2>주간 추이</h2>
+    <span class="tag tag-blue">TREND</span>
+    <span class="sec-sub">파란색: 미리예약 / 노란색: 당일최저가</span>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:10px;">예약 건수</div>
+      <div class="chart-box"><canvas id="cntChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:10px;">GPM (Profit/Revenue) — 핵심 모니터링 지표</div>
+      <div class="chart-box"><canvas id="gpmChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:10px;">매출 (억원)</div>
+      <div class="chart-box"><canvas id="revChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:10px;">공헌이익률 (CM/Revenue)</div>
+      <div class="chart-box"><canvas id="cmChart"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- 시나리오 -->
+<div class="section">
+  <div class="sec-head">
+    <h2>판매 전략 시나리오</h2>
+    <span class="tag tag-yellow">STRATEGY</span>
+    <span class="sec-sub">기여도 기준 의사결정</span>
+  </div>
+  <div class="g3">
+    <div class="scenario s-red active">
+      <div class="s-header">
+        <div class="s-label red">CASE 2 — 공급 부족</div>
+        <div class="s-status" style="background:rgba(239,68,68,0.15);color:#ef4444;">3월 해당</div>
+      </div>
+      <div class="s-metric red">&lt; 3%</div>
+      <div class="s-desc">미리예약 판매 부진. 유휴 차량 미소진.</div>
+      <div class="s-action"><strong>Action:</strong> 할인율 추가 상향, 노출 확대, 차종·지역 확장</div>
+    </div>
+    <div class="scenario s-yellow">
+      <div class="s-header">
+        <div class="s-label yellow">CASE 1 — 정상 운영</div>
+        <div class="s-status" style="background:rgba(250,204,21,0.15);color:#facc15;">2월 해당</div>
+      </div>
+      <div class="s-metric yellow">3 ~ 10%</div>
+      <div class="s-desc">정상 범위. 유휴 가동률 적정 기여.</div>
+      <div class="s-action"><strong>Action:</strong> 현 조건 유지, GPM 주간 모니터링</div>
+    </div>
+    <div class="scenario s-green">
+      <div class="s-header">
+        <div class="s-label green">CASE 3 — 과열 (조기 완판)</div>
+        <div class="s-status" style="background:rgba(255,255,255,0.04);color:#555;">미도달</div>
+      </div>
+      <div class="s-metric green">&gt; 10%</div>
+      <div class="s-desc">당일 정가 수요 잠식 우려.</div>
+      <div class="s-action"><strong>Action:</strong> GPM 16.3%↑ 이면 유지, 미만 시 쿠폰 Off</div>
+    </div>
+  </div>
+</div>
+
+<!-- 기준 재설정 권고 -->
+<div class="section">
+  <div class="sec-head">
+    <h2>판매 기준 재설정 권고</h2>
+    <span class="tag tag-red">RECOMMENDATION</span>
+  </div>
+  <div class="transform">
+    <div class="t-side old">
+      <h4 style="color:#ef4444;">AS-IS: 물량 기준</h4>
+      <p>매출 비중 <strong style="color:#fff;">10% 초과 시 무조건 중단</strong>.<br>수익성과 무관하게 물량만으로 판단.</p>
+    </div>
+    <div class="t-arrow">→</div>
+    <div class="t-side new">
+      <h4 style="color:#22c55e;">TO-BE: GPM 기준</h4>
+      <ul>
+        <li><strong class="green">GPM 20%↑</strong> → 적극 확대</li>
+        <li><strong class="yellow">GPM 16~20%</strong> → 현상 유지, 주간 점검</li>
+        <li><strong class="red">GPM 16%↓ 2주 연속</strong> → 축소/중단</li>
+      </ul>
+      <p style="margin-top:6px;">핵심: <strong style="color:#fff;">기여도 10%↑ 이어도 GPM 16.3%↑ 유지 시 계속 운영</strong></p>
+    </div>
+  </div>
+  <div class="card">
+    <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:12px;">수정된 의사결정 프레임워크</div>
+    <table>
+      <thead><tr><th>Signal</th><th>상태</th><th class="r">GPM 기준</th><th>실행</th></tr></thead>
+      <tbody>
+        <tr><td><span class="green" style="font-weight:700;">GREEN</span></td><td>적극 확대</td><td class="r green" style="font-weight:700;">20% 이상</td><td>노출 확대, 차종·지역 확장. 기여도 무관 운영 지속.</td></tr>
+        <tr><td><span class="yellow" style="font-weight:700;">YELLOW</span></td><td>현상 유지</td><td class="r yellow" style="font-weight:700;">16~20%</td><td>할인율 추가 상향 금지. GPM 하락 추세 주간 점검.</td></tr>
+        <tr><td><span class="red" style="font-weight:700;">RED</span></td><td>축소/중단</td><td class="r red" style="font-weight:700;">16% 미만</td><td>할인율 즉시 축소. 2주 연속 시 쿠폰 Off → 당일 예약 전환.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- What-if -->
+<div class="section">
+  <div class="sec-head">
+    <h2>시뮬레이션: 2월에 조기 중단했다면?</h2>
+    <span class="tag tag-yellow">WHAT-IF</span>
+  </div>
+  <div class="card">
+    <table>
+      <thead><tr><th>시나리오</th><th class="r">매출</th><th class="r">순이익</th><th class="r">GPM</th><th>판단</th></tr></thead>
+      <tbody>
+        <tr class="row-highlight">
+          <td class="row-label">실제 (2월 전체 운영)</td>
+          <td class="r">14.99억</td><td class="r green" style="font-weight:700;">+4.62억</td><td class="r green">30.8%</td><td class="green">수익 극대화</td>
+        </tr>
+        <tr>
+          <td class="row-label">가정: W7 시점에 중단</td>
+          <td class="r">~1.44억</td><td class="r">+0.41억</td><td class="r">28.5%</td><td class="red">4.21억 순이익 손실</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:12px;font-size:12px;color:#facc15;line-height:1.6;">
+      물량 기준 조기 중단 시 약 <strong style="color:#fff;">4.21억원 순이익 기회손실</strong>.
+      GPM 기반 판단이었다면 Green Signal → 계속 운영 → 수익 극대화.
+    </div>
+  </div>
+</div>
+
+<div class="footer">socar-data.socar_biz_profit.profit_socar_reservation (반납 기준) | Auto-refresh: 매일 09:00 KST</div>
+
+<!-- Charts -->
+<script>
+const W=['W1\n1/1','W2\n1/5','W3\n1/12','W4\n1/19','W5\n1/26','W6\n2/2','W7\n2/9','W8\n2/16','W9\n2/23','W10\n3/2','W11\n3/9','W12\n3/16','W13\n3/23'];
+const eb={cnt:[787,598,763,888,840,928,4477,2671,1583,264,281,485,124],rev:[1.55,0.97,1.27,1.43,1.37,1.44,5.76,5.58,2.23,0.52,0.49,0.86,0.21],cm:[1.04,0.64,0.85,0.94,0.91,0.93,3.59,4.03,1.46,0.39,0.33,0.60,0.15],pft:[0.46,0.27,0.35,0.38,0.39,0.41,1.54,2.04,0.61,0.19,0.16,0.30,0.07]};
+const sd={cnt:[838,2754,3109,4589,3033,3027,2575,1991,2932,1795,2203,2408,402],rev:[0.34,1.06,1.21,1.68,1.15,1.17,0.95,0.81,1.21,0.73,0.90,0.99,0.15],cm:[0.17,0.54,0.62,0.84,0.60,0.62,0.48,0.45,0.66,0.39,0.45,0.51,0.07],pft:[-0.13,-0.28,-0.44,-0.63,-0.37,-0.28,-0.22,-0.21,-0.27,-0.22,-0.26,-0.28,-0.03]};
+
+// GPM = profit/revenue
+const ebGPM=eb.pft.map((v,i)=>eb.rev[i]>0?+(v/eb.rev[i]*100).toFixed(1):0);
+const sdGPM=sd.pft.map((v,i)=>sd.rev[i]>0?+(v/sd.rev[i]*100).toFixed(1):0);
+// CM Rate = cm/revenue
+const ebCM=eb.cm.map((v,i)=>eb.rev[i]>0?+(v/eb.rev[i]*100).toFixed(1):0);
+const sdCM=sd.cm.map((v,i)=>sd.rev[i]>0?+(v/sd.rev[i]*100).toFixed(1):0);
+
+const C={eb:'#60a5fa',ebB:'rgba(96,165,250,0.10)',sd:'#facc15',sdB:'rgba(250,204,21,0.10)',ebG:'#22c55e',ebGB:'rgba(34,197,94,0.10)'};
+const O={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#666',font:{size:10},usePointStyle:true,pointStyle:'circle'}}},scales:{x:{ticks:{color:'#444',font:{size:9},maxRotation:0},grid:{color:'#16181f'}},y:{ticks:{color:'#444',font:{size:10}},grid:{color:'#1a1c26'}}}};
+
+// 건수 차트
+new Chart(document.getElementById('cntChart'),{type:'bar',data:{labels:W,datasets:[{label:'미리예약',data:eb.cnt,backgroundColor:C.eb,borderRadius:3,barPercentage:.65},{label:'당일최저가',data:sd.cnt,backgroundColor:C.sd,borderRadius:3,barPercentage:.65}]},options:O});
+
+// GPM 차트 (profit/revenue)
+new Chart(document.getElementById('gpmChart'),{type:'line',data:{labels:W,datasets:[
+  {label:'미리예약 GPM',data:ebGPM,borderColor:C.ebG,backgroundColor:C.ebGB,fill:true,tension:.3,pointRadius:3,borderWidth:2},
+  {label:'당일최저가 GPM',data:sdGPM,borderColor:C.sd,backgroundColor:C.sdB,fill:true,tension:.3,pointRadius:3,borderWidth:2}
+]},options:{...O,scales:{...O.scales,y:{...O.scales.y,min:-50,max:50,ticks:{...O.scales.y.ticks,callback:v=>v+'%'}}},plugins:{...O.plugins,annotation:{annotations:{
+  avg:{type:'line',yMin:15.9,yMax:15.9,borderColor:'rgba(255,255,255,0.15)',borderWidth:1,borderDash:[3,3],label:{display:true,content:'전체평균 15.9%',position:'end',color:'#888',font:{size:8},backgroundColor:'transparent'}},
+  zero:{type:'line',yMin:0,yMax:0,borderColor:'rgba(255,255,255,0.08)',borderWidth:1,borderDash:[4,4]}
+}}}}});
+
+// 매출 차트
+new Chart(document.getElementById('revChart'),{type:'line',data:{labels:W,datasets:[
+  {label:'미리예약',data:eb.rev,borderColor:C.eb,backgroundColor:C.ebB,fill:true,tension:.3,pointRadius:3,borderWidth:2},
+  {label:'당일최저가',data:sd.rev,borderColor:C.sd,backgroundColor:C.sdB,fill:true,tension:.3,pointRadius:3,borderWidth:2}
+]},options:{...O,scales:{...O.scales,y:{...O.scales.y,ticks:{...O.scales.y.ticks,callback:v=>v+'억'}}}}});
+
+// 공헌이익률 차트 (cm/revenue)
+new Chart(document.getElementById('cmChart'),{type:'line',data:{labels:W,datasets:[
+  {label:'미리예약',data:ebCM,borderColor:C.eb,backgroundColor:C.ebB,fill:true,tension:.3,pointRadius:3,borderWidth:2},
+  {label:'당일최저가',data:sdCM,borderColor:C.sd,backgroundColor:C.sdB,fill:true,tension:.3,pointRadius:3,borderWidth:2}
+]},options:{...O,scales:{...O.scales,y:{...O.scales.y,min:30,max:80,ticks:{...O.scales.y.ticks,callback:v=>v+'%'}}}}});
+</script>
+</body>
+</html>

@@ -47,14 +47,16 @@ table{width:100%;border-collapse:collapse;font-size:12.5px}thead th{text-align:l
 <body>
 
 <div class="refresh-toast" id="toast">✓ 새로고침 명령어가 복사되었습니다. 터미널에 붙여넣기 하세요.</div>
-<div class="header">
-  <h1>얼리버드 판매 전략 리포트</h1>
-  <div class="meta">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+  <h1 style="font-size:26px;font-weight:800;color:#fff;letter-spacing:-.5px;">얼리버드 판매 전략 리포트</h1>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <div style="text-align:right;">
+      <div class="date" style="font-size:12px;color:#666;">데이터 기준: 2026.01.01 ~ 2026.03.25 (반납 기준)</div>
+      <div class="update" id="lastUpdate" style="font-size:11px;color:#444;margin-top:2px;">마지막 갱신: 2026.03.26</div>
+    </div>
     <button class="refresh-btn" onclick="doRefresh()" title="클릭하면 새로고침 명령어 복사">
       <span class="icon">↻</span> 새로고침
     </button>
-    <div class="date">데이터 기준: 2026.01.01 ~ 2026.03.25 (반납 기준)</div>
-    <div class="update" id="lastUpdate">마지막 갱신: 2026.03.26</div>
   </div>
 </div>
 <div class="divider"></div>

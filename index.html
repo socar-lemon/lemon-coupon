@@ -32,29 +32,16 @@ table{width:100%;border-collapse:collapse;font-size:12.5px}thead th{text-align:l
 .nc-card .nc-cnt{font-size:28px;font-weight:800;color:#fff}
 .nc-card .nc-sub{font-size:10px;color:#555;margin-top:4px}
 .nc-card.zero{opacity:.4}
-/* Refresh button */
-.refresh-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;border:1px solid #2a2d3a;background:rgba(96,165,250,0.06);color:#60a5fa;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit}
-.refresh-btn:hover{background:rgba(96,165,250,0.12);border-color:#60a5fa}
-.refresh-btn.loading{opacity:.5;pointer-events:none}
-.refresh-btn .icon{font-size:14px;transition:transform .3s}
-.refresh-btn.loading .icon{animation:spin 1s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.refresh-toast{position:fixed;top:20px;right:20px;padding:12px 20px;border-radius:8px;background:#14161e;border:1px solid #22c55e;color:#22c55e;font-size:12px;font-weight:600;z-index:9999;opacity:0;transform:translateY(-10px);transition:all .3s;pointer-events:none}
-.refresh-toast.show{opacity:1;transform:translateY(0)}
 .footer{text-align:center;color:#333;font-size:10px;margin-top:48px;padding-top:14px;border-top:1px solid #1a1c26}
 </style>
 </head>
 <body>
 
-<div class="refresh-toast" id="toast">✓ 새로고침 명령어가 복사되었습니다. 터미널에 붙여넣기 하세요.</div>
 <div class="header">
   <h1>얼리버드 판매 전략 리포트</h1>
   <div class="meta">
-    <button class="refresh-btn" onclick="doRefresh()" title="클릭하면 새로고침 명령어 복사">
-      <span class="icon">↻</span> 새로고침
-    </button>
     <div class="date">데이터 기준: 2026.01.01 ~ 2026.03.25 (반납 기준)</div>
-    <div class="update" id="lastUpdate">마지막 갱신: 2026.03.26</div>
+    <div class="update">마지막 갱신: 2026.03.26</div>
   </div>
 </div>
 <div class="divider"></div>
@@ -558,17 +545,6 @@ new Chart(document.getElementById('cmChart'),{type:'line',data:{labels:W,dataset
 ]},options:{...O,scales:{...O.scales,y:{...O.scales.y,min:30,max:80,ticks:{...O.scales.y.ticks,callback:v=>v+'%'}}}}});
 
 // Refresh
-function doRefresh(){
-  const cmd='cd ~/Desktop/LemonClaude && python3 earlybird_refresh.py';
-  navigator.clipboard.writeText(cmd).then(()=>{
-    const t=document.getElementById('toast');
-    t.classList.add('show');
-    setTimeout(()=>t.classList.remove('show'),3000);
-  }).catch(()=>{
-    prompt('아래 명령어를 터미널에서 실행하세요:', cmd);
-  });
-}
-
 // Tab switching
 function switchTab(id){
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active')});

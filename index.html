@@ -561,14 +561,32 @@ new Chart(document.getElementById('cmChart'),{type:'line',data:{labels:W,dataset
 
 // Refresh
 function doRefresh(){
-  const cmd='cd ~/Desktop/LemonClaude && python3 earlybird_refresh.py';
-  navigator.clipboard.writeText(cmd).then(()=>{
-    const t=document.getElementById('toast');
-    t.classList.add('show');
-    setTimeout(()=>t.classList.remove('show'),3000);
-  }).catch(()=>{
-    prompt('아래 명령어를 터미널에서 실행하세요:', cmd);
-  });
+  const btn=document.querySelector('.refresh-btn');
+  const toast=document.getElementById('toast');
+  btn.classList.add('loading');
+  toast.textContent='⏳ BigQuery 쿼리 실행 중... (30초~1분 소요)';
+  toast.classList.add('show');
+
+  fetch('http://localhost:5555/refresh')
+    .then(r=>r.json())
+    .then(d=>{
+      btn.classList.remove('loading');
+      if(d.status==='ok'){
+        toast.textContent='✓ 갱신 완료! 새로고침합니다...';
+        toast.style.borderColor='#22c55e';toast.style.color='#22c55e';
+        setTimeout(()=>location.reload(),2000);
+      } else {
+        toast.textContent='✗ 오류: '+d.message;
+        toast.style.borderColor='#ef4444';toast.style.color='#ef4444';
+        setTimeout(()=>toast.classList.remove('show'),5000);
+      }
+    })
+    .catch(()=>{
+      btn.classList.remove('loading');
+      toast.textContent='서버 미실행. 터미널에서: python3 ~/Desktop/LemonClaude/refresh_server.py';
+      toast.style.borderColor='#facc15';toast.style.color='#facc15';
+      setTimeout(()=>toast.classList.remove('show'),5000);
+    });
 }
 
 // Tab switching

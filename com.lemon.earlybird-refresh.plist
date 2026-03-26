@@ -7,20 +7,15 @@
     <key>ProgramArguments</key>
     <array>
         <string>/Library/Developer/CommandLineTools/usr/bin/python3</string>
-        <string>/Users/lemon/Desktop/LemonClaude/earlybird_refresh.py</string>
+        <string>/Users/lemon/Desktop/LemonClaude/refresh_server.py</string>
     </array>
-    <key>StartCalendarInterval</key>
-    <dict>
-        <key>Hour</key>
-        <integer>9</integer>
-        <key>Minute</key>
-        <integer>0</integer>
-    </dict>
+    <key>KeepAlive</key>
+    <true/>
     <key>StandardOutPath</key>
-    <string>/Users/lemon/Desktop/LemonClaude/refresh.log</string>
+    <string>/tmp/earlybird-refresh.log</string>
     <key>StandardErrorPath</key>
-    <string>/Users/lemon/Desktop/LemonClaude/refresh_error.log</string>
+    <string>/tmp/earlybird-refresh.err</string>
     <key>RunAtLoad</key>
-    <false/>
+    <true/>
 </dict>
 </plist>

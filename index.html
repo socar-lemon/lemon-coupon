@@ -46,25 +46,23 @@ table{width:100%;border-collapse:collapse;font-size:12.5px}thead th{text-align:l
 </head>
 <body>
 
-<div class="refresh-toast" id="toast"></div>
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-  <h1 style="font-size:26px;font-weight:800;color:#fff;letter-spacing:-.5px;">얼리버드 판매 전략 리포트</h1>
-  <div style="display:flex;align-items:center;gap:16px;">
-    <div style="text-align:right;">
-      <div class="date" style="font-size:12px;color:#666;">데이터 기준: 2026.01.01 ~ 2026.03.25 (반납 기준)</div>
-      <div class="update" id="lastUpdate" style="font-size:11px;color:#444;margin-top:2px;">마지막 갱신: 2026.03.26 17:20</div>
-    </div>
-    <button class="refresh-btn" onclick="doRefresh()" title="BigQuery 최신 데이터로 갱신">
+<div class="refresh-toast" id="toast">✓ 새로고침 명령어가 복사되었습니다. 터미널에 붙여넣기 하세요.</div>
+<div class="header">
+  <h1>얼리버드 판매 전략 리포트</h1>
+  <div class="meta">
+    <button class="refresh-btn" onclick="doRefresh()" title="클릭하면 새로고침 명령어 복사">
       <span class="icon">↻</span> 새로고침
     </button>
+    <div class="date">데이터 기준: 2026.01.01 ~ 2026.03.25 (반납 기준)</div>
+    <div class="update" id="lastUpdate">마지막 갱신: 2026.03.26</div>
   </div>
 </div>
 <div class="divider"></div>
 
 <!-- Tabs -->
 <div class="tabs">
-  <button class="tab-btn active" onclick="switchTab('report',this)">얼리버드 리포트</button>
-  <button class="tab-btn" onclick="switchTab('newcoupon',this)">4월 얼리버드 모니터링</button>
+  <button class="tab-btn active" onclick="switchTab('report')">얼리버드 리포트</button>
+  <button class="tab-btn" onclick="switchTab('newcoupon')">4월 얼리버드 모니터링</button>
 </div>
 
 <!-- TAB 1 -->
@@ -521,22 +519,9 @@ table{width:100%;border-collapse:collapse;font-size:12.5px}thead th{text-align:l
 
 <!-- Charts -->
 <script>
-const W=['W1
-12-29','W2
-01-05','W3
-01-12','W4
-01-19','W5
-01-26','W6
-02-02','W7
-02-09','W8
-02-16','W9
-02-23','W10
-03-02','W11
-03-09','W12
-03-16','W13
-03-23'];
-const eb={cnt:[1281,598,763,888,840,928,4477,2671,1583,264,281,485,164],rev:[2.4,0.97,1.27,1.43,1.37,1.44,5.76,5.58,2.23,0.52,0.49,0.86,0.29],cm:[1.6,0.64,0.85,0.94,0.91,0.93,3.59,4.03,1.46,0.39,0.33,0.6,0.2],pft:[0.73,0.27,0.35,0.38,0.39,0.41,1.54,2.04,0.61,0.19,0.15,0.29,0.1]};
-const sd={cnt:[2908,2754,3109,4589,3033,3027,2575,1991,2932,1795,2203,2408,597],rev:[1.15,1.06,1.21,1.68,1.15,1.17,0.95,0.81,1.21,0.73,0.9,0.99,0.22],cm:[0.59,0.54,0.62,0.84,0.6,0.62,0.48,0.45,0.66,0.39,0.45,0.51,0.1],pft:[-0.32,-0.28,-0.44,-0.63,-0.37,-0.28,-0.22,-0.21,-0.27,-0.22,-0.26,-0.29,-0.04]};
+const W=['W1\n1/1','W2\n1/5','W3\n1/12','W4\n1/19','W5\n1/26','W6\n2/2','W7\n2/9','W8\n2/16','W9\n2/23','W10\n3/2','W11\n3/9','W12\n3/16','W13\n3/23'];
+const eb={cnt:[787,598,763,888,840,928,4477,2671,1583,264,281,485,164],rev:[1.55,0.97,1.27,1.43,1.37,1.44,5.76,5.58,2.23,0.52,0.49,0.86,0.29],cm:[1.04,0.64,0.85,0.94,0.91,0.93,3.59,4.03,1.46,0.39,0.33,0.60,0.20],pft:[0.46,0.27,0.35,0.38,0.39,0.41,1.54,2.04,0.61,0.19,0.16,0.30,0.10]};
+const sd={cnt:[838,2754,3109,4589,3033,3027,2575,1991,2932,1795,2203,2408,597],rev:[0.34,1.06,1.21,1.68,1.15,1.17,0.95,0.81,1.21,0.73,0.90,0.99,0.22],cm:[0.17,0.54,0.62,0.84,0.60,0.62,0.48,0.45,0.66,0.39,0.45,0.51,0.10],pft:[-0.13,-0.28,-0.44,-0.63,-0.37,-0.28,-0.22,-0.21,-0.27,-0.22,-0.26,-0.28,-0.04]};
 
 // GPM = profit/revenue
 const ebGPM=eb.pft.map((v,i)=>eb.rev[i]>0?+(v/eb.rev[i]*100).toFixed(1):0);
@@ -574,40 +559,22 @@ new Chart(document.getElementById('cmChart'),{type:'line',data:{labels:W,dataset
 
 // Refresh
 function doRefresh(){
-  const btn=document.querySelector('.refresh-btn');
-  const toast=document.getElementById('toast');
-  btn.classList.add('loading');
-  toast.textContent='⏳ BigQuery 쿼리 실행 중... (30초~1분 소요)';
-  toast.classList.add('show');
-
-  fetch('http://localhost:5555/refresh')
-    .then(r=>r.json())
-    .then(d=>{
-      btn.classList.remove('loading');
-      if(d.status==='ok'){
-        toast.textContent='✓ 갱신 완료! 새로고침합니다...';
-        toast.style.borderColor='#22c55e';toast.style.color='#22c55e';
-        setTimeout(()=>location.reload(),2000);
-      } else {
-        toast.textContent='✗ 오류: '+d.message;
-        toast.style.borderColor='#ef4444';toast.style.color='#ef4444';
-        setTimeout(()=>toast.classList.remove('show'),5000);
-      }
-    })
-    .catch(()=>{
-      btn.classList.remove('loading');
-      toast.textContent='서버 미실행. 터미널에서: python3 ~/Desktop/LemonClaude/refresh_server.py';
-      toast.style.borderColor='#facc15';toast.style.color='#facc15';
-      setTimeout(()=>toast.classList.remove('show'),5000);
-    });
+  const cmd='cd ~/Desktop/LemonClaude && python3 earlybird_refresh.py';
+  navigator.clipboard.writeText(cmd).then(()=>{
+    const t=document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'),3000);
+  }).catch(()=>{
+    prompt('아래 명령어를 터미널에서 실행하세요:', cmd);
+  });
 }
 
 // Tab switching
-function switchTab(id,btn){
+function switchTab(id){
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('tab-'+id).classList.add('active');
-  btn.classList.add('active');
+  event.target.classList.add('active');
 }
 
 // New coupon table
@@ -635,7 +602,10 @@ const ncData=[
 // ======= NEW COUPON DAILY TREND CHARTS =======
 // Data structure: add new days as they come. Each day = {date, c16264, c16265, c16266, c16267, c16268, c16269, c16270, c16271}
 const ncDays = [
-  {date:'03/26',c16264:51,c16265:21,c16266:14,c16267:8,c16268:4,c16269:0,c16270:0,c16271:0,r16264:4.92,r16265:3.08,r16266:2.25,r16267:1.42,r16268:0.73,r16269:0,r16270:0,r16271:0},
+  {date:'3/26', c16264:30, c16265:15, c16266:8, c16267:6, c16268:2, c16269:0, c16270:0, c16271:0,
+   r16264:3.26, r16265:2.13, r16266:1.32, r16267:1.02, r16268:0.37, r16269:0, r16270:0, r16271:0},
+  // === 아래에 새 날짜 추가 ===
+  // {date:'3/27', c16264:??, c16265:??, ...},
 ];
 
 const ncLabels = ncDays.map(d=>d.date);

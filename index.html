@@ -74,6 +74,14 @@ tbody tr:hover{background:rgba(96,165,250,0.03)}
 </div>
 
 <div class="section">
+  <div class="sec-title">일간 추이 (최근 7일) <span class="badge" style="background:rgba(96,165,250,0.12);color:var(--blue)">3/20~3/26</span></div>
+  <div class="row r2">
+    <div class="card"><div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:8px">일별 매출 (백만원)</div><div class="chart-box" style="height:200px"><canvas id="d1"></canvas></div></div>
+    <div class="card"><div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:8px">일별 Profit (백만원)</div><div class="chart-box" style="height:200px"><canvas id="d2"></canvas></div></div>
+  </div>
+</div>
+
+<div class="section">
   <div class="sec-title">주간 상세</div>
   <div class="card" style="overflow-x:auto">
     <table>
@@ -89,7 +97,7 @@ tbody tr:hover{background:rgba(96,165,250,0.03)}
 
 <div class="row r3">
   <div class="card"><div class="kpi-label">누적 생성 건수</div><div class="kpi-val blue">233건</div><div class="kpi-sub">D1: 198 | D2: 35</div></div>
-  <div class="card"><div class="kpi-label">누적 Net 매출</div><div class="kpi-val green">30.95M</div><div class="kpi-sub">rent + PF - 할인</div></div>
+  <div class="card"><div class="kpi-label">누적 Net 매출</div><div class="kpi-val green">30.95백만</div><div class="kpi-sub">rent + PF - 할인</div></div>
   <div class="card"><div class="kpi-label">건당 Net</div><div class="kpi-val">132,833원</div><div class="kpi-sub">당일최저가(37K)의 3.6배</div></div>
 </div>
 
@@ -111,7 +119,12 @@ tbody tr:hover{background:rgba(96,165,250,0.03)}
 
 <div class="section">
   <div class="sec-title">일별 생성 추이</div>
-  <div class="card"><div class="chart-box" style="height:300px"><canvas id="c5"></canvas></div></div>
+  <div class="card"><div class="chart-box" style="height:250px"><canvas id="c5"></canvas></div></div>
+</div>
+
+<div class="section">
+  <div class="sec-title">4월 반납 예정일 분포 <span class="badge" style="background:rgba(34,197,94,0.12);color:var(--green)">end_date 기준</span></div>
+  <div class="card"><div class="chart-box" style="height:220px"><canvas id="c6"></canvas></div></div>
 </div>
 
 <div class="section">
@@ -151,6 +164,14 @@ new Chart(document.getElementById('c1'),{type:'bar',data:{labels:W,datasets:[{la
 new Chart(document.getElementById('c2'),{type:'line',data:{labels:W,datasets:[{label:'미리예약',data:eb.rev,borderColor:'#60a5fa',backgroundColor:'rgba(96,165,250,0.1)',fill:true,tension:.3,pointRadius:3,borderWidth:2},{label:'당일최저가',data:sd.rev,borderColor:'#facc15',backgroundColor:'rgba(250,204,21,0.1)',fill:true,tension:.3,pointRadius:3,borderWidth:2}]},options:{...O,scales:{...O.scales,y:{...O.scales.y,ticks:{...O.scales.y.ticks,callback:v=>v+'억'}}}}});
 new Chart(document.getElementById('c3'),{type:'line',data:{labels:W,datasets:[{label:'미리예약',data:ebGPM,borderColor:'#22c55e',backgroundColor:'rgba(34,197,94,0.1)',fill:true,tension:.3,pointRadius:3,borderWidth:2},{label:'당일최저가',data:sdGPM,borderColor:'#facc15',backgroundColor:'rgba(250,204,21,0.1)',fill:true,tension:.3,pointRadius:3,borderWidth:2}]},options:{...O,scales:{...O.scales,y:{...O.scales.y,min:-50,max:50,ticks:{...O.scales.y.ticks,callback:v=>v+'%'}}}}});
 new Chart(document.getElementById('c4'),{type:'line',data:{labels:W,datasets:[{label:'미리예약',data:ebCM,borderColor:'#60a5fa',backgroundColor:'rgba(96,165,250,0.1)',fill:true,tension:.3,pointRadius:3,borderWidth:2},{label:'당일최저가',data:sdCM,borderColor:'#facc15',backgroundColor:'rgba(250,204,21,0.1)',fill:true,tension:.3,pointRadius:3,borderWidth:2}]},options:{...O,scales:{...O.scales,y:{...O.scales.y,min:30,max:80,ticks:{...O.scales.y.ticks,callback:v=>v+'%'}}}}});
+
+// Daily charts (thin lines)
+const DD=['3/20','3/21','3/22','3/23','3/24','3/25','3/26'];
+const ebD={rev:[8.5,15.2,40.4,13.3,7.9,8.0,9.0],pft:[2.8,4.8,14.1,4.4,2.6,3.0,3.3]};
+const sdD={rev:[20.3,31.9,14.3,8.6,6.3,6.8,8.1],pft:[-9.5,-11.4,-1.7,-1.5,-1.3,-1.5,-1.4]};
+const OD={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#666',font:{size:9},usePointStyle:true}}},scales:{x:{ticks:{color:'#444',font:{size:9}},grid:{color:'#16181f'}},y:{ticks:{color:'#444',font:{size:9}},grid:{color:'#1a1c26'}}}};
+new Chart(document.getElementById('d1'),{type:'line',data:{labels:DD,datasets:[{label:'미리예약',data:ebD.rev,borderColor:'#60a5fa',backgroundColor:'rgba(96,165,250,0.08)',fill:true,tension:.3,pointRadius:3,borderWidth:1.5},{label:'당일최저가',data:sdD.rev,borderColor:'#facc15',backgroundColor:'rgba(250,204,21,0.08)',fill:true,tension:.3,pointRadius:3,borderWidth:1.5}]},options:OD});
+new Chart(document.getElementById('d2'),{type:'line',data:{labels:DD,datasets:[{label:'미리예약',data:ebD.pft,borderColor:'#22c55e',backgroundColor:'rgba(34,197,94,0.08)',fill:true,tension:.3,pointRadius:3,borderWidth:1.5},{label:'당일최저가',data:sdD.pft,borderColor:'#ef4444',backgroundColor:'rgba(239,68,68,0.08)',fill:true,tension:.3,pointRadius:3,borderWidth:1.5}]},options:{...OD,scales:{...OD.scales,y:{...OD.scales.y,ticks:{...OD.scales.y.ticks,callback:v=>v+'백만'}}}}});
 
 // Weekly table
 (function(){
@@ -210,6 +231,11 @@ const byDay={};
 nc.forEach(d=>{if(!byDay[d.d])byDay[d.d]={};byDay[d.d][d.pid]=d.cnt;});
 const ds=series.map(s=>({label:s.l,data:days.map(d=>(byDay[d]||{})[s.k]||0),backgroundColor:s.c,borderRadius:2,barPercentage:.7})).filter(s=>s.data.some(v=>v>0));
 new Chart(document.getElementById('c5'),{type:'bar',data:{labels:days,datasets:ds},options:{...O,scales:{x:{...O.scales.x,stacked:true},y:{...O.scales.y,stacked:true}}}});
+
+// 반납예정일 차트
+const endDates=['4/3','4/4','4/5','4/6','4/7','4/8','4/9','4/10','4/11','4/12','4/13','4/14','4/15','4/16','4/17','4/18','4/19','4/20','4/21','4/23','4/25','4/26','4/27','4/28'];
+const endCnt=[3,13,63,20,9,1,3,2,8,46,6,3,2,3,1,3,17,5,3,1,2,15,3,1];
+new Chart(document.getElementById('c6'),{type:'bar',data:{labels:endDates,datasets:[{label:'반납 예정 건수',data:endCnt,backgroundColor:endCnt.map(v=>v>=30?'#60a5fa':v>=10?'#3b82f6':'#1e3a5f'),borderRadius:2,barPercentage:.8}]},options:{...O,plugins:{legend:{display:false}}}});
 </script>
 </body>
 </html>

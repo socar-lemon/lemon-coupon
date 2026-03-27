@@ -1,1 +1,215 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>얼리버드 대시보드</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0c0e14;--card:#14161e;--bd:#1e2130;--tx:#d0d0d0;--dim:#888;--mut:#555;--blue:#60a5fa;--green:#22c55e;--red:#ef4444;--yellow:#facc15}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--tx);padding:32px;max-width:1360px;margin:0 auto}
+h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
+.sub{font-size:12px;color:var(--mut);margin-bottom:24px}
+.tabs{display:flex;gap:4px;margin-bottom:28px;border-bottom:1px solid var(--bd)}
+.tab{font-family:inherit;font-size:13px;font-weight:600;padding:10px 20px;background:none;border:none;color:var(--mut);cursor:pointer;border-bottom:2px solid transparent}
+.tab:hover{color:var(--dim)}
+.tab.on{color:#fff;border-bottom-color:var(--blue)}
+.panel{display:none}.panel.on{display:block}
+.row{display:grid;gap:14px;margin-bottom:20px}
+.r2{grid-template-columns:1fr 1fr}.r3{grid-template-columns:1fr 1fr 1fr}.r4{grid-template-columns:1fr 1fr 1fr 1fr}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:20px}
+.kpi-label{font-size:11px;color:var(--mut);margin-bottom:6px}
+.kpi-val{font-size:24px;font-weight:800;color:#fff}
+.kpi-sub{font-size:11px;color:var(--dim);margin-top:4px}
+.mono{font-family:'JetBrains Mono',monospace}
+.chart-box{position:relative;height:280px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{text-align:left;color:var(--mut);font-weight:600;padding:8px 10px;border-bottom:2px solid var(--bd);font-size:10px}
+tbody td{padding:8px 10px;border-bottom:1px solid #1a1c26}
+tbody tr:hover{background:rgba(96,165,250,0.03)}
+.R{text-align:right;font-variant-numeric:tabular-nums}
+.blue{color:var(--blue)}.green{color:var(--green)}.red{color:var(--red)}.yellow{color:var(--yellow)}
+.section{margin-bottom:28px}
+.sec-title{font-size:15px;font-weight:700;color:#fff;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.badge{font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px}
+.nc{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:14px;text-align:center}
+.nc-name{font-size:11px;color:var(--dim);margin-bottom:6px;font-weight:600}
+.nc-cnt{font-size:28px;font-weight:800;color:#fff}
+.nc-sub{font-size:10px;color:var(--mut);margin-top:4px}
+.footer{text-align:center;color:#333;font-size:10px;margin-top:40px;padding-top:12px;border-top:1px solid #1a1c26}
+</style>
+</head>
+<body>
 
+<h1>얼리버드 대시보드</h1>
+<div class="sub">데이터 기준: 반납 ~2026.03.26 | 생성 ~2026.03.27 | 단위: 억원(반납) / 백만원(생성)</div>
+
+<div class="tabs">
+  <button class="tab on" id="btn-t1" onclick="sw('t1')">미리예약 반납 실적</button>
+  <button class="tab" id="btn-t2" onclick="sw('t2')">4월 얼리버드 생성 현황</button>
+</div>
+
+<!-- ===== TAB 1: 미리예약 반납 실적 ===== -->
+<div class="panel on" id="t1">
+
+<div class="row r4">
+  <div class="card"><div class="kpi-label">미리예약 누적 건수</div><div class="kpi-val">15,331</div><div class="kpi-sub">W1~W13</div></div>
+  <div class="card"><div class="kpi-label">미리예약 누적 매출</div><div class="kpi-val green">25.7억</div><div class="kpi-sub">GPM 30.4%</div></div>
+  <div class="card"><div class="kpi-label">당일최저가 누적 매출</div><div class="kpi-val red">13.5억</div><div class="kpi-sub">GPM -28.3%</div></div>
+  <div class="card"><div class="kpi-label">미리예약 건당 매출</div><div class="kpi-val">167,618</div><div class="kpi-sub">당일최저가 39,052 대비 4.3배</div></div>
+</div>
+
+<div class="section">
+  <div class="sec-title">주간 추이 <span class="badge" style="background:rgba(96,165,250,0.12);color:var(--blue)">W1~W13</span></div>
+  <div class="row r2">
+    <div class="card"><div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:8px">예약 건수</div><div class="chart-box"><canvas id="c1"></canvas></div></div>
+    <div class="card"><div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:8px">매출 (억원)</div><div class="chart-box"><canvas id="c2"></canvas></div></div>
+  </div>
+  <div class="row r2">
+    <div class="card"><div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:8px">GPM (Profit/Revenue)</div><div class="chart-box"><canvas id="c3"></canvas></div></div>
+    <div class="card"><div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:8px">CM% (CM/Revenue)</div><div class="chart-box"><canvas id="c4"></canvas></div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="sec-title">주간 상세</div>
+  <div class="card" style="overflow-x:auto">
+    <table>
+      <thead><tr><th>주차</th><th class="R">미리예약 건수</th><th class="R">미리예약 매출(억)</th><th class="R">GPM</th><th class="R">CM%</th><th class="R">당일최저가 건수</th><th class="R">당일최저가 매출(억)</th><th class="R">GPM</th></tr></thead>
+      <tbody id="weeklyTable"></tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- ===== TAB 2: 4월 얼리버드 생성 현황 ===== -->
+<div class="panel" id="t2">
+
+<div class="row r3">
+  <div class="card"><div class="kpi-label">누적 생성 건수</div><div class="kpi-val blue">233건</div><div class="kpi-sub">D1: 198 | D2: 35</div></div>
+  <div class="card"><div class="kpi-label">누적 Net 매출</div><div class="kpi-val green">30.95M</div><div class="kpi-sub">rent + PF - 할인</div></div>
+  <div class="card"><div class="kpi-label">건당 Net</div><div class="kpi-val">132,833원</div><div class="kpi-sub">당일최저가(37K)의 3.6배</div></div>
+</div>
+
+<div class="section">
+  <div class="sec-title">쿠폰별 누적 <span class="badge" style="background:rgba(96,165,250,0.12);color:var(--blue)">3/26~3/27</span></div>
+  <div class="row r4">
+    <div class="nc"><div class="nc-name">2일 109K (주중)</div><div class="nc-cnt blue">125</div><div class="nc-sub">D1:108 D2:17 | 110K/건</div></div>
+    <div class="nc"><div class="nc-name">2일 139K (주말)</div><div class="nc-cnt blue">42</div><div class="nc-sub">D1:34 D2:8 | 140K/건</div></div>
+    <div class="nc"><div class="nc-name">3일 149K (주중)</div><div class="nc-cnt">33</div><div class="nc-sub">D1:29 D2:4 | 155K/건</div></div>
+    <div class="nc"><div class="nc-name">3일 179K (주말)</div><div class="nc-cnt">21</div><div class="nc-sub">D1:17 D2:4 | 188K/건</div></div>
+  </div>
+  <div class="row r4">
+    <div class="nc"><div class="nc-name">4일 179K (주중)</div><div class="nc-cnt">6</div><div class="nc-sub">D1:5 D2:1 | 176K/건</div></div>
+    <div class="nc"><div class="nc-name">4일 209K (주말)</div><div class="nc-cnt">4</div><div class="nc-sub">D1:4 D2:0 | 201K/건</div></div>
+    <div class="nc"><div class="nc-name">5일 219K (주중)</div><div class="nc-cnt">1</div><div class="nc-sub">D1:1 D2:0 | 209K/건</div></div>
+    <div class="nc"><div class="nc-name">5일 249K (주말)</div><div class="nc-cnt">1</div><div class="nc-sub">D1:0 D2:1 | 250K/건</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="sec-title">일별 생성 추이</div>
+  <div class="card"><div class="chart-box" style="height:300px"><canvas id="c5"></canvas></div></div>
+</div>
+
+<div class="section">
+  <div class="sec-title">일별 상세 <span class="badge" style="background:rgba(34,197,94,0.12);color:var(--green)">Net = rent+PF-할인</span></div>
+  <div class="card">
+    <table>
+      <thead><tr><th>생성일</th><th>쿠폰</th><th class="R">건수</th><th class="R">Net(백만)</th><th class="R">건당 Net</th></tr></thead>
+      <tbody id="createTable"></tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<div class="footer">earlybird-dashboard | 2026.03.27</div>
+
+<script>
+function sw(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  document.getElementById('btn-'+id).classList.add('on');
+}
+
+// ===== TAB 1 DATA =====
+const W=['W1','W2','W3','W4','W5','W6','W7','W8','W9','W10','W11','W12','W13'];
+const eb={cnt:[1281,598,763,888,840,928,4477,2671,1583,264,281,485,222],rev:[2.40,0.97,1.27,1.43,1.37,1.44,5.76,5.58,2.23,0.52,0.49,0.86,0.38],cm:[1.60,0.64,0.85,0.94,0.91,0.93,3.59,4.03,1.46,0.39,0.33,0.60,0.26],pft:[0.73,0.27,0.35,0.38,0.39,0.41,1.54,2.04,0.61,0.19,0.16,0.30,0.13]};
+const sd={cnt:[2908,2754,3109,4589,3033,3027,2575,1991,2932,1795,2203,2408,818],rev:[1.15,1.06,1.21,1.68,1.15,1.17,0.95,0.81,1.21,0.73,0.90,0.99,0.30],cm:[0.59,0.54,0.62,0.84,0.60,0.62,0.48,0.45,0.66,0.39,0.45,0.51,0.14],pft:[-0.32,-0.28,-0.44,-0.63,-0.37,-0.28,-0.22,-0.21,-0.27,-0.22,-0.26,-0.28,-0.06]};
+
+const ebGPM=eb.pft.map((v,i)=>eb.rev[i]>0?+(v/eb.rev[i]*100).toFixed(1):0);
+const sdGPM=sd.pft.map((v,i)=>sd.rev[i]>0?+(v/sd.rev[i]*100).toFixed(1):0);
+const ebCM=eb.cm.map((v,i)=>eb.rev[i]>0?+(v/eb.rev[i]*100).toFixed(1):0);
+const sdCM=sd.cm.map((v,i)=>sd.rev[i]>0?+(v/sd.rev[i]*100).toFixed(1):0);
+
+const O={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#666',font:{size:10},usePointStyle:true}}},scales:{x:{ticks:{color:'#444',font:{size:9}},grid:{color:'#16181f'}},y:{ticks:{color:'#444',font:{size:10}},grid:{color:'#1a1c26'}}}};
+
+new Chart(document.getElementById('c1'),{type:'bar',data:{labels:W,datasets:[{label:'미리예약',data:eb.cnt,backgroundColor:'#60a5fa',borderRadius:3,barPercentage:.6},{label:'당일최저가',data:sd.cnt,backgroundColor:'#facc15',borderRadius:3,barPercentage:.6}]},options:O});
+new Chart(document.getElementById('c2'),{type:'line',data:{labels:W,datasets:[{label:'미리예약',data:eb.rev,borderColor:'#60a5fa',backgroundColor:'rgba(96,165,250,0.1)',fill:true,tension:.3,pointRadius:3,borderWidth:2},{label:'당일최저가',data:sd.rev,borderColor:'#facc15',backgroundColor:'rgba(250,204,21,0.1)',fill:true,tension:.3,pointRadius:3,borderWidth:2}]},options:{...O,scales:{...O.scales,y:{...O.scales.y,ticks:{...O.scales.y.ticks,callback:v=>v+'억'}}}}});
+new Chart(document.getElementById('c3'),{type:'line',data:{labels:W,datasets:[{label:'미리예약',data:ebGPM,borderColor:'#22c55e',backgroundColor:'rgba(34,197,94,0.1)',fill:true,tension:.3,pointRadius:3,borderWidth:2},{label:'당일최저가',data:sdGPM,borderColor:'#facc15',backgroundColor:'rgba(250,204,21,0.1)',fill:true,tension:.3,pointRadius:3,borderWidth:2}]},options:{...O,scales:{...O.scales,y:{...O.scales.y,min:-50,max:50,ticks:{...O.scales.y.ticks,callback:v=>v+'%'}}}}});
+new Chart(document.getElementById('c4'),{type:'line',data:{labels:W,datasets:[{label:'미리예약',data:ebCM,borderColor:'#60a5fa',backgroundColor:'rgba(96,165,250,0.1)',fill:true,tension:.3,pointRadius:3,borderWidth:2},{label:'당일최저가',data:sdCM,borderColor:'#facc15',backgroundColor:'rgba(250,204,21,0.1)',fill:true,tension:.3,pointRadius:3,borderWidth:2}]},options:{...O,scales:{...O.scales,y:{...O.scales.y,min:30,max:80,ticks:{...O.scales.y.ticks,callback:v=>v+'%'}}}}});
+
+// Weekly table
+(function(){
+  const tb=document.getElementById('weeklyTable');
+  W.forEach((w,i)=>{
+    const eg=eb.rev[i]>0?(eb.pft[i]/eb.rev[i]*100).toFixed(1):'0';
+    const ec=eb.rev[i]>0?(eb.cm[i]/eb.rev[i]*100).toFixed(1):'0';
+    const sg=sd.rev[i]>0?(sd.pft[i]/sd.rev[i]*100).toFixed(1):'0';
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td style="font-weight:600">${w}</td><td class="R mono">${eb.cnt[i].toLocaleString()}</td><td class="R mono">${eb.rev[i]}</td><td class="R mono" style="color:${eg>=0?'#22c55e':'#ef4444'}">${eg}%</td><td class="R mono blue">${ec}%</td><td class="R mono">${sd.cnt[i].toLocaleString()}</td><td class="R mono">${sd.rev[i]}</td><td class="R mono red">${sg}%</td>`;
+    tb.appendChild(tr);
+  });
+})();
+
+// ===== TAB 2 DATA =====
+const nc=[
+  {d:'3/26',pid:16264,n:'2일 109K',cnt:108,net:11.90,per:110221},
+  {d:'3/26',pid:16265,n:'2일 139K',cnt:34,net:4.76,per:139940},
+  {d:'3/26',pid:16266,n:'3일 149K',cnt:29,net:4.51,per:155401},
+  {d:'3/26',pid:16267,n:'3일 179K',cnt:17,net:3.18,per:187009},
+  {d:'3/26',pid:16268,n:'4일 179K',cnt:5,net:0.89,per:178629},
+  {d:'3/26',pid:16269,n:'4일 209K',cnt:4,net:0.81,per:201289},
+  {d:'3/26',pid:16270,n:'5일 219K',cnt:1,net:0.21,per:208700},
+  {d:'3/27',pid:16264,n:'2일 109K',cnt:17,net:1.88,per:110626},
+  {d:'3/27',pid:16265,n:'2일 139K',cnt:8,net:1.05,per:131784},
+  {d:'3/27',pid:16266,n:'3일 149K',cnt:4,net:0.59,per:147420},
+  {d:'3/27',pid:16267,n:'3일 179K',cnt:4,net:0.76,per:190105},
+  {d:'3/27',pid:16268,n:'4일 179K',cnt:1,net:0.16,per:162727},
+  {d:'3/27',pid:16271,n:'5일 249K',cnt:1,net:0.25,per:250036},
+];
+
+// Create table
+(function(){
+  const tb=document.getElementById('createTable');
+  nc.forEach(d=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td style="font-weight:600">${d.d}</td><td>${d.n}</td><td class="R mono blue" style="font-weight:700">${d.cnt}</td><td class="R mono">${d.net}</td><td class="R mono">${d.per.toLocaleString()}</td>`;
+    tb.appendChild(tr);
+  });
+  const tot=document.createElement('tr');
+  tot.style.cssText='background:rgba(96,165,250,0.04);font-weight:700';
+  const tc=nc.reduce((s,d)=>s+d.cnt,0);
+  const tn=nc.reduce((s,d)=>s+d.net,0);
+  tot.innerHTML=`<td style="color:#fff">누적</td><td></td><td class="R mono" style="color:#fff;font-size:14px">${tc}</td><td class="R mono" style="color:#fff">${tn.toFixed(2)}</td><td class="R mono" style="color:#fff">${Math.round(tn*1e6/tc).toLocaleString()}</td>`;
+  tb.appendChild(tot);
+})();
+
+// Daily stacked bar
+const days=['3/26','3/27'];
+const series=[
+  {k:16264,l:'2일 109K',c:'#60a5fa'},{k:16265,l:'2일 139K',c:'#3b82f6'},
+  {k:16266,l:'3일 149K',c:'#22c55e'},{k:16267,l:'3일 179K',c:'#16a34a'},
+  {k:16268,l:'4일 179K',c:'#facc15'},{k:16269,l:'4일 209K',c:'#f59e0b'},
+  {k:16270,l:'5일 219K',c:'#ef4444'},{k:16271,l:'5일 249K',c:'#dc2626'},
+];
+const byDay={};
+nc.forEach(d=>{if(!byDay[d.d])byDay[d.d]={};byDay[d.d][d.pid]=d.cnt;});
+const ds=series.map(s=>({label:s.l,data:days.map(d=>(byDay[d]||{})[s.k]||0),backgroundColor:s.c,borderRadius:2,barPercentage:.7})).filter(s=>s.data.some(v=>v>0));
+new Chart(document.getElementById('c5'),{type:'bar',data:{labels:days,datasets:ds},options:{...O,scales:{x:{...O.scales.x,stacked:true},y:{...O.scales.y,stacked:true}}}});
+</script>
+</body>
+</html>

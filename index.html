@@ -214,14 +214,14 @@ const nc=[
 // Daily stacked bar
 const days=['3/26','3/27','3/28','3/29','3/30'];
 const series=[
-  {k:16264,l:'2일 109K',c:'#60a5fa'},{k:16265,l:'2일 139K',c:'#3b82f6'},
-  {k:16266,l:'3일 149K',c:'#22c55e'},{k:16267,l:'3일 179K',c:'#16a34a'},
-  {k:16268,l:'4일 179K',c:'#facc15'},{k:16269,l:'4일 209K',c:'#f59e0b'},
-  {k:16270,l:'5일 219K',c:'#ef4444'},{k:16271,l:'5일 249K',c:'#dc2626'},
+  {k:'2일 109K',c:'#60a5fa'},{k:'2일 139K',c:'#3b82f6'},
+  {k:'3일 149K',c:'#22c55e'},{k:'3일 179K',c:'#16a34a'},
+  {k:'4일 179K',c:'#facc15'},{k:'4일 209K',c:'#f59e0b'},
+  {k:'5일 219K',c:'#ef4444'},{k:'5일 249K',c:'#dc2626'},
 ];
 const byDay={};
-nc.forEach(d=>{if(!byDay[d.d])byDay[d.d]={};byDay[d.d][d.pid]=d.cnt;});
-const ds=series.map(s=>({label:s.l,data:days.map(d=>(byDay[d]||{})[s.k]||0),backgroundColor:s.c,borderRadius:2,barPercentage:.7})).filter(s=>s.data.some(v=>v>0));
+nc.forEach(d=>{if(!byDay[d.d])byDay[d.d]={};byDay[d.d][d.n]=(byDay[d.d][d.n]||0)+d.cnt;});
+const ds=series.map(s=>({label:s.k,data:days.map(d=>(byDay[d]||{})[s.k]||0),backgroundColor:s.c,borderRadius:2,barPercentage:.7})).filter(s=>s.data.some(v=>v>0));
 new Chart(document.getElementById('c5'),{type:'bar',data:{labels:days,datasets:ds},options:{...O,scales:{x:{...O.scales.x,stacked:true},y:{...O.scales.y,stacked:true}}}});
 
 // 반납예정일 차트

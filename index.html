@@ -44,7 +44,7 @@ tbody tr:hover{background:rgba(96,165,250,0.03)}
 <body>
 
 <h1>얼리버드 대시보드</h1>
-<div class="sub">데이터 기준: 반납 ~2026.03.29 | 생성 ~2026.03.30 | 단위: 억원(반납) / 백만원(생성)</div>
+<div class="sub">데이터 기준: 반납 ~2026.03.31 | 생성 ~2026.04.01 | 단위: 억원(반납) / 백만원(생성)</div>
 
 <div class="tabs">
   <button class="tab on" id="btn-t1" onclick="sw('t1')">미리예약 반납 실적</button>
@@ -55,14 +55,14 @@ tbody tr:hover{background:rgba(96,165,250,0.03)}
 <div class="panel on" id="t1">
 
 <div class="row r4">
-  <div class="card"><div class="kpi-label">미리예약 누적 건수</div><div class="kpi-val">15,867</div><div class="kpi-sub">W1~W13 (3/29 반납)</div></div>
-  <div class="card"><div class="kpi-label">미리예약 누적 매출</div><div class="kpi-val green">26.7억</div><div class="kpi-sub">GPM 31.0%</div></div>
-  <div class="card"><div class="kpi-label">당일최저가 누적 매출</div><div class="kpi-val red">14.0억</div><div class="kpi-sub">GPM -27.0%</div></div>
-  <div class="card"><div class="kpi-label">미리예약 건당 매출</div><div class="kpi-val">168,300</div><div class="kpi-sub">당일최저가 40,500 대비 4.2배</div></div>
+  <div class="card"><div class="kpi-label">미리예약 누적 건수</div><div class="kpi-val">16,035</div><div class="kpi-sub">W1~W14 (3/31 반납)</div></div>
+  <div class="card"><div class="kpi-label">미리예약 누적 매출</div><div class="kpi-val green">26.1억</div><div class="kpi-sub">GPM 30.6%</div></div>
+  <div class="card"><div class="kpi-label">당일최저가 누적 매출</div><div class="kpi-val red">14.1억</div><div class="kpi-sub">GPM -28.6%</div></div>
+  <div class="card"><div class="kpi-label">미리예약 건당 매출</div><div class="kpi-val">162,900</div><div class="kpi-sub">당일최저가 39,100 대비 4.2배</div></div>
 </div>
 
 <div class="section">
-  <div class="sec-title">주간 추이 <span class="badge" style="background:rgba(96,165,250,0.12);color:var(--blue)">W1~W13</span></div>
+  <div class="sec-title">주간 추이 <span class="badge" style="background:rgba(96,165,250,0.12);color:var(--blue)">W1~W14</span></div>
   <div class="row r2">
     <div class="card"><div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:8px">예약 건수</div><div class="chart-box"><canvas id="c1"></canvas></div></div>
     <div class="card"><div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:8px">매출 (억원)</div><div class="chart-box"><canvas id="c2"></canvas></div></div>
@@ -74,7 +74,7 @@ tbody tr:hover{background:rgba(96,165,250,0.03)}
 </div>
 
 <div class="section">
-  <div class="sec-title">일간 추이 (최근 7일) <span class="badge" style="background:rgba(96,165,250,0.12);color:var(--blue)">3/20~3/26</span></div>
+  <div class="sec-title">일간 추이 (최근 7일) <span class="badge" style="background:rgba(96,165,250,0.12);color:var(--blue)">3/25~3/31</span></div>
   <div class="row r2">
     <div class="card"><div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:8px">일별 매출 (백만원)</div><div class="chart-box" style="height:200px"><canvas id="d1"></canvas></div></div>
     <div class="card"><div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:8px">일별 Profit (백만원)</div><div class="chart-box" style="height:200px"><canvas id="d2"></canvas></div></div>
@@ -96,24 +96,24 @@ tbody tr:hover{background:rgba(96,165,250,0.03)}
 <div class="panel" id="t2">
 
 <div class="row r3">
-  <div class="card"><div class="kpi-label">누적 생성 건수 (취소 제외)</div><div class="kpi-val blue">786건</div><div class="kpi-sub">D1:180 D2:220 D3:191 D4:173 D5:22</div></div>
-  <div class="card"><div class="kpi-label">누적 Net 매출</div><div class="kpi-val green">106.9백만</div><div class="kpi-sub">rent + PF - 할인</div></div>
-  <div class="card"><div class="kpi-label">건당 Net</div><div class="kpi-val">136,032원</div><div class="kpi-sub">당일최저가(37K)의 3.7배</div></div>
+  <div class="card"><div class="kpi-label">누적 생성 건수 (취소 제외)</div><div class="kpi-val blue">1,206건</div><div class="kpi-sub">D1:168 D2:203 D3:179 D4:165 D5:173 D6:160 D7:158</div></div>
+  <div class="card"><div class="kpi-label">누적 Net 매출</div><div class="kpi-val green">166.2백만</div><div class="kpi-sub">rent + PF - 할인</div></div>
+  <div class="card"><div class="kpi-label">건당 Net</div><div class="kpi-val">137,800원</div><div class="kpi-sub">당일최저가(39K)의 3.5배</div></div>
 </div>
 
 <div class="section">
-  <div class="sec-title">쿠폰별 누적 <span class="badge" style="background:rgba(96,165,250,0.12);color:var(--blue)">3/26~3/30 취소 제외</span></div>
+  <div class="sec-title">쿠폰별 누적 <span class="badge" style="background:rgba(96,165,250,0.12);color:var(--blue)">3/26~4/1 취소 제외</span></div>
   <div class="row r4">
-    <div class="nc"><div class="nc-name">2일 109K (주중)</div><div class="nc-cnt blue">412</div><div class="nc-sub">일평균 103건 | 111K/건</div></div>
-    <div class="nc"><div class="nc-name">2일 139K (주말)</div><div class="nc-cnt blue">131</div><div class="nc-sub">일평균 33건 | 141K/건</div></div>
-    <div class="nc"><div class="nc-name">3일 149K (주중)</div><div class="nc-cnt">123</div><div class="nc-sub">일평균 31건 | 153K/건</div></div>
-    <div class="nc"><div class="nc-name">3일 179K (주말)</div><div class="nc-cnt">62</div><div class="nc-sub">일평균 16건 | 183K/건</div></div>
+    <div class="nc"><div class="nc-name">2일 109K (주중)</div><div class="nc-cnt blue">632</div><div class="nc-sub">일평균 90건 | 113K/건</div></div>
+    <div class="nc"><div class="nc-name">2일 139K (주말)</div><div class="nc-cnt blue">184</div><div class="nc-sub">일평균 26건 | 144K/건</div></div>
+    <div class="nc"><div class="nc-name">3일 149K (주중)</div><div class="nc-cnt">202</div><div class="nc-sub">일평균 29건 | 153K/건</div></div>
+    <div class="nc"><div class="nc-name">3일 179K (주말)</div><div class="nc-cnt">102</div><div class="nc-sub">일평균 15건 | 184K/건</div></div>
   </div>
   <div class="row r4">
-    <div class="nc"><div class="nc-name">4일 179K (주중)</div><div class="nc-cnt">14</div><div class="nc-sub">일평균 3건 | 178K/건</div></div>
-    <div class="nc"><div class="nc-name">4일 209K (주말)</div><div class="nc-cnt">20</div><div class="nc-sub">일평균 5건 | 217K/건</div></div>
-    <div class="nc"><div class="nc-name">5일 219K (주중)</div><div class="nc-cnt">6</div><div class="nc-sub">일평균 1.5건 | 211K/건</div></div>
-    <div class="nc"><div class="nc-name">5일 249K (주말)</div><div class="nc-cnt">11</div><div class="nc-sub">일평균 2.8건 | 252K/건</div></div>
+    <div class="nc"><div class="nc-name">4일 179K (주중)</div><div class="nc-cnt">27</div><div class="nc-sub">일평균 3.9건 | 182K/건</div></div>
+    <div class="nc"><div class="nc-name">4일 209K (주말)</div><div class="nc-cnt">31</div><div class="nc-sub">일평균 4.4건 | 215K/건</div></div>
+    <div class="nc"><div class="nc-name">5일 219K (주중)</div><div class="nc-cnt">9</div><div class="nc-sub">일평균 1.3건 | 220K/건</div></div>
+    <div class="nc"><div class="nc-name">5일 249K (주말)</div><div class="nc-cnt">19</div><div class="nc-sub">일평균 2.7건 | 259K/건</div></div>
   </div>
 </div>
 
@@ -138,7 +138,7 @@ tbody tr:hover{background:rgba(96,165,250,0.03)}
 </div>
 </div>
 
-<div class="footer">earlybird-dashboard | 2026.03.30</div>
+<div class="footer">earlybird-dashboard | 2026.04.01</div>
 
 <script>
 function sw(id){
@@ -149,9 +149,9 @@ function sw(id){
 }
 
 // ===== TAB 1 DATA =====
-const W=['W1','W2','W3','W4','W5','W6','W7','W8','W9','W10','W11','W12','W13'];
-const eb={cnt:[1281,598,763,888,840,928,4477,2671,1583,264,281,485,758],rev:[2.40,0.97,1.27,1.43,1.37,1.44,5.76,5.58,2.23,0.52,0.49,0.86,1.39],cm:[1.59,0.64,0.85,0.94,0.91,0.93,3.59,4.03,1.46,0.39,0.33,0.60,0.97],pft:[0.73,0.27,0.35,0.38,0.39,0.41,1.54,2.04,0.62,0.20,0.16,0.30,0.50]};
-const sd={cnt:[2908,2754,3109,4589,3033,3027,2575,1991,2932,1795,2203,2408,2197],rev:[1.15,1.06,1.21,1.68,1.15,1.17,0.95,0.81,1.21,0.73,0.90,0.99,0.89],cm:[0.59,0.54,0.62,0.84,0.60,0.62,0.48,0.45,0.66,0.39,0.45,0.51,0.45],pft:[-0.32,-0.28,-0.44,-0.63,-0.37,-0.28,-0.22,-0.21,-0.26,-0.21,-0.24,-0.27,-0.23]};
+const W=['W1','W2','W3','W4','W5','W6','W7','W8','W9','W10','W11','W12','W13','W14'];
+const eb={cnt:[1281,598,763,888,840,928,4477,2671,1583,264,281,485,755,221],rev:[2.40,0.97,1.27,1.43,1.37,1.44,5.76,5.58,2.23,0.52,0.49,0.86,1.38,0.41],cm:[1.59,0.64,0.85,0.94,0.91,0.93,3.59,4.03,1.46,0.39,0.33,0.60,0.96,0.28],pft:[0.73,0.27,0.35,0.38,0.39,0.41,1.54,2.04,0.61,0.19,0.16,0.30,0.48,0.15]};
+const sd={cnt:[2908,2754,3109,4589,3033,3027,2575,1991,2932,1795,2203,2408,2196,596],rev:[1.15,1.06,1.21,1.68,1.15,1.17,0.95,0.81,1.21,0.73,0.90,0.99,0.88,0.22],cm:[0.59,0.54,0.62,0.84,0.60,0.62,0.48,0.45,0.66,0.39,0.45,0.51,0.45,0.10],pft:[-0.32,-0.28,-0.44,-0.63,-0.37,-0.28,-0.22,-0.21,-0.27,-0.22,-0.26,-0.29,-0.25,0.00]};
 
 const ebGPM=eb.pft.map((v,i)=>eb.rev[i]>0?+(v/eb.rev[i]*100).toFixed(1):0);
 const sdGPM=sd.pft.map((v,i)=>sd.rev[i]>0?+(v/sd.rev[i]*100).toFixed(1):0);
@@ -166,9 +166,9 @@ new Chart(document.getElementById('c3'),{type:'line',data:{labels:W,datasets:[{l
 new Chart(document.getElementById('c4'),{type:'line',data:{labels:W,datasets:[{label:'미리예약',data:ebCM,borderColor:'#60a5fa',backgroundColor:'rgba(96,165,250,0.1)',fill:true,tension:.3,pointRadius:3,borderWidth:2},{label:'당일최저가',data:sdCM,borderColor:'#facc15',backgroundColor:'rgba(250,204,21,0.1)',fill:true,tension:.3,pointRadius:3,borderWidth:2}]},options:{...O,scales:{...O.scales,y:{...O.scales.y,min:30,max:80,ticks:{...O.scales.y.ticks,callback:v=>v+'%'}}}}});
 
 // Daily charts (thin lines)
-const DD=['3/23','3/24','3/25','3/26','3/27','3/28','3/29'];
-const ebD={rev:[13.2,7.9,8.0,8.7,14.2,20.4,66.7],pft:[4.6,2.7,3.0,3.2,5.1,7.0,24.3]};
-const sdD={rev:[8.6,6.3,6.8,8.0,18.7,23.9,16.6],pft:[-1.3,-1.1,-1.4,-1.3,-8.0,-7.1,-2.4]};
+const DD=['3/25','3/26','3/27','3/28','3/29','3/30','3/31'];
+const ebD={rev:[8.0,8.7,14.1,20.4,66.1,25.5,15.0],pft:[3.0,3.1,5.0,6.8,23.4,8.8,6.7]};
+const sdD={rev:[6.8,8.0,18.5,23.7,16.4,10.0,11.8],pft:[-1.5,-1.5,-8.6,-7.8,-2.8,-2.1,2.4]};
 const OD={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#666',font:{size:9},usePointStyle:true}}},scales:{x:{ticks:{color:'#444',font:{size:9}},grid:{color:'#16181f'}},y:{ticks:{color:'#444',font:{size:9}},grid:{color:'#1a1c26'}}}};
 new Chart(document.getElementById('d1'),{type:'line',data:{labels:DD,datasets:[{label:'미리예약',data:ebD.rev,borderColor:'#60a5fa',backgroundColor:'rgba(96,165,250,0.08)',fill:true,tension:.3,pointRadius:3,borderWidth:1.5},{label:'당일최저가',data:sdD.rev,borderColor:'#facc15',backgroundColor:'rgba(250,204,21,0.08)',fill:true,tension:.3,pointRadius:3,borderWidth:1.5}]},options:OD});
 new Chart(document.getElementById('d2'),{type:'line',data:{labels:DD,datasets:[{label:'미리예약',data:ebD.pft,borderColor:'#22c55e',backgroundColor:'rgba(34,197,94,0.08)',fill:true,tension:.3,pointRadius:3,borderWidth:1.5},{label:'당일최저가',data:sdD.pft,borderColor:'#ef4444',backgroundColor:'rgba(239,68,68,0.08)',fill:true,tension:.3,pointRadius:3,borderWidth:1.5}]},options:{...OD,scales:{...OD.scales,y:{...OD.scales.y,ticks:{...OD.scales.y.ticks,callback:v=>v+'백만'}}}}});
@@ -188,11 +188,13 @@ new Chart(document.getElementById('d2'),{type:'line',data:{labels:DD,datasets:[{
 
 // ===== TAB 2 DATA =====
 const nc=[
-  {d:'3/26',n:'2일 109K',cnt:97,net:10.64,per:109669},{d:'3/26',n:'2일 139K',cnt:32,net:4.47,per:139703},{d:'3/26',n:'3일 149K',cnt:28,net:4.33,per:154524},{d:'3/26',n:'3일 179K',cnt:16,net:3.00,per:187309},{d:'3/26',n:'4일 179K',cnt:4,net:0.70,per:173848},{d:'3/26',n:'4일 209K',cnt:2,net:0.39,per:196114},{d:'3/26',n:'5일 219K',cnt:1,net:0.21,per:208700},
-  {d:'3/27',n:'2일 109K',cnt:113,net:12.63,per:111798},{d:'3/27',n:'2일 139K',cnt:43,net:6.05,per:140612},{d:'3/27',n:'3일 149K',cnt:29,net:4.34,per:149578},{d:'3/27',n:'3일 179K',cnt:16,net:2.85,per:178206},{d:'3/27',n:'4일 179K',cnt:4,net:0.70,per:174761},{d:'3/27',n:'4일 209K',cnt:7,net:1.81,per:258168},{d:'3/27',n:'5일 219K',cnt:2,net:0.40,per:199091},{d:'3/27',n:'5일 249K',cnt:6,net:1.57,per:260870},
-  {d:'3/28',n:'2일 109K',cnt:106,net:12.03,per:113522},{d:'3/28',n:'2일 139K',cnt:23,net:3.20,per:139270},{d:'3/28',n:'3일 149K',cnt:35,net:5.29,per:151126},{d:'3/28',n:'3일 179K',cnt:14,net:2.59,per:185160},{d:'3/28',n:'4일 179K',cnt:3,net:0.59,per:196070},{d:'3/28',n:'4일 209K',cnt:8,net:1.58,per:197647},{d:'3/28',n:'5일 219K',cnt:1,net:0.27,per:268355},{d:'3/28',n:'5일 249K',cnt:1,net:0.24,per:238427},
-  {d:'3/29',n:'2일 109K',cnt:90,net:10.22,per:113572},{d:'3/29',n:'2일 139K',cnt:31,net:4.54,per:146455},{d:'3/29',n:'3일 149K',cnt:28,net:4.35,per:155363},{d:'3/29',n:'3일 179K',cnt:16,net:2.90,per:181015},{d:'3/29',n:'4일 179K',cnt:2,net:0.34,per:171977},{d:'3/29',n:'4일 209K',cnt:2,net:0.39,per:195900},{d:'3/29',n:'5일 219K',cnt:1,net:0.21,per:208909},{d:'3/29',n:'5일 249K',cnt:3,net:0.69,per:231145},
-  {d:'3/30',n:'2일 109K',cnt:6,net:0.68,per:113268},{d:'3/30',n:'2일 139K',cnt:2,net:0.28,per:141941},{d:'3/30',n:'3일 149K',cnt:3,net:0.45,per:149609},{d:'3/30',n:'4일 179K',cnt:1,net:0.21,per:213436},{d:'3/30',n:'4일 209K',cnt:1,net:0.20,per:198900},{d:'3/30',n:'5일 219K',cnt:1,net:0.21,per:210018},{d:'3/30',n:'5일 249K',cnt:1,net:0.29,per:289400},
+  {d:'3/26',n:'2일 109K',cnt:94,net:10.32,per:109787},{d:'3/26',n:'2일 139K',cnt:27,net:3.82,per:141481},{d:'3/26',n:'3일 149K',cnt:27,net:4.18,per:154815},{d:'3/26',n:'3일 179K',cnt:14,net:2.66,per:190000},{d:'3/26',n:'4일 179K',cnt:3,net:0.49,per:163333},{d:'3/26',n:'4일 209K',cnt:2,net:0.39,per:195000},{d:'3/26',n:'5일 219K',cnt:1,net:0.21,per:210000},
+  {d:'3/27',n:'2일 109K',cnt:106,net:11.87,per:112028},{d:'3/27',n:'2일 139K',cnt:39,net:5.48,per:140513},{d:'3/27',n:'3일 149K',cnt:26,net:3.88,per:149231},{d:'3/27',n:'3일 179K',cnt:15,net:2.69,per:179333},{d:'3/27',n:'4일 179K',cnt:4,net:0.70,per:175000},{d:'3/27',n:'4일 209K',cnt:6,net:1.56,per:260000},{d:'3/27',n:'5일 219K',cnt:2,net:0.40,per:200000},{d:'3/27',n:'5일 249K',cnt:5,net:1.34,per:268000},
+  {d:'3/28',n:'2일 109K',cnt:97,net:10.98,per:113196},{d:'3/28',n:'2일 139K',cnt:21,net:2.92,per:139048},{d:'3/28',n:'3일 149K',cnt:34,net:5.15,per:151471},{d:'3/28',n:'3일 179K',cnt:14,net:2.59,per:185000},{d:'3/28',n:'4일 179K',cnt:3,net:0.59,per:196667},{d:'3/28',n:'4일 209K',cnt:8,net:1.58,per:197500},{d:'3/28',n:'5일 219K',cnt:1,net:0.27,per:270000},{d:'3/28',n:'5일 249K',cnt:1,net:0.24,per:240000},
+  {d:'3/29',n:'2일 109K',cnt:87,net:9.95,per:114368},{d:'3/29',n:'2일 139K',cnt:29,net:4.25,per:146552},{d:'3/29',n:'3일 149K',cnt:26,net:3.95,per:151923},{d:'3/29',n:'3일 179K',cnt:16,net:2.90,per:181250},{d:'3/29',n:'4일 179K',cnt:2,net:0.34,per:170000},{d:'3/29',n:'4일 209K',cnt:2,net:0.39,per:195000},{d:'3/29',n:'5일 219K',cnt:1,net:0.21,per:210000},{d:'3/29',n:'5일 249K',cnt:2,net:0.47,per:235000},
+  {d:'3/30',n:'2일 109K',cnt:100,net:11.45,per:114500},{d:'3/30',n:'2일 139K',cnt:19,net:2.75,per:144737},{d:'3/30',n:'3일 149K',cnt:25,net:3.71,per:148400},{d:'3/30',n:'3일 179K',cnt:11,net:2.02,per:183636},{d:'3/30',n:'4일 179K',cnt:6,net:1.19,per:198333},{d:'3/30',n:'4일 209K',cnt:4,net:0.87,per:217500},{d:'3/30',n:'5일 219K',cnt:2,net:0.43,per:215000},{d:'3/30',n:'5일 249K',cnt:6,net:1.54,per:256667},
+  {d:'3/31',n:'2일 109K',cnt:70,net:8.25,per:117857},{d:'3/31',n:'2일 139K',cnt:17,net:2.59,per:152353},{d:'3/31',n:'3일 149K',cnt:46,net:7.19,per:156304},{d:'3/31',n:'3일 179K',cnt:14,net:2.44,per:174286},{d:'3/31',n:'4일 179K',cnt:5,net:0.92,per:184000},{d:'3/31',n:'4일 209K',cnt:4,net:0.86,per:215000},{d:'3/31',n:'5일 219K',cnt:2,net:0.46,per:230000},{d:'3/31',n:'5일 249K',cnt:2,net:0.54,per:270000},
+  {d:'4/1',n:'2일 109K',cnt:78,net:8.90,per:114103},{d:'4/1',n:'2일 139K',cnt:32,net:4.63,per:144688},{d:'4/1',n:'3일 149K',cnt:18,net:2.78,per:154444},{d:'4/1',n:'3일 179K',cnt:18,net:3.47,per:192778},{d:'4/1',n:'4일 179K',cnt:4,net:0.69,per:172500},{d:'4/1',n:'4일 209K',cnt:5,net:1.00,per:200000},{d:'4/1',n:'5일 249K',cnt:3,net:0.79,per:263333},
 ];
 
 // Create table
@@ -212,7 +214,7 @@ const nc=[
 })();
 
 // Daily stacked bar
-const days=['3/26','3/27','3/28','3/29','3/30'];
+const days=['3/26','3/27','3/28','3/29','3/30','3/31','4/1'];
 const series=[
   {k:'2일 109K',c:'#60a5fa'},{k:'2일 139K',c:'#3b82f6'},
   {k:'3일 149K',c:'#22c55e'},{k:'3일 179K',c:'#16a34a'},
@@ -225,9 +227,9 @@ const ds=series.map(s=>({label:s.k,data:days.map(d=>(byDay[d]||{})[s.k]||0),back
 new Chart(document.getElementById('c5'),{type:'bar',data:{labels:days,datasets:ds},options:{...O,scales:{x:{...O.scales.x,stacked:true},y:{...O.scales.y,stacked:true}}}});
 
 // 반납예정일 차트
-const endDates=['4/3','4/4','4/5','4/6','4/7','4/8','4/9','4/10','4/11','4/12','4/13','4/14','4/15','4/16','4/17','4/18','4/19','4/20','4/21','4/23','4/25','4/26','4/27','4/28'];
-const endCnt=[3,13,63,20,9,1,3,2,8,46,6,3,2,3,1,3,17,5,3,1,2,15,3,1];
-new Chart(document.getElementById('c6'),{type:'bar',data:{labels:endDates,datasets:[{label:'반납 예정 건수',data:endCnt,backgroundColor:endCnt.map(v=>v>=30?'#60a5fa':v>=10?'#3b82f6':'#1e3a5f'),borderRadius:2,barPercentage:.8}]},options:{...O,plugins:{legend:{display:false}}}});
+const endDates=['4/3','4/4','4/5','4/6','4/7','4/8','4/9','4/10','4/11','4/12','4/13','4/14','4/15','4/16','4/17','4/18','4/19','4/20','4/21','4/22','4/23','4/24','4/25','4/26','4/27','4/28','4/29','4/30'];
+const endCnt=[3,19,139,53,25,25,29,41,83,270,59,22,11,15,14,46,149,33,17,10,4,7,20,83,17,6,4,2];
+new Chart(document.getElementById('c6'),{type:'bar',data:{labels:endDates,datasets:[{label:'반납 예정 건수',data:endCnt,backgroundColor:endCnt.map(v=>v>=100?'#60a5fa':v>=30?'#3b82f6':'#1e3a5f'),borderRadius:2,barPercentage:.8}]},options:{...O,plugins:{legend:{display:false}}}});
 </script>
 </body>
 </html>

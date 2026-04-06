@@ -513,14 +513,14 @@
 
   <!-- Tab 6: Utilization -->
   <div class="tab-panel" id="panel-6">
-    <h2 style="font-size:18px;font-weight:700;margin-bottom:4px;">가동률 분석 (op_min / dp_min)</h2>
-    <p style="font-size:13px;color:#64748b;margin-bottom:24px;">반납 기준 2026.03.23~04.05 | dp_min = 배포차량 × 1,440분/일 | op_min = occupied_time 합산</p>
+    <h2 style="font-size:18px;font-weight:700;margin-bottom:4px;">가동률 분석 (op_h / dp_h)</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:24px;">2026.03.23~04.05 | dp_h = 배포차량 × 24h | op_h = car_daily.utime(h) | EB = rsv.utime/60</p>
 
     <div class="kpi-row-4">
-      <div class="kpi-card"><div class="label">W14 평균 가동률</div><div class="value" style="color:#2563eb">103.6%</div><div class="sub">op_min / dp_min (반납일 기준, 100% 초과 가능)</div></div>
-      <div class="kpi-card"><div class="label">W14 얼리버드 가동 기여</div><div class="value" style="color:#10b981">2.97%p</div><div class="sub">eb_op_min / dp_min 평균</div></div>
+      <div class="kpi-card"><div class="label">W14 평균 가동률</div><div class="value" style="color:#2563eb">39.4%</div><div class="sub">op_h / dp_h 주간 평균</div></div>
+      <div class="kpi-card"><div class="label">W14 얼리버드 가동 기여</div><div class="value" style="color:#10b981">1.75%p</div><div class="sub">eb_h / dp_h 평균</div></div>
       <div class="kpi-card"><div class="label">W14 얼리버드 건수</div><div class="value" style="color:#f59e0b">1,141건</div><div class="sub">W13 754건 대비 +51%</div></div>
-      <div class="kpi-card"><div class="label">4/5(일) 얼리버드 기여</div><div class="value" style="color:#a855f7">10.03%p</div><div class="sub">주말 피크 — 최대 기여일</div></div>
+      <div class="kpi-card"><div class="label">4/5(일) 얼리버드 기여</div><div class="value" style="color:#a855f7">5.81%p</div><div class="sub">주말 피크 — 유휴 13.3% 개선</div></div>
     </div>
 
     <div class="chart-container">
@@ -541,7 +541,7 @@
 
     <table class="data-table">
       <thead>
-        <tr><th>날짜</th><th>배포(대)</th><th>dp_min</th><th>전체 op_min</th><th>전체 가동률</th><th>유휴율</th><th>EB op_min</th><th>EB 건수</th><th>EB 가동기여</th><th>쿠폰 op_min</th><th>쿠폰 가동률</th></tr>
+        <tr><th>날짜</th><th>배포(대)</th><th>dp_h</th><th>전체 op_h</th><th>전체 가동률</th><th>유휴율</th><th>EB op_h</th><th>EB 건수</th><th>EB 가동기여</th><th>EB 유휴개선</th><th>쿠폰 op_h</th><th>쿠폰 가동률</th></tr>
       </thead>
       <tbody id="utilTableBody"></tbody>
     </table>
@@ -549,10 +549,10 @@
     <div class="insight-box">
       <h3>가동률 분석 인사이트</h3>
       <ul>
-        <li><strong>반납일 기준 가동률 100% 초과</strong>: 다일 이용(1박2일+) 예약의 occupied_time이 반납일에 일괄 집계되므로, 금~일에 100%를 초과합니다. 절대 수치보다 <strong>WoW 변동</strong>과 <strong>얼리버드 기여 비중</strong>에 집중하세요.</li>
-        <li><strong>얼리버드 주말 집중 효과</strong>: 4/5(일) 얼리버드 가동 기여 10.03%p로 평일(~1%p) 대비 10배. 주말 유휴 차량 활용에 핵심 역할.</li>
-        <li><strong>W13→W14 얼리버드 건수 +51%</strong>: 4월 미리예약 균일가 런칭 효과로 건수 급증. 가동 기여도 동반 상승.</li>
-        <li><strong>유휴율이 음수인 날</strong> = 가동률 100% 초과일. 이 날은 차량 부족(수요 > 공급) 상태로, 얼리버드의 유휴 개선 효과가 아닌 추가 매출 기여로 해석해야 합니다.</li>
+        <li><strong>평일 가동률 32~42%, 주말 피크 56%</strong>: 평일 유휴율 58~68%로 개선 여지가 큼. 얼리버드가 평일에 0.5~0.9%p 기여 → 평일 타겟 확대 필요.</li>
+        <li><strong>얼리버드 주말 집중 효과</strong>: 4/5(일) 가동 기여 5.81%p, 유휴 개선 13.3%p. 주말 유휴 43.7% 중 얼리버드가 13.3%p를 흡수.</li>
+        <li><strong>W13→W14 얼리버드 건수 +51%</strong> (754→1,141건): 4월 미리예약 균일가 런칭 효과. 가동 기여도 W13 평균 1.12%p → W14 1.75%p로 상승.</li>
+        <li><strong>유휴 개선율 = eb_h / (dp_h - op_h)</strong>: 얼리버드가 남은 유휴시간 대비 얼마를 채우는지. 4/5(일) 13.3%로 최대.</li>
       </ul>
     </div>
   </div>
@@ -1166,20 +1166,20 @@ function initCompareCharts() {
 // === Tab 6: Utilization Charts ===
 function initUtilCharts() {
   const utilData = [
-    {date:'3/23',dp:14573,dp_min:20985120,op:19282609,all_cnt:9190,util:91.9,idle:8.1,eb_op:287032,eb_cnt:76,eb_util:1.37,cp_op:18847451,cp_util:89.8},
-    {date:'3/24',dp:14570,dp_min:20980800,op:19446665,all_cnt:9545,util:92.7,idle:7.3,eb_op:177145,eb_cnt:47,eb_util:0.84,cp_op:19154136,cp_util:91.3},
-    {date:'3/25',dp:14132,dp_min:20350080,op:20270123,all_cnt:9757,util:99.6,idle:0.4,eb_op:156612,eb_cnt:40,eb_util:0.77,cp_op:20023198,cp_util:98.4},
-    {date:'3/26',dp:14072,dp_min:20263680,op:21273977,all_cnt:10119,util:105.0,idle:-5.0,eb_op:199381,eb_cnt:56,eb_util:0.98,cp_op:20973574,cp_util:103.5},
-    {date:'3/27',dp:14070,dp_min:20260800,op:22601556,all_cnt:10298,util:111.6,idle:-11.6,eb_op:298300,eb_cnt:80,eb_util:1.47,cp_op:22147270,cp_util:109.3},
-    {date:'3/28',dp:14071,dp_min:20262240,op:21441950,all_cnt:9953,util:105.8,idle:-5.8,eb_op:407158,eb_cnt:116,eb_util:2.01,cp_op:20942866,cp_util:103.4},
-    {date:'3/29',dp:14071,dp_min:20262240,op:27376525,all_cnt:11946,util:135.1,idle:-35.1,eb_op:1226024,eb_cnt:339,eb_util:6.05,cp_op:26002513,cp_util:128.3},
-    {date:'3/30',dp:14069,dp_min:20259360,op:20240421,all_cnt:9374,util:99.9,idle:0.1,eb_op:535679,eb_cnt:139,eb_util:2.64,cp_op:19574031,cp_util:96.6},
-    {date:'3/31',dp:14085,dp_min:20282400,op:20265655,all_cnt:9553,util:99.9,idle:0.1,eb_op:331427,eb_cnt:81,eb_util:1.63,cp_op:19811722,cp_util:97.7},
-    {date:'4/1',dp:14084,dp_min:20280960,op:19999138,all_cnt:9792,util:98.6,idle:1.4,eb_op:185134,eb_cnt:45,eb_util:0.91,cp_op:19505514,cp_util:96.2},
-    {date:'4/2',dp:14084,dp_min:20280960,op:21880546,all_cnt:10552,util:107.9,idle:-7.9,eb_op:232326,eb_cnt:61,eb_util:1.15,cp_op:21506743,cp_util:106.0},
-    {date:'4/3',dp:14209,dp_min:20460960,op:23484101,all_cnt:10826,util:114.8,idle:-14.8,eb_op:305316,eb_cnt:79,eb_util:1.49,cp_op:23015616,cp_util:112.5},
-    {date:'4/4',dp:14452,dp_min:20810880,op:22067215,all_cnt:10325,util:106.0,idle:-6.0,eb_op:615496,eb_cnt:166,eb_util:2.96,cp_op:21360207,cp_util:102.6},
-    {date:'4/5',dp:14452,dp_min:20810880,op:30757625,all_cnt:13334,util:147.8,idle:-47.8,eb_op:2087418,eb_cnt:570,eb_util:10.03,cp_op:28543280,cp_util:137.2},
+    {date:'3/23',dp:14573,dp_h:349752,op_h:112057,util:32.0,idle:68.0,eb_h:2823,eb_cnt:76,eb_util:0.81,eb_idle:1.2,cp_h:110408,cp_util:31.6},
+    {date:'3/24',dp:14570,dp_h:349680,op_h:108828,util:31.1,idle:68.9,eb_h:1741,eb_cnt:47,eb_util:0.50,eb_idle:0.7,cp_h:107503,cp_util:30.7},
+    {date:'3/25',dp:14132,dp_h:339168,op_h:115606,util:34.1,idle:65.9,eb_h:1638,eb_cnt:40,eb_util:0.48,eb_idle:0.7,cp_h:115520,cp_util:34.1},
+    {date:'3/26',dp:14072,dp_h:337728,op_h:124276,util:36.8,idle:63.2,eb_h:1901,eb_cnt:56,eb_util:0.56,eb_idle:0.9,cp_h:123164,cp_util:36.5},
+    {date:'3/27',dp:14070,dp_h:337680,op_h:141840,util:42.0,idle:58.0,eb_h:2958,eb_cnt:80,eb_util:0.88,eb_idle:1.5,cp_h:140400,cp_util:41.6},
+    {date:'3/28',dp:14071,dp_h:337704,op_h:121758,util:36.1,idle:63.9,eb_h:3772,eb_cnt:116,eb_util:1.12,eb_idle:1.7,cp_h:121036,cp_util:35.8},
+    {date:'3/29',dp:14071,dp_h:337704,op_h:174144,util:51.6,idle:48.4,eb_h:11808,eb_cnt:339,eb_util:3.50,eb_idle:7.2,cp_h:173046,cp_util:51.2},
+    {date:'3/30',dp:14069,dp_h:337656,op_h:123126,util:36.5,idle:63.5,eb_h:5306,eb_cnt:139,eb_util:1.57,eb_idle:2.5,cp_h:121661,cp_util:36.0},
+    {date:'3/31',dp:14085,dp_h:338040,op_h:120750,util:35.7,idle:64.3,eb_h:3424,eb_cnt:81,eb_util:1.01,eb_idle:1.6,cp_h:119159,cp_util:35.2},
+    {date:'4/1',dp:14084,dp_h:338016,op_h:110801,util:32.8,idle:67.2,eb_h:1915,eb_cnt:45,eb_util:0.57,eb_idle:0.8,cp_h:109581,cp_util:32.4},
+    {date:'4/2',dp:14084,dp_h:338016,op_h:123030,util:36.4,idle:63.6,eb_h:2289,eb_cnt:61,eb_util:0.68,eb_idle:1.1,cp_h:122988,cp_util:36.4},
+    {date:'4/3',dp:14209,dp_h:341016,op_h:143927,util:42.2,idle:57.8,eb_h:3007,eb_cnt:79,eb_util:0.88,eb_idle:1.5,cp_h:142969,cp_util:41.9},
+    {date:'4/4',dp:14452,dp_h:346848,op_h:124621,util:35.9,idle:64.1,eb_h:5946,eb_cnt:166,eb_util:1.71,eb_idle:2.7,cp_h:123864,cp_util:35.7},
+    {date:'4/5',dp:14452,dp_h:346848,op_h:195422,util:56.3,idle:43.7,eb_h:20166,eb_cnt:570,eb_util:5.81,eb_idle:13.3,cp_h:194686,cp_util:56.1},
   ];
 
   const labels = utilData.map(d => d.date);
@@ -1194,6 +1194,7 @@ function initUtilCharts() {
         { label: '전체 가동률 (%)', data: utilData.map(d => d.util), borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,.08)', borderWidth: 2.5, pointRadius: 4, tension: 0.3, fill: true, order: 1 },
         { label: '쿠폰 가동률 (%)', data: utilData.map(d => d.cp_util), borderColor: '#f59e0b', borderWidth: 1.5, pointRadius: 3, tension: 0.3, borderDash: [5,3], order: 2 },
         { label: '얼리버드 기여 (%p)', data: utilData.map(d => d.eb_util), borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,.15)', borderWidth: 2, pointRadius: 4, tension: 0.3, fill: true, yAxisID: 'y1', order: 0 },
+        { label: '유휴율 (%)', data: utilData.map(d => d.idle), borderColor: '#94a3b8', borderWidth: 1, pointRadius: 2, tension: 0.3, borderDash: [3,3], order: 3 },
       ]
     },
     options: {
@@ -1204,7 +1205,7 @@ function initUtilCharts() {
         tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(1) + '%' } },
         annotation: { annotations: {
           w13: { type: 'box', xMin: 0, xMax: 6.5, backgroundColor: w13bg, borderWidth: 0, label: { content: 'W13', display: true, position: 'start', color: '#94a3b8', font: { size: 11 } } },
-          line100: { type: 'line', yMin: 100, yMax: 100, borderColor: '#ef4444', borderWidth: 1, borderDash: [4,4], label: { content: '100%', display: true, position: 'end', backgroundColor: 'transparent', color: '#ef4444', font: { size: 10 } } }
+          line50: { type: 'line', yMin: 50, yMax: 50, borderColor: '#94a3b8', borderWidth: 1, borderDash: [4,4], label: { content: '50%', display: true, position: 'end', backgroundColor: 'transparent', color: '#94a3b8', font: { size: 10 } } }
         }}
       },
       scales: {
@@ -1237,34 +1238,30 @@ function initUtilCharts() {
       },
       scales: {
         x: { grid: { display: false }, ticks: { font: { size: 10 } } },
-        y: { title: { display: true, text: '%p of dp_min', font: { size: 11 } }, grid: { color: '#f1f5f9' }, beginAtZero: true }
+        y: { title: { display: true, text: '%p of dp_h', font: { size: 11 } }, grid: { color: '#f1f5f9' }, beginAtZero: true }
       }
     }
   });
 
-  // 3. Idle Rate Chart
+  // 3. Idle Improvement Chart (EB contribution to idle reduction)
   new Chart(document.getElementById('idleChart'), {
     type: 'bar',
     data: {
       labels,
-      datasets: [{
-        label: '유휴율 (%)',
-        data: utilData.map(d => d.idle),
-        backgroundColor: utilData.map(d => d.idle > 0 ? 'rgba(37,99,235,.5)' : 'rgba(239,68,68,.35)'),
-        borderColor: utilData.map(d => d.idle > 0 ? '#2563eb' : '#ef4444'),
-        borderWidth: 1,
-        borderRadius: 4,
-      }]
+      datasets: [
+        { label: '유휴율 (%)', data: utilData.map(d => d.idle), backgroundColor: 'rgba(148,163,184,.3)', borderColor: '#94a3b8', borderWidth: 1, borderRadius: 4, order: 1 },
+        { label: 'EB 유휴 개선 (%p)', data: utilData.map(d => d.eb_idle), backgroundColor: 'rgba(16,185,129,.6)', borderColor: '#10b981', borderWidth: 1, borderRadius: 4, order: 0 },
+      ]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: ctx => { const v = ctx.parsed.y; return v >= 0 ? '유휴 ' + v.toFixed(1) + '%' : '초과가동 ' + Math.abs(v).toFixed(1) + '%'; } } }
+        legend: { position: 'top', labels: { usePointStyle: true, padding: 12 } },
+        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(1) + '%' } }
       },
       scales: {
         x: { grid: { display: false }, ticks: { font: { size: 10 } } },
-        y: { title: { display: true, text: '유휴율 (%, 음수=초과가동)', font: { size: 11 } }, grid: { color: '#f1f5f9' } }
+        y: { title: { display: true, text: '(%)', font: { size: 11 } }, grid: { color: '#f1f5f9' }, beginAtZero: true }
       }
     }
   });
@@ -1272,18 +1269,18 @@ function initUtilCharts() {
   // 4. Populate table
   const tbody = document.getElementById('utilTableBody');
   utilData.forEach(d => {
-    const cls = d.idle < 0 ? 'color:#ef4444' : '';
     tbody.innerHTML += '<tr>'
       + '<td style="text-align:left;font-weight:600">' + d.date + '</td>'
       + '<td>' + d.dp.toLocaleString() + '</td>'
-      + '<td>' + (d.dp_min/1e6).toFixed(1) + 'M</td>'
-      + '<td>' + (d.op/1e6).toFixed(1) + 'M</td>'
+      + '<td>' + (d.dp_h/1000).toFixed(0) + 'K</td>'
+      + '<td>' + (d.op_h/1000).toFixed(0) + 'K</td>'
       + '<td style="font-weight:600">' + d.util.toFixed(1) + '%</td>'
-      + '<td style="' + cls + '">' + d.idle.toFixed(1) + '%</td>'
-      + '<td style="color:#10b981">' + (d.eb_op/1e6).toFixed(2) + 'M</td>'
+      + '<td>' + d.idle.toFixed(1) + '%</td>'
+      + '<td style="color:#10b981">' + (d.eb_h/1000).toFixed(1) + 'K</td>'
       + '<td style="color:#10b981">' + d.eb_cnt + '</td>'
       + '<td style="color:#10b981;font-weight:600">' + d.eb_util.toFixed(2) + '%p</td>'
-      + '<td>' + (d.cp_op/1e6).toFixed(1) + 'M</td>'
+      + '<td style="color:#10b981">' + d.eb_idle.toFixed(1) + '%p</td>'
+      + '<td>' + (d.cp_h/1000).toFixed(0) + 'K</td>'
       + '<td>' + d.cp_util.toFixed(1) + '%</td>'
       + '</tr>';
   });

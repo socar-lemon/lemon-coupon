@@ -166,6 +166,40 @@
       <h3>반납 기준 일별 매출 (백만원)</h3>
       <div class="chart-wrap"><canvas id="chartReturnRev"></canvas></div>
     </div>
+
+    <!-- 4월 반납 예상 추이 섹션 -->
+    <div style="margin-top:32px;">
+      <div class="group-title"><span class="dot" style="background:#2563eb"></span> 4월 반납 예상 추이 (실적 + 파이프라인)</div>
+      <p style="font-size:13px;color:#64748b;margin-bottom:16px;">4/1~4/5 실적 반영, 4/6~ 출발일+이용기간 기준 추정</p>
+
+      <div class="kpi-row-4">
+        <div class="kpi-card">
+          <div class="label">4월 전체</div>
+          <div class="value">5,479건</div>
+          <div class="sub">9.95억원</div>
+        </div>
+        <div class="kpi-card">
+          <div class="label">균일가</div>
+          <div class="value" style="color:#2563eb;">1,983건</div>
+          <div class="sub">3.50억원</div>
+        </div>
+        <div class="kpi-card">
+          <div class="label">2주 EB</div>
+          <div class="value" style="color:#10b981;">1,301건</div>
+          <div class="sub">2.57억원</div>
+        </div>
+        <div class="kpi-card">
+          <div class="label">4주 EB</div>
+          <div class="value" style="color:#f59e0b;">2,195건</div>
+          <div class="sub">3.88억원</div>
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <h3>4월 반납 예상 추이 (실적 + 파이프라인)</h3>
+        <div class="chart-wrap" style="height:420px;"><canvas id="chartAprilForecast"></canvas></div>
+      </div>
+    </div>
   </div>
 
   <!-- Tab 3: Plan -->
@@ -508,13 +542,13 @@ function mapData(labels, raw) {
   return labels.map(l => raw[l] ?? null);
 }
 
-const allLabelsCreated = dateRange('2026-03-01', '2026-04-05');
+const allLabelsCreated = dateRange('2026-03-01', '2026-04-06');
 const allLabelsReturn = dateRange('2026-03-06', '2026-04-05');
 
 // Created data
-const createdApril = {'3/26':58,'3/27':64,'3/28':31,'4/2':2,'4/3':2};
-const createdEb2w = {'3/1':72,'3/2':67,'3/3':76,'3/4':85,'3/5':71,'3/6':58,'3/7':75,'3/8':96,'3/9':77,'3/10':94,'3/11':80,'3/12':80,'3/13':63,'3/14':38,'3/15':42,'3/16':43,'3/17':33,'3/18':36,'3/19':30,'3/20':22,'3/21':15,'3/22':3,'3/23':1,'3/24':1,'3/25':1,'3/26':1,'3/27':2,'3/28':6,'3/30':1,'3/31':1};
-const createdEb4w = {'3/1':33,'3/2':34,'3/3':30,'3/4':44,'3/5':63,'3/6':29,'3/7':16,'3/14':1,'3/16':2,'3/17':2,'3/20':3,'3/24':1,'3/27':1,'3/28':3,'4/2':1,'4/3':2};
+const createdApril = {'3/26':160,'3/27':187,'3/28':151,'3/29':152,'3/30':156,'3/31':140,'4/1':241,'4/2':219,'4/3':218,'4/4':158,'4/5':153,'4/6':48};
+const createdEb2w = {'3/1':72,'3/2':67,'3/3':76,'3/4':85,'3/5':71,'3/6':58,'3/7':75,'3/8':100,'3/9':82,'3/10':100,'3/11':88,'3/12':88,'3/13':76,'3/14':62,'3/15':66,'3/16':78,'3/17':72,'3/18':69,'3/19':77,'3/20':64,'3/21':67,'3/22':81,'3/23':86,'3/24':68,'3/25':78,'3/26':60,'3/27':30,'3/28':38,'3/29':41,'3/30':42,'3/31':44,'4/1':0,'4/2':1,'4/3':0,'4/4':0,'4/5':1,'4/6':0};
+const createdEb4w = {'3/1':73,'3/2':92,'3/3':68,'3/4':88,'3/5':147,'3/6':97,'3/7':98,'3/8':93,'3/9':84,'3/10':121,'3/11':102,'3/12':122,'3/13':115,'3/14':103,'3/15':99,'3/16':92,'3/17':95,'3/18':111,'3/19':131,'3/20':100,'3/21':74,'3/22':93,'3/23':100,'3/24':98,'3/25':121,'3/26':129,'3/27':104,'3/28':81,'3/29':99,'3/30':106,'3/31':96,'4/1':134,'4/2':215,'4/3':240,'4/4':152,'4/5':156,'4/6':34};
 
 // Revenue approximation (cnt * avg_rev / 1e6)
 const avgRevApril = 176744, avgRevEb2w = 188603, avgRevEb4w = 166613;
@@ -580,6 +614,87 @@ function initReturnCharts() {
     type: 'line',
     data: { labels: allLabelsReturn, datasets: makeDatasets(returnAprilRev, returnEb2wRev, returnEb4wRev, allLabelsReturn) },
     options: chartOpts('백만원')
+  });
+
+  // 4월 반납 예상 추이 stacked bar chart
+  const aprilForecastLabels = [];
+  for (let d = 1; d <= 30; d++) aprilForecastLabels.push('4/' + d);
+
+  const fcApril = [0,0,3,25,129,135,33,25,18,32,55,243,383,36,27,24,33,168,288,143,15,17,27,50,138,119,14,4,5,0];
+  const fcEb2w = [30,42,49,95,234,14,33,37,54,100,147,54,39,20,17,43,56,62,28,15,12,7,9,14,14,4,2,0,0,0];
+  const fcEb4w = [16,19,27,54,196,11,18,22,42,153,215,47,34,28,27,40,118,228,53,46,30,33,52,126,215,76,42,31,33,99];
+
+  const totalPlugin = {
+    id: 'totalOnTop',
+    afterDatasetsDraw(chart) {
+      const { ctx } = chart;
+      const meta = chart.getDatasetMeta(2); // last dataset (eb4w)
+      meta.data.forEach((bar, i) => {
+        const total = fcApril[i] + fcEb2w[i] + fcEb4w[i];
+        ctx.save();
+        ctx.font = '10px sans-serif';
+        ctx.fillStyle = '#64748b';
+        ctx.textAlign = 'center';
+        ctx.fillText(total, bar.x, bar.y - 6);
+        ctx.restore();
+      });
+    }
+  };
+
+  const dashedLinePlugin = {
+    id: 'dashedLine200',
+    afterDraw(chart) {
+      const yScale = chart.scales.y;
+      const yPixel = yScale.getPixelForValue(200);
+      const { ctx, chartArea: { left, right } } = chart;
+      ctx.save();
+      ctx.beginPath();
+      ctx.setLineDash([6, 4]);
+      ctx.strokeStyle = '#ef4444';
+      ctx.lineWidth = 1.5;
+      ctx.moveTo(left, yPixel);
+      ctx.lineTo(right, yPixel);
+      ctx.stroke();
+      ctx.fillStyle = '#ef4444';
+      ctx.font = '11px sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('일 200건', left + 4, yPixel - 6);
+      ctx.restore();
+    }
+  };
+
+  new Chart(document.getElementById('chartAprilForecast'), {
+    type: 'bar',
+    data: {
+      labels: aprilForecastLabels,
+      datasets: [
+        { label: '균일가', data: fcApril, backgroundColor: '#2563eb' },
+        { label: '2주 EB', data: fcEb2w, backgroundColor: '#10b981' },
+        { label: '4주 EB', data: fcEb4w, backgroundColor: '#f59e0b' }
+      ]
+    },
+    plugins: [totalPlugin, dashedLinePlugin],
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'top', labels: { usePointStyle: true, padding: 16 } },
+        tooltip: {
+          callbacks: {
+            footer: function(items) {
+              let sum = 0;
+              items.forEach(i => sum += i.parsed.y);
+              return '합계: ' + sum + '건';
+            }
+          }
+        }
+      },
+      scales: {
+        x: { stacked: true, grid: { display: false }, ticks: { font: { size: 11 } } },
+        y: { stacked: true, beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { font: { size: 11 } } }
+      }
+    }
   });
 }
 

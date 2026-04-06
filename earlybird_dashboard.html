@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>얼리버드 쿠폰 실적 대시보드</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f1f5f9; color: #1e293b; }
+  .header { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 24px 32px; }
+  .header h1 { font-size: 24px; font-weight: 700; color: #0f172a; }
+  .header p { font-size: 14px; color: #64748b; margin-top: 4px; }
+  .tabs { display: flex; gap: 0; background: #fff; border-bottom: 2px solid #e2e8f0; padding: 0 32px; }
+  .tab { padding: 12px 24px; cursor: pointer; font-size: 14px; font-weight: 500; color: #64748b; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all .2s; }
+  .tab:hover { color: #2563eb; }
+  .tab.active { color: #2563eb; border-bottom-color: #2563eb; font-weight: 600; }
+  .content { max-width: 1280px; margin: 0 auto; padding: 24px 32px; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* KPI Cards */
+  .group-title { font-size: 18px; font-weight: 700; margin: 24px 0 12px; display: flex; align-items: center; gap: 8px; }
+  .group-title .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+  .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 24px; }
+  .kpi-row-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+  .kpi-card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+  .kpi-card .label { font-size: 12px; color: #64748b; margin-bottom: 4px; }
+  .kpi-card .value { font-size: 22px; font-weight: 700; }
+  .kpi-card .sub { font-size: 11px; color: #94a3b8; margin-top: 2px; }
+
+  /* Table */
+  .data-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.08); margin-bottom: 32px; }
+  .data-table th { background: #f8fafc; font-size: 12px; font-weight: 600; color: #64748b; padding: 12px 16px; text-align: right; border-bottom: 1px solid #e2e8f0; }
+  .data-table th:first-child, .data-table td:first-child { text-align: left; }
+  .data-table td { padding: 12px 16px; font-size: 13px; text-align: right; border-bottom: 1px solid #f1f5f9; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover { background: #f8fafc; }
+
+  /* Charts */
+  .chart-container { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,.08); margin-bottom: 24px; }
+  .chart-container h3 { font-size: 15px; font-weight: 600; margin-bottom: 16px; color: #334155; }
+  .chart-wrap { position: relative; height: 360px; }
+
+  /* Plan section */
+  .plan-section { background: #fff; border-radius: 12px; padding: 28px 32px; box-shadow: 0 1px 3px rgba(0,0,0,.08); margin-bottom: 24px; }
+  .plan-section h3 { font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #e2e8f0; }
+  .plan-section ul { list-style: none; padding: 0; margin-bottom: 20px; }
+  .plan-section li { padding: 6px 0; font-size: 14px; line-height: 1.6; color: #334155; position: relative; padding-left: 18px; }
+  .plan-section li::before { content: ''; position: absolute; left: 0; top: 14px; width: 6px; height: 6px; border-radius: 50%; background: #94a3b8; }
+  .plan-section .highlight { background: #eff6ff; border-left: 3px solid #2563eb; padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 8px 0; }
+  .plan-section .highlight li::before { background: #2563eb; }
+  .plan-section .goal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .plan-section .goal-card { padding: 16px; border-radius: 8px; border: 1px solid #e2e8f0; }
+  .plan-section .goal-card h4 { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+  .plan-section .goal-card p { font-size: 13px; color: #64748b; line-height: 1.5; }
+
+  /* Insight box */
+  .insight-box { background: linear-gradient(135deg, #f5f3ff, #ede9fe); border: 1px solid #c4b5fd; border-radius: 12px; padding: 24px 28px; margin-bottom: 24px; }
+  .insight-box h3 { font-size: 16px; font-weight: 700; color: #5b21b6; margin-bottom: 14px; }
+  .insight-box ul { list-style: none; padding: 0; }
+  .insight-box li { padding: 6px 0; font-size: 14px; line-height: 1.7; color: #4c1d95; position: relative; padding-left: 22px; }
+  .insight-box li::before { content: ''; position: absolute; left: 0; top: 14px; width: 8px; height: 8px; border-radius: 50%; background: #8b5cf6; }
+
+  /* Pipeline section */
+  .pipeline-highlight { background: #faf5ff; border-left: 3px solid #8b5cf6; padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 8px 0 16px 0; }
+  .pipeline-highlight li::before { background: #8b5cf6 !important; }
+
+  .footer { text-align: center; padding: 24px; font-size: 12px; color: #94a3b8; }
+
+  @media (max-width: 768px) {
+    .kpi-row, .kpi-row-4 { grid-template-columns: repeat(2, 1fr); }
+    .plan-section .goal-grid { grid-template-columns: 1fr; }
+    .content { padding: 16px; }
+    .tabs { padding: 0 16px; overflow-x: auto; }
+    .tab { white-space: nowrap; padding: 12px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>얼리버드 쿠폰 실적 대시보드</h1>
+  <p>2026년 3~4월 | 생성/반납 기준</p>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(0)">전체 현황</div>
+  <div class="tab" onclick="switchTab(1)">생성 기준 일별 추이</div>
+  <div class="tab" onclick="switchTab(2)">반납 기준 일별 추이</div>
+  <div class="tab" onclick="switchTab(3)">실행 계획</div>
+  <div class="tab" onclick="switchTab(4)">매출/가동 기여</div>
+  <div class="tab" onclick="switchTab(5)">사전예약 vs 당일</div>
+</div>
+
+<div class="content">
+
+  <!-- Tab 0: Summary -->
+  <div class="tab-panel active" id="panel-0">
+
+    <div class="group-title"><span class="dot" style="background:#2563eb"></span> 4월 미리예약 균일가 <span style="font-size:13px;font-weight:400;color:#64748b;">PID 16264~16271 | 3/26 런칭</span></div>
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="label">이용건수</div><div class="value" style="color:#2563eb">157건</div></div>
+      <div class="kpi-card"><div class="label">매출</div><div class="value" style="color:#2563eb">27.7M</div><div class="sub">27,748,525원</div></div>
+      <div class="kpi-card"><div class="label">GP</div><div class="value" style="color:#2563eb">11.7M</div><div class="sub">11,747,609원</div></div>
+      <div class="kpi-card"><div class="label">건당매출</div><div class="value" style="color:#2563eb">176,744</div></div>
+      <div class="kpi-card"><div class="label">총이용시간</div><div class="value" style="color:#2563eb">5,503h</div></div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>PID</th><th>쿠폰명</th><th>건수</th><th>매출</th><th>GP</th><th>건당매출</th><th>시간</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>16264</td><td style="text-align:left">미리예약 2일 109,000원</td><td>107</td><td>17.0M</td><td>7.2M</td><td>159,008</td><td>3,472</td></tr>
+        <tr><td>16265</td><td style="text-align:left">미리예약 2일 139,000원</td><td>28</td><td>5.5M</td><td>2.0M</td><td>195,750</td><td>907</td></tr>
+        <tr><td>16266</td><td style="text-align:left">미리예약 3일 149,000원</td><td>14</td><td>2.9M</td><td>1.4M</td><td>209,259</td><td>703</td></tr>
+        <tr><td>16267</td><td style="text-align:left">미리예약 3일 179,000원</td><td>8</td><td>2.3M</td><td>1.1M</td><td>290,500</td><td>421</td></tr>
+        <tr style="color:#2563eb"><td>16268</td><td style="text-align:left">미리예약 4일 179,000원</td><td colspan="2" style="text-align:center">반납 시작 4/6~</td><td colspan="3" style="text-align:center">55건 예약</td></tr>
+        <tr style="color:#2563eb"><td>16269</td><td style="text-align:left">미리예약 4일 209,000원</td><td colspan="2" style="text-align:center">반납 시작 4/6~</td><td colspan="3" style="text-align:center">44건 예약</td></tr>
+        <tr style="color:#2563eb"><td>16270</td><td style="text-align:left">미리예약 5일 219,000원</td><td colspan="2" style="text-align:center">반납 시작 4/8~</td><td colspan="3" style="text-align:center">10건 예약</td></tr>
+        <tr style="color:#94a3b8"><td>16271</td><td style="text-align:left">미리예약 5일 249,000원</td><td colspan="2" style="text-align:center">발급중</td><td colspan="3" style="text-align:center">미예약</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:12px;color:#64748b;margin:-24px 0 32px 4px;">* 4일/5일 쿠폰은 이용기간이 길어 4/6 이후부터 반납 시작. 파이프라인은 예약 확정(state=1,2) 기준.</p>
+
+    <div class="group-title"><span class="dot" style="background:#10b981"></span> 2주 얼리버드 55% <span style="font-size:13px;font-weight:400;color:#64748b;">PID 16117 | 상시 운영</span></div>
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="label">이용건수</div><div class="value" style="color:#10b981">1,270건</div></div>
+      <div class="kpi-card"><div class="label">매출</div><div class="value" style="color:#10b981">239.5M</div><div class="sub">239,525,810원</div></div>
+      <div class="kpi-card"><div class="label">GP</div><div class="value" style="color:#10b981">100.6M</div><div class="sub">100,600,000원</div></div>
+      <div class="kpi-card"><div class="label">건당매출</div><div class="value" style="color:#10b981">188,603</div></div>
+      <div class="kpi-card"><div class="label">총이용시간</div><div class="value" style="color:#10b981">43,849h</div></div>
+    </div>
+
+    <div class="group-title"><span class="dot" style="background:#f59e0b"></span> 4주 얼리버드 65% <span style="font-size:13px;font-weight:400;color:#64748b;">PID 16118 | 상시 운영</span></div>
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="label">이용건수</div><div class="value" style="color:#f59e0b">265건</div></div>
+      <div class="kpi-card"><div class="label">매출</div><div class="value" style="color:#f59e0b">44.2M</div><div class="sub">44,152,445원</div></div>
+      <div class="kpi-card"><div class="label">GP</div><div class="value" style="color:#f59e0b">17.3M</div><div class="sub">17,300,000원</div></div>
+      <div class="kpi-card"><div class="label">건당매출</div><div class="value" style="color:#f59e0b">166,613</div></div>
+      <div class="kpi-card"><div class="label">총이용시간</div><div class="value" style="color:#f59e0b">9,605h</div></div>
+    </div>
+
+  </div>
+
+  <!-- Tab 1: Created Daily -->
+  <div class="tab-panel" id="panel-1">
+    <div class="chart-container">
+      <h3>생성 기준 일별 이용건수</h3>
+      <div class="chart-wrap"><canvas id="chartCreatedCnt"></canvas></div>
+    </div>
+    <div class="chart-container">
+      <h3>생성 기준 일별 매출 (백만원)</h3>
+      <div class="chart-wrap"><canvas id="chartCreatedRev"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Tab 2: Return Daily -->
+  <div class="tab-panel" id="panel-2">
+    <div class="chart-container">
+      <h3>반납 기준 일별 이용건수</h3>
+      <div class="chart-wrap"><canvas id="chartReturnCnt"></canvas></div>
+    </div>
+    <div class="chart-container">
+      <h3>반납 기준 일별 매출 (백만원)</h3>
+      <div class="chart-wrap"><canvas id="chartReturnRev"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Tab 3: Plan -->
+  <div class="tab-panel" id="panel-3">
+
+    <div class="plan-section">
+      <h3>전주 실행 내용 및 실적</h3>
+      <p style="font-size:14px;color:#334155;line-height:1.8;margin-bottom:12px;">
+        <strong>3/26(목): 4월 미리예약 균일가 쿠폰 8종 런칭</strong><br>
+        (2 ~ 5일 / 중형미만 · 중형이상 가격 차등 구조)
+      </p>
+      <table class="data-table" style="margin-bottom:20px;">
+        <thead><tr><th style="text-align:left">구분</th><th>중형미만</th><th>중형이상</th></tr></thead>
+        <tbody>
+          <tr><td>2일</td><td>109,000원</td><td>139,000원</td></tr>
+          <tr><td>3일</td><td>149,000원</td><td>179,000원</td></tr>
+          <tr><td>4일</td><td>179,000원</td><td>209,000원</td></tr>
+          <tr><td>5일</td><td>219,000원</td><td>249,000원</td></tr>
+        </tbody>
+      </table>
+      <h3>실적 (생성 기준)</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px;">
+        <div style="background:#f0f9ff;border-radius:10px;padding:20px;border-left:3px solid #2563eb;">
+          <div style="font-size:13px;color:#2563eb;font-weight:600;margin-bottom:8px;">W14 (4/3~4/5)</div>
+          <div style="font-size:13px;color:#334155;line-height:1.8;">
+            대여PF: <strong>21백만원</strong> / 건당매출: <strong>12.3만원</strong><br>
+            이용건수: <strong>172건</strong><br>
+            이용시간: <strong>6,400시간</strong> / 가동률: <strong>1%</strong>
+          </div>
+        </div>
+        <div style="background:#f0fdf4;border-radius:10px;padding:20px;border-left:3px solid #10b981;">
+          <div style="font-size:13px;color:#10b981;font-weight:600;margin-bottom:8px;">4월 누계 (4/3~4/30, 생성 기준)</div>
+          <div style="font-size:13px;color:#334155;line-height:1.8;">
+            대여PF: <strong>107백만원</strong> / 건당매출: <strong>136,032원</strong><br>
+            이용건수: <strong>786건</strong><br>
+            이용시간: <strong>35,733시간</strong> / 가동률: <strong>0.5%</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="plan-section">
+      <h3>금주 실행 계획 (4/7~4/11)</h3>
+      <ul>
+        <li><strong>4월 균일가 쿠폰 추가 푸시</strong> — 4일/5일 쿠폰 이용 0건, 마케팅 노출 강화 필요</li>
+        <li><strong>2주/4주 얼리버드 4월 반납 실적 모니터링</strong> — 주말(4/5) 반납 피크 확인</li>
+        <li><strong>강릉/동해/삼척 프로모션 쿠폰 실적 트래킹 시작</strong> (4/4 런칭)</li>
+      </ul>
+    </div>
+
+    <div class="plan-section">
+      <h3>금주 목표</h3>
+      <div class="goal-grid">
+        <div class="goal-card" style="border-left: 3px solid #2563eb;">
+          <h4 style="color:#2563eb">4월 균일가</h4>
+          <p>4일/5일 첫 이용 달성<br>주간 50건+ 목표</p>
+        </div>
+        <div class="goal-card" style="border-left: 3px solid #10b981;">
+          <h4 style="color:#10b981">2주 얼리버드</h4>
+          <p>주간 반납 500건+ 유지</p>
+        </div>
+        <div class="goal-card" style="border-left: 3px solid #f59e0b;">
+          <h4 style="color:#f59e0b">4주 얼리버드</h4>
+          <p>주간 반납 300건+ 유지</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="plan-section">
+      <h3 style="border-bottom-color: #8b5cf6; color: #5b21b6;">파이프라인 기반 목표</h3>
+      <div class="pipeline-highlight">
+        <ul>
+          <li>W15 (4/7~4/13) 예상 이용: <strong>1,179건+</strong></li>
+          <li>W15 피크일 4/11(금): <strong>701건</strong> 출발 예정 (균일가 339 + 2주 147 + 4주 215)</li>
+          <li>W16 (4/14~4/20): <strong>855건+</strong></li>
+          <li>4월 전체 잔여: <strong>4,369건</strong></li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Tab 4: 매출/가동 기여 -->
+  <div class="tab-panel" id="panel-4">
+
+    <div class="group-title"><span class="dot" style="background:#8b5cf6"></span> 매출/가동 기여도 분석 <span style="font-size:13px;font-weight:400;color:#64748b;">반납 기준 | 얼리버드 전체(균일가+2주+4주)</span></div>
+
+    <!-- KPI Summary -->
+    <div class="kpi-row-4">
+      <div class="kpi-card" style="border-top: 3px solid #8b5cf6;">
+        <div class="label">4월 가동 기여</div>
+        <div class="value" style="color:#8b5cf6">2.4%</div>
+        <div class="sub">33,105h / 1,395,840h (4/1~4/5 일평균)</div>
+      </div>
+      <div class="kpi-card" style="border-top: 3px solid #8b5cf6;">
+        <div class="label">4/5(토) 피크 가동률</div>
+        <div class="value" style="color:#8b5cf6">69.1%</div>
+        <div class="sub">EB 7.2%p 기여 (20,026/279,168h)</div>
+      </div>
+      <div class="kpi-card" style="border-top: 3px solid #8b5cf6;">
+        <div class="label">일평균 EB 가동률</div>
+        <div class="value" style="color:#8b5cf6">2.4%p</div>
+        <div class="sub">33,105h / (5일 × 279,168h)</div>
+      </div>
+      <div class="kpi-card" style="border-top: 3px solid #a855f7;">
+        <div class="label">피크일 EB 비중</div>
+        <div class="value" style="color:#a855f7">10.4%</div>
+        <div class="sub">20,026 / 193,099h (이용시간 중 EB)</div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:#64748b;margin:-16px 0 24px 4px;">운영대수 11,632대 기준 (제주 제외)</p>
+
+    <!-- Revenue Contribution Chart -->
+    <div class="chart-container">
+      <h3>주차별 매출 기여도 (반납 기준)</h3>
+      <div class="chart-wrap"><canvas id="chartRevContrib"></canvas></div>
+    </div>
+
+    <!-- Utilization Chart -->
+    <div class="chart-container">
+      <h3>일별 가동시간 기여도 (반납 기준)</h3>
+      <div style="position:relative;height:400px;"><canvas id="chartUtilContrib"></canvas></div>
+    </div>
+
+    <!-- Pipeline Chart -->
+    <div class="chart-container">
+      <h3>미래 파이프라인 — 예약 확정, 미출발 (출발일 기준)</h3>
+      <div style="position:relative;height:420px;"><canvas id="chartPipeline"></canvas></div>
+    </div>
+
+    <!-- Pipeline KPI -->
+    <div class="group-title"><span class="dot" style="background:#8b5cf6"></span> 파이프라인 요약</div>
+    <div class="kpi-row-4">
+      <div class="kpi-card" style="border-top: 3px solid #2563eb;">
+        <div class="label">4월 잔여 파이프라인</div>
+        <div class="value" style="color:#2563eb">~4,369건</div>
+        <div class="sub">균일가 1,731 + 2주 806 + 4주 1,832</div>
+      </div>
+      <div class="kpi-card" style="border-top: 3px solid #8b5cf6;">
+        <div class="label">5월 사전예약</div>
+        <div class="value" style="color:#8b5cf6">~1,950건+</div>
+        <div class="sub">4주 얼리버드</div>
+      </div>
+      <div class="kpi-card" style="border-top: 3px solid #ef4444;">
+        <div class="label">W15 (4/10~11) 피크</div>
+        <div class="value" style="color:#ef4444">1,179건</div>
+        <div class="sub">균일가 563 + 2주 247 + 4주 369</div>
+      </div>
+      <div class="kpi-card" style="border-top: 3px solid #f59e0b;">
+        <div class="label">W16 (4/17~18) 피크</div>
+        <div class="value" style="color:#f59e0b">855건</div>
+        <div class="sub">균일가 391 + 2주 118 + 4주 346</div>
+      </div>
+    </div>
+
+    <!-- Insight Box -->
+    <div class="insight-box">
+      <h3>시사점</h3>
+      <ul>
+        <li>얼리버드는 전체 매출의 2~4%를 사전에 깔아두는 역할 — 주말 피크엔 5~10%</li>
+        <li>W10 -> W14 기여율 0.1% -> 3.9%, 매주 성장 중</li>
+        <li>4/5(토) 전체 가동률 69.1% 중 EB가 7.2%p 기여 (EB 이용시간 비중 10.4%)</li>
+        <li>운영대수 11,632대 기준, EB가 일평균 2.4%p 가동률을 미리 깔아둠</li>
+        <li>4월 잔여 파이프라인 4,369건 — W15(4/11 금) 피크 1,179건 깔림</li>
+        <li>4월 균일가 쿠폰이 합류하면서 W15부터 기여율 5%+ 돌파 예상</li>
+        <li>5월 사전예약도 1,950건+ 이미 확보 (4주 얼리버드)</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Tab 5: 사전예약 vs 당일 -->
+  <div class="tab-panel" id="panel-5">
+
+    <!-- Insight Banner -->
+    <div style="background: linear-gradient(135deg, #7c3aed, #a855f7); border-radius: 12px; padding: 28px 32px; margin-bottom: 24px; color: #fff;">
+      <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px; color: #fff;">Key Finding</h3>
+      <p style="font-size: 15px; line-height: 1.7; color: rgba(255,255,255,.95);">4월 들어 얼리버드가 당일최저가를 역전 — 4/5(토) 건수 <strong>570 vs 388</strong>, 가동시간 <strong>20,026h vs 2,324h (8.6배)</strong></p>
+    </div>
+
+    <!-- Section 2: 일별 건수 비교 차트 -->
+    <div class="chart-container">
+      <h3 style="border-left: 3px solid #f97316; padding-left: 12px;">일별 건수 비교 — 얼리버드 vs 당일최저가 (주말+금요일)</h3>
+      <div class="chart-wrap"><canvas id="chartEbVsDealCnt"></canvas></div>
+    </div>
+
+    <!-- Section 3: 일별 가동시간 비교 차트 -->
+    <div class="chart-container">
+      <h3 style="border-left: 3px solid #f97316; padding-left: 12px;">일별 가동시간 비교 — 얼리버드 vs 당일최저가 (3/1~4/5 전체)</h3>
+      <div style="position:relative;height:400px;"><canvas id="chartEbVsDealHours"></canvas></div>
+    </div>
+
+    <!-- Section 4: 예약 리드타임별 가동시간 분포 -->
+    <div class="chart-container">
+      <h3 style="border-left: 3px solid #f97316; padding-left: 12px;">예약 리드타임별 가동시간 분포</h3>
+      <div style="position:relative;height:400px;"><canvas id="chartLeadtimeDist"></canvas></div>
+    </div>
+
+    <!-- Section 5: 3월 vs 4월 KPI -->
+    <div class="group-title"><span class="dot" style="background:#f97316"></span> 3월 vs 4월 비교</div>
+    <div style="display: grid; grid-template-columns: 1fr 80px 1fr; gap: 16px; margin-bottom: 24px; align-items: stretch;">
+      <!-- March Card -->
+      <div style="background:#fff; border-radius:12px; padding:24px; box-shadow:0 1px 3px rgba(0,0,0,.08); border-top: 3px solid #94a3b8;">
+        <h4 style="font-size:14px; font-weight:700; color:#64748b; margin-bottom:16px;">3월 (전월)</h4>
+        <div style="margin-bottom:12px;">
+          <div style="font-size:12px; color:#64748b;">EB 가동시간</div>
+          <div style="font-size:20px; font-weight:700; color:#334155;">62,278h</div>
+          <div style="font-size:11px; color:#94a3b8;">전체의 ~1.6%</div>
+        </div>
+        <div style="margin-bottom:12px;">
+          <div style="font-size:12px; color:#64748b;">당일최저가 가동시간</div>
+          <div style="font-size:20px; font-weight:700; color:#334155;">65,707h</div>
+          <div style="font-size:11px; color:#94a3b8;">전체의 ~1.7%</div>
+        </div>
+        <div>
+          <div style="font-size:12px; color:#64748b;">EB/당일최저가 비율</div>
+          <div style="font-size:20px; font-weight:700; color:#94a3b8;">0.95x</div>
+        </div>
+      </div>
+      <!-- Arrow -->
+      <div style="display:flex; align-items:center; justify-content:center;">
+        <div style="font-size:32px; color:#f97316; font-weight:700;">&#10132;</div>
+      </div>
+      <!-- April Card -->
+      <div style="background:#fff; border-radius:12px; padding:24px; box-shadow:0 1px 3px rgba(0,0,0,.08); border-top: 3px solid #f97316;">
+        <h4 style="font-size:14px; font-weight:700; color:#f97316; margin-bottom:16px;">4월 (4/1~4/5)</h4>
+        <div style="margin-bottom:12px;">
+          <div style="font-size:12px; color:#64748b;">EB 가동시간</div>
+          <div style="font-size:20px; font-weight:700; color:#f97316;">33,105h</div>
+          <div style="font-size:11px; color:#94a3b8;">전체의 4.8% <span style="color:#16a34a; font-weight:600;">+3.2%p</span></div>
+        </div>
+        <div style="margin-bottom:12px;">
+          <div style="font-size:12px; color:#64748b;">당일최저가 가동시간</div>
+          <div style="font-size:20px; font-weight:700; color:#f97316;">15,526h</div>
+          <div style="font-size:11px; color:#94a3b8;">전체의 2.3% <span style="color:#dc2626; font-weight:600;">+0.6%p</span></div>
+        </div>
+        <div>
+          <div style="font-size:12px; color:#64748b;">EB/당일최저가 비율</div>
+          <div style="font-size:20px; font-weight:700; color:#f97316;">2.13x <span style="color:#16a34a; font-weight:600;">+1.18x</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 6: 주말 피크 트렌드 -->
+    <div class="group-title"><span class="dot" style="background:#f97316"></span> 주말 피크 트렌드</div>
+    <table class="data-table" style="margin-bottom:32px;">
+      <thead>
+        <tr>
+          <th style="text-align:left;">주말</th>
+          <th>EB건</th>
+          <th>당일건</th>
+          <th>EB &gt; 당일?</th>
+          <th>EB시간</th>
+          <th>당일시간</th>
+          <th>EB배수</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="text-align:left;">3/8(토)</td>
+          <td>28</td>
+          <td>273</td>
+          <td style="color:#dc2626;">X</td>
+          <td>946</td>
+          <td>1,882</td>
+          <td>0.5x</td>
+        </tr>
+        <tr>
+          <td style="text-align:left;">3/15(토)</td>
+          <td>151</td>
+          <td>268</td>
+          <td style="color:#dc2626;">X</td>
+          <td>5,055</td>
+          <td>1,778</td>
+          <td style="color:#f59e0b; font-weight:600;">2.8x</td>
+        </tr>
+        <tr>
+          <td style="text-align:left;">3/22(토)</td>
+          <td>217</td>
+          <td>295</td>
+          <td style="color:#dc2626;">X</td>
+          <td>7,269</td>
+          <td>2,037</td>
+          <td style="color:#f59e0b; font-weight:600;">3.6x</td>
+        </tr>
+        <tr>
+          <td style="text-align:left;">3/29(토)</td>
+          <td>339</td>
+          <td>355</td>
+          <td style="color:#f59e0b; font-weight:600;">&asymp;</td>
+          <td>11,732</td>
+          <td>2,463</td>
+          <td style="color:#f97316; font-weight:600;">4.8x</td>
+        </tr>
+        <tr style="background:#fff7ed;">
+          <td style="text-align:left; font-weight:700;">4/5(토)</td>
+          <td style="font-weight:700; color:#f97316;">570</td>
+          <td>388</td>
+          <td style="color:#16a34a; font-weight:700;">O</td>
+          <td style="font-weight:700; color:#f97316;">20,026</td>
+          <td>2,324</td>
+          <td style="color:#f97316; font-weight:700;">8.6x</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+</div>
+
+<div class="footer">최종 업데이트: 2026-04-06</div>
+
+<script>
+// Tab switching
+function switchTab(idx) {
+  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+  document.querySelectorAll('.tab-panel').forEach((p, i) => p.classList.toggle('active', i === idx));
+  if (idx === 1 && !window._createdInit) { initCreatedCharts(); window._createdInit = true; }
+  if (idx === 2 && !window._returnInit) { initReturnCharts(); window._returnInit = true; }
+  if (idx === 4 && !window._contribInit) { initContribCharts(); window._contribInit = true; }
+  if (idx === 5 && !window._compareInit) { initCompareCharts(); window._compareInit = true; }
+}
+
+const COLORS = { april: '#2563eb', eb2w: '#10b981', eb4w: '#f59e0b' };
+const COLORS_BG = { april: 'rgba(37,99,235,.1)', eb2w: 'rgba(16,185,129,.1)', eb4w: 'rgba(245,158,11,.1)' };
+
+// Helper: build full date range
+function dateRange(start, end) {
+  const dates = [];
+  let d = new Date(start);
+  const e = new Date(end);
+  while (d <= e) {
+    dates.push((d.getMonth()+1) + '/' + d.getDate());
+    d.setDate(d.getDate() + 1);
+  }
+  return dates;
+}
+
+function mapData(labels, raw) {
+  return labels.map(l => raw[l] ?? null);
+}
+
+const allLabelsCreated = dateRange('2026-03-01', '2026-04-05');
+const allLabelsReturn = dateRange('2026-03-06', '2026-04-05');
+
+// Created data
+const createdApril = {'3/26':58,'3/27':64,'3/28':31,'4/2':2,'4/3':2};
+const createdEb2w = {'3/1':72,'3/2':67,'3/3':76,'3/4':85,'3/5':71,'3/6':58,'3/7':75,'3/8':96,'3/9':77,'3/10':94,'3/11':80,'3/12':80,'3/13':63,'3/14':38,'3/15':42,'3/16':43,'3/17':33,'3/18':36,'3/19':30,'3/20':22,'3/21':15,'3/22':3,'3/23':1,'3/24':1,'3/25':1,'3/26':1,'3/27':2,'3/28':6,'3/30':1,'3/31':1};
+const createdEb4w = {'3/1':33,'3/2':34,'3/3':30,'3/4':44,'3/5':63,'3/6':29,'3/7':16,'3/14':1,'3/16':2,'3/17':2,'3/20':3,'3/24':1,'3/27':1,'3/28':3,'4/2':1,'4/3':2};
+
+// Revenue approximation (cnt * avg_rev / 1e6)
+const avgRevApril = 176744, avgRevEb2w = 188603, avgRevEb4w = 166613;
+function revData(raw, avg) {
+  const r = {};
+  for (const k in raw) r[k] = Math.round(raw[k] * avg / 1e6 * 10) / 10;
+  return r;
+}
+const createdAprilRev = revData(createdApril, avgRevApril);
+const createdEb2wRev = revData(createdEb2w, avgRevEb2w);
+const createdEb4wRev = revData(createdEb4w, avgRevEb4w);
+
+// Return data
+const returnApril = {'4/3':3,'4/4':21,'4/5':133};
+const returnEb2w = {'3/6':1,'3/7':1,'3/8':28,'3/9':10,'3/10':11,'3/11':9,'3/12':21,'3/13':23,'3/14':41,'3/15':123,'3/16':41,'3/17':21,'3/18':21,'3/19':32,'3/20':43,'3/21':59,'3/22':150,'3/23':56,'3/24':35,'3/25':28,'3/26':45,'3/27':60,'3/28':94,'3/29':222,'3/30':86,'3/31':52,'4/1':30,'4/2':42,'4/3':48,'4/4':92,'4/5':238};
+const returnEb4w = {'3/11':1,'3/12':2,'3/13':5,'3/14':7,'3/15':28,'3/16':9,'3/17':5,'3/18':4,'3/19':1,'3/20':8,'3/21':24,'3/22':67,'3/23':20,'3/24':12,'3/25':12,'3/26':11,'3/27':20,'3/28':22,'3/29':117,'3/30':53,'3/31':29,'4/1':15,'4/2':19,'4/3':28,'4/4':53,'4/5':199};
+
+const returnAprilRev = revData(returnApril, avgRevApril);
+const returnEb2wRev = revData(returnEb2w, avgRevEb2w);
+const returnEb4wRev = revData(returnEb4w, avgRevEb4w);
+
+function makeDatasets(aprilData, eb2wData, eb4wData, labels) {
+  return [
+    { label: '4월 미리예약 균일가', data: mapData(labels, aprilData), borderColor: COLORS.april, backgroundColor: COLORS_BG.april, tension: .3, pointRadius: 2, borderWidth: 2, spanGaps: false },
+    { label: '2주 얼리버드 55%', data: mapData(labels, eb2wData), borderColor: COLORS.eb2w, backgroundColor: COLORS_BG.eb2w, tension: .3, pointRadius: 2, borderWidth: 2, spanGaps: false },
+    { label: '4주 얼리버드 65%', data: mapData(labels, eb4wData), borderColor: COLORS.eb4w, backgroundColor: COLORS_BG.eb4w, tension: .3, pointRadius: 2, borderWidth: 2, spanGaps: false }
+  ];
+}
+
+function chartOpts(unit) {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: { legend: { position: 'top', labels: { usePointStyle: true, padding: 16 } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { maxRotation: 60, font: { size: 11 } } },
+      y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { font: { size: 11 }, callback: v => unit === '백만원' ? v + 'M' : v } }
+    }
+  };
+}
+
+function initCreatedCharts() {
+  new Chart(document.getElementById('chartCreatedCnt'), {
+    type: 'line',
+    data: { labels: allLabelsCreated, datasets: makeDatasets(createdApril, createdEb2w, createdEb4w, allLabelsCreated) },
+    options: chartOpts('건')
+  });
+  new Chart(document.getElementById('chartCreatedRev'), {
+    type: 'line',
+    data: { labels: allLabelsCreated, datasets: makeDatasets(createdAprilRev, createdEb2wRev, createdEb4wRev, allLabelsCreated) },
+    options: chartOpts('백만원')
+  });
+}
+
+function initReturnCharts() {
+  new Chart(document.getElementById('chartReturnCnt'), {
+    type: 'line',
+    data: { labels: allLabelsReturn, datasets: makeDatasets(returnApril, returnEb2w, returnEb4w, allLabelsReturn) },
+    options: chartOpts('건')
+  });
+  new Chart(document.getElementById('chartReturnRev'), {
+    type: 'line',
+    data: { labels: allLabelsReturn, datasets: makeDatasets(returnAprilRev, returnEb2wRev, returnEb4wRev, allLabelsReturn) },
+    options: chartOpts('백만원')
+  });
+}
+
+// === Tab 4: Contribution Charts ===
+function initContribCharts() {
+  // 1. Revenue Contribution combo chart
+  const revWeeks = ['W10 (3/2~)', 'W11 (3/9~)', 'W12 (3/16~)', 'W13 (3/23~)', 'W14 (3/30~)'];
+  const totalRev = [4907, 4768, 4823, 5120, 5383];
+  const ebRev = [5.8, 48.6, 85.9, 138.0, 212.1];
+  const ebPct = [0.12, 1.02, 1.78, 2.70, 3.94];
+
+  new Chart(document.getElementById('chartRevContrib'), {
+    type: 'bar',
+    data: {
+      labels: revWeeks,
+      datasets: [
+        {
+          label: '전체 매출 (M)',
+          data: totalRev,
+          backgroundColor: 'rgba(148,163,184,.35)',
+          borderColor: '#94a3b8',
+          borderWidth: 1,
+          yAxisID: 'y',
+          order: 2
+        },
+        {
+          label: '얼리버드 매출 (M)',
+          data: ebRev,
+          backgroundColor: 'rgba(139,92,246,.7)',
+          borderColor: '#8b5cf6',
+          borderWidth: 1,
+          yAxisID: 'y',
+          order: 2
+        },
+        {
+          label: '기여율 (%)',
+          data: ebPct,
+          type: 'line',
+          borderColor: '#a855f7',
+          backgroundColor: 'rgba(168,85,247,.15)',
+          borderWidth: 3,
+          pointBackgroundColor: '#a855f7',
+          pointRadius: 5,
+          tension: 0.3,
+          yAxisID: 'y1',
+          order: 1,
+          fill: false
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'top', labels: { usePointStyle: true, padding: 16 } },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              if (ctx.dataset.yAxisID === 'y1') return ctx.dataset.label + ': ' + ctx.parsed.y + '%';
+              return ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString() + 'M';
+            }
+          }
+        }
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: {
+          type: 'linear',
+          position: 'left',
+          beginAtZero: true,
+          title: { display: true, text: '매출 (백만원)', font: { size: 12 } },
+          grid: { color: '#f1f5f9' },
+          ticks: { callback: v => v.toLocaleString() + 'M' }
+        },
+        y1: {
+          type: 'linear',
+          position: 'right',
+          beginAtZero: true,
+          max: 5,
+          title: { display: true, text: '기여율 (%)', font: { size: 12 } },
+          grid: { drawOnChartArea: false },
+          ticks: { callback: v => v + '%' }
+        }
+      }
+    }
+  });
+
+  // 2. Daily Utilization Area Chart
+  const utilDailyData = {
+    '3/1':[165490,0],'3/2':[201313,0],'3/3':[105402,0],'3/4':[105388,0],'3/5':[113672,0],
+    '3/6':[134323,25],'3/7':[105571,28],'3/8':[143825,946],'3/9':[96329,413],'3/10':[105456,352],
+    '3/11':[120971,339],'3/12':[123597,773],'3/13':[149703,958],'3/14':[119646,1487],'3/15':[172015,5055],
+    '3/16':[115757,1743],'3/17':[107941,914],'3/18':[106549,1006],'3/19':[118381,1113],'3/20':[139573,1862],
+    '3/21':[114787,2617],'3/22':[158625,7269],'3/23':[110381,2809],'3/24':[106693,1725],'3/25':[114413,1628],
+    '3/26':[122153,1882],'3/27':[139924,2936],'3/28':[119682,3749],'3/29':[171878,11732],'3/30':[121202,5274],
+    '3/31':[118677,3403],'4/1':[108860,1907],'4/2':[122064,2276],'4/3':[142329,2981],'4/4':[122507,5915],'4/5':[193099,20026]
+  };
+
+  const utilLabels = dateRange('2026-03-01', '2026-04-05');
+  const utilTotal = utilLabels.map(l => { const d = utilDailyData[l]; return d ? d[0] : null; });
+  const utilEB = utilLabels.map(l => { const d = utilDailyData[l]; return d ? d[1] : null; });
+  const utilNonEB = utilLabels.map(l => { const d = utilDailyData[l]; return d ? d[0] - d[1] : null; });
+  const utilPct = utilLabels.map(l => { const d = utilDailyData[l]; return d && d[0] > 0 ? Math.round(d[1] / d[0] * 1000) / 10 : null; });
+
+  new Chart(document.getElementById('chartUtilContrib'), {
+    type: 'line',
+    data: {
+      labels: utilLabels,
+      datasets: [
+        {
+          label: '일반 가동시간',
+          data: utilNonEB,
+          backgroundColor: 'rgba(148,163,184,.25)',
+          borderColor: 'rgba(148,163,184,.5)',
+          borderWidth: 1,
+          fill: true,
+          tension: 0.3,
+          pointRadius: 0,
+          order: 3
+        },
+        {
+          label: '얼리버드 가동시간',
+          data: utilEB,
+          backgroundColor: 'rgba(139,92,246,.45)',
+          borderColor: '#8b5cf6',
+          borderWidth: 2,
+          fill: true,
+          tension: 0.3,
+          pointRadius: 1,
+          order: 2
+        },
+        {
+          label: '얼리버드 기여율 (%)',
+          data: utilPct,
+          borderColor: '#a855f7',
+          backgroundColor: 'transparent',
+          borderWidth: 2.5,
+          borderDash: [6, 3],
+          pointBackgroundColor: '#a855f7',
+          pointRadius: 0,
+          tension: 0.3,
+          fill: false,
+          yAxisID: 'y1',
+          order: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'top', labels: { usePointStyle: true, padding: 16 } },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              if (ctx.dataset.yAxisID === 'y1') return ctx.dataset.label + ': ' + ctx.parsed.y + '%';
+              return ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString() + 'h';
+            }
+          }
+        }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { maxRotation: 60, font: { size: 10 } } },
+        y: {
+          type: 'linear',
+          position: 'left',
+          stacked: true,
+          beginAtZero: true,
+          title: { display: true, text: '가동시간 (h)', font: { size: 12 } },
+          grid: { color: '#f1f5f9' },
+          ticks: { callback: v => (v/1000).toFixed(0) + 'K' }
+        },
+        y1: {
+          type: 'linear',
+          position: 'right',
+          beginAtZero: true,
+          max: 12,
+          title: { display: true, text: '기여율 (%)', font: { size: 12 } },
+          grid: { drawOnChartArea: false },
+          ticks: { callback: v => v + '%' }
+        }
+      }
+    }
+  });
+
+  // 3. Pipeline Stacked Bar Chart
+  const aprilFixed = {'4/6':16,'4/7':25,'4/8':27,'4/9':82,'4/10':224,'4/11':339,'4/12':68,'4/13':44,'4/14':25,'4/15':35,'4/16':55,'4/17':166,'4/18':225,'4/19':36,'4/20':22,'4/21':15,'4/22':15,'4/23':26,'4/24':130,'4/25':120,'4/26':15,'4/27':13,'4/28':4,'4/29':4};
+  const eb2wPipe = {'4/6':35,'4/7':33,'4/8':38,'4/9':54,'4/10':100,'4/11':147,'4/12':55,'4/13':39,'4/14':20,'4/15':17,'4/16':44,'4/17':56,'4/18':62,'4/19':28,'4/20':15,'4/21':12,'4/22':7,'4/23':10,'4/24':14,'4/25':14,'4/26':4,'4/27':2};
+  const eb4wApril = {'4/6':16,'4/7':18,'4/8':22,'4/9':42,'4/10':154,'4/11':215,'4/12':47,'4/13':34,'4/14':28,'4/15':27,'4/16':40,'4/17':118,'4/18':228,'4/19':54,'4/20':48,'4/21':30,'4/22':33,'4/23':52,'4/24':126,'4/25':215,'4/26':77,'4/27':42,'4/28':31,'4/29':33,'4/30':102};
+
+  const pipeLabels = dateRange('2026-04-06', '2026-04-30');
+
+  new Chart(document.getElementById('chartPipeline'), {
+    type: 'bar',
+    data: {
+      labels: pipeLabels,
+      datasets: [
+        {
+          label: '균일가 (state=1)',
+          data: mapData(pipeLabels, aprilFixed),
+          backgroundColor: 'rgba(37,99,235,.7)',
+          borderColor: '#2563eb',
+          borderWidth: 1
+        },
+        {
+          label: '2주 얼리버드 (state=1)',
+          data: mapData(pipeLabels, eb2wPipe),
+          backgroundColor: 'rgba(16,185,129,.7)',
+          borderColor: '#10b981',
+          borderWidth: 1
+        },
+        {
+          label: '4주 얼리버드 (state=1)',
+          data: mapData(pipeLabels, eb4wApril),
+          backgroundColor: 'rgba(245,158,11,.7)',
+          borderColor: '#f59e0b',
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'top', labels: { usePointStyle: true, padding: 16 } },
+        tooltip: {
+          callbacks: {
+            afterBody: function(items) {
+              let total = 0;
+              items.forEach(i => { total += (i.parsed.y || 0); });
+              return 'Total: ' + total + '건';
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          stacked: true,
+          grid: { display: false },
+          ticks: { maxRotation: 60, font: { size: 10 } }
+        },
+        y: {
+          stacked: true,
+          beginAtZero: true,
+          grid: { color: '#f1f5f9' },
+          title: { display: true, text: '예약 건수', font: { size: 12 } },
+          ticks: { callback: v => v + '건' }
+        }
+      }
+    }
+  });
+}
+
+// === Tab 5: 사전예약 vs 당일 Charts ===
+function initCompareCharts() {
+  // Section 2: Grouped bar chart — counts (selected Fri/Sat/Sun)
+  const cntLabels = ['3/7(금)','3/8(토)','3/9(일)','3/14(금)','3/15(토)','3/16(일)','3/21(금)','3/22(토)','3/23(일)','3/28(금)','3/29(토)','3/30(일)','4/4(금)','4/5(토)'];
+  const ebCnt =   [1, 28, 10, 48, 151, 50, 83, 217, 76, 116, 339, 139, 166, 570];
+  const dealCnt = [479, 273, 228, 537, 268, 224, 677, 295, 224, 501, 355, 277, 738, 388];
+
+  new Chart(document.getElementById('chartEbVsDealCnt'), {
+    type: 'bar',
+    data: {
+      labels: cntLabels,
+      datasets: [
+        { label: '얼리버드', data: ebCnt, backgroundColor: 'rgba(37,99,235,.75)', borderColor: '#2563eb', borderWidth: 1 },
+        { label: '당일최저가', data: dealCnt, backgroundColor: 'rgba(249,115,22,.65)', borderColor: '#f97316', borderWidth: 1 }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'top', labels: { usePointStyle: true, padding: 16 } },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) { return ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString() + '건'; }
+          }
+        }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 11 }, maxRotation: 45 } },
+        y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { callback: v => v.toLocaleString() + '건' } }
+      }
+    }
+  });
+
+  // Section 3: Area chart — hours (full daily 3/1~4/5)
+  const hoursLabels = dateRange('2026-03-01', '2026-04-05');
+  const ebHoursRaw = {'3/1':0,'3/2':0,'3/3':0,'3/4':0,'3/5':0,'3/6':25,'3/7':28,'3/8':946,'3/9':413,'3/10':352,'3/11':339,'3/12':773,'3/13':958,'3/14':1487,'3/15':5055,'3/16':1743,'3/17':914,'3/18':1006,'3/19':1113,'3/20':1862,'3/21':2617,'3/22':7269,'3/23':2809,'3/24':1725,'3/25':1628,'3/26':1882,'3/27':2936,'3/28':3749,'3/29':11732,'3/30':5274,'3/31':3403,'4/1':1907,'4/2':2276,'4/3':2981,'4/4':5915,'4/5':20026};
+  const dealHoursRaw = {'3/1':3567,'3/2':1165,'3/3':1055,'3/4':1051,'3/5':937,'3/6':2533,'3/7':3269,'3/8':1882,'3/9':1379,'3/10':1450,'3/11':1400,'3/12':1416,'3/13':3078,'3/14':3637,'3/15':1778,'3/16':1384,'3/17':1203,'3/18':1254,'3/19':1610,'3/20':3469,'3/21':4526,'3/22':2037,'3/23':1382,'3/24':988,'3/25':1192,'3/26':1354,'3/27':3187,'3/28':3396,'3/29':2463,'3/30':1719,'3/31':2002,'4/1':1927,'4/2':2818,'4/3':3601,'4/4':4856,'4/5':2324};
+
+  new Chart(document.getElementById('chartEbVsDealHours'), {
+    type: 'line',
+    data: {
+      labels: hoursLabels,
+      datasets: [
+        {
+          label: '얼리버드 가동시간',
+          data: mapData(hoursLabels, ebHoursRaw),
+          backgroundColor: 'rgba(37,99,235,.2)',
+          borderColor: '#2563eb',
+          borderWidth: 2,
+          fill: true,
+          tension: 0.3,
+          pointRadius: 1
+        },
+        {
+          label: '당일최저가 가동시간',
+          data: mapData(hoursLabels, dealHoursRaw),
+          backgroundColor: 'rgba(249,115,22,.2)',
+          borderColor: '#f97316',
+          borderWidth: 2,
+          fill: true,
+          tension: 0.3,
+          pointRadius: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'top', labels: { usePointStyle: true, padding: 16 } },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) { return ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString() + 'h'; }
+          }
+        }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { maxRotation: 60, font: { size: 10 } } },
+        y: {
+          beginAtZero: true,
+          grid: { color: '#f1f5f9' },
+          title: { display: true, text: '가동시간 (h)', font: { size: 12 } },
+          ticks: { callback: v => v.toLocaleString() + 'h' }
+        }
+      }
+    }
+  });
+
+  // Section 4: Stacked area chart — leadtime distribution (all 36 days)
+  const leadLabels = dateRange('2026-03-01', '2026-04-05');
+  const samedayRaw = {'3/1':80136,'3/2':105761,'3/3':0,'3/4':0,'3/5':0,'3/6':0,'3/7':0,'3/8':83353,'3/9':59993,'3/10':0,'3/11':0,'3/12':0,'3/13':0,'3/14':0,'3/15':90617,'3/16':68051,'3/17':0,'3/18':0,'3/19':0,'3/20':0,'3/21':0,'3/22':79785,'3/23':67860,'3/24':0,'3/25':0,'3/26':0,'3/27':0,'3/28':0,'3/29':81506,'3/30':64891,'3/31':0,'4/1':75625,'4/2':80116,'4/3':87852,'4/4':63936,'4/5':89746};
+  const midRaw = {'3/1':62775,'3/2':67498,'3/3':0,'3/4':0,'3/5':0,'3/6':0,'3/7':0,'3/8':49431,'3/9':29243,'3/10':0,'3/11':0,'3/12':0,'3/13':0,'3/14':0,'3/15':66421,'3/16':38678,'3/17':0,'3/18':0,'3/19':0,'3/20':0,'3/21':0,'3/22':58951,'3/23':33083,'3/24':0,'3/25':0,'3/26':0,'3/27':0,'3/28':0,'3/29':62677,'3/30':42287,'3/31':0,'4/1':27350,'4/2':33807,'4/3':45733,'4/4':44593,'4/5':73726};
+  const advanceRaw = {'3/1':22579,'3/2':28054,'3/3':0,'3/4':0,'3/5':0,'3/6':0,'3/7':0,'3/8':11041,'3/9':7093,'3/10':0,'3/11':0,'3/12':0,'3/13':0,'3/14':0,'3/15':14977,'3/16':9028,'3/17':0,'3/18':0,'3/19':0,'3/20':0,'3/21':0,'3/22':19889,'3/23':9438,'3/24':0,'3/25':0,'3/26':0,'3/27':0,'3/28':0,'3/29':27695,'3/30':14024,'3/31':0,'4/1':5885,'4/2':8141,'4/3':8744,'4/4':13978,'4/5':29627};
+
+  new Chart(document.getElementById('chartLeadtimeDist'), {
+    type: 'line',
+    data: {
+      labels: leadLabels,
+      datasets: [
+        {
+          label: '2주+ 사전예약',
+          data: mapData(leadLabels, advanceRaw),
+          backgroundColor: 'rgba(139,92,246,.5)',
+          borderColor: '#8b5cf6',
+          borderWidth: 1.5,
+          fill: true,
+          tension: 0.3,
+          pointRadius: 0,
+          order: 1
+        },
+        {
+          label: '1일~2주전 예약',
+          data: mapData(leadLabels, midRaw),
+          backgroundColor: 'rgba(59,130,246,.4)',
+          borderColor: '#3b82f6',
+          borderWidth: 1.5,
+          fill: true,
+          tension: 0.3,
+          pointRadius: 0,
+          order: 2
+        },
+        {
+          label: '당일예약',
+          data: mapData(leadLabels, samedayRaw),
+          backgroundColor: 'rgba(249,115,22,.35)',
+          borderColor: '#f97316',
+          borderWidth: 1.5,
+          fill: true,
+          tension: 0.3,
+          pointRadius: 0,
+          order: 3
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'top', labels: { usePointStyle: true, padding: 16 } },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) { return ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString() + 'h'; }
+          }
+        }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { maxRotation: 60, font: { size: 10 } } },
+        y: {
+          stacked: true,
+          beginAtZero: true,
+          grid: { color: '#f1f5f9' },
+          title: { display: true, text: '가동시간 (h)', font: { size: 12 } },
+          ticks: { callback: v => (v/1000).toFixed(0) + 'K' }
+        }
+      }
+    }
+  });
+}
+</script>
+</body>
+</html>

@@ -85,19 +85,70 @@
 </div>
 
 <div class="tabs">
-  <div class="tab active" onclick="switchTab(0)">전체 현황</div>
-  <div class="tab" onclick="switchTab(1)">생성 기준 일별 추이</div>
-  <div class="tab" onclick="switchTab(2)">반납 기준 일별 추이</div>
-  <div class="tab" onclick="switchTab(3)">실행 계획</div>
-  <div class="tab" onclick="switchTab(4)">매출/가동 기여</div>
-  <div class="tab" onclick="switchTab(5)">사전예약 vs 당일</div>
-  <div class="tab" onclick="switchTab(6)">가동률 분석</div>
+  <div class="tab active" onclick="switchTab(0)">목표 달성 현황</div>
+  <div class="tab" onclick="switchTab(1)">차종별 현황</div>
+  <div class="tab" onclick="switchTab(2)">전체 현황</div>
+  <div class="tab" onclick="switchTab(3)">생성 기준 일별 추이</div>
+  <div class="tab" onclick="switchTab(4)">반납 기준 일별 추이</div>
+  <div class="tab" onclick="switchTab(5)">실행 계획</div>
+  <div class="tab" onclick="switchTab(6)">매출/가동 기여</div>
+  <div class="tab" onclick="switchTab(7)">사전예약 vs 당일</div>
+  <div class="tab" onclick="switchTab(8)">가동률 분석</div>
 </div>
 
 <div class="content">
 
-  <!-- Tab 0: Summary -->
+  <!-- Tab 0: Goal Progress -->
   <div class="tab-panel active" id="panel-0">
+    <h2 style="font-size:18px;font-weight:700;margin-bottom:4px;">얼리버드 목표 달성 현황</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:24px;">운영대수 11,632대 기준 | 가동률 5% 목표 = 일 13,958시간 | 4/3~</p>
+
+    <div class="kpi-row-4">
+      <div class="kpi-card"><div class="label">목표 (일 5%)</div><div class="value" style="color:#64748b">13,958h</div><div class="sub">11,632대 × 24h × 5%</div></div>
+      <div class="kpi-card"><div class="label">4/5(일) 달성</div><div class="value" style="color:#10b981">20,136h</div><div class="sub">7.22% — 목표 초과!</div></div>
+      <div class="kpi-card"><div class="label">4/6(월) 달성</div><div class="value" style="color:#f59e0b">7,194h</div><div class="sub">2.58% — 목표 52%</div></div>
+      <div class="kpi-card"><div class="label">4일 평균</div><div class="value" style="color:#2563eb">2.75%</div><div class="sub">목표의 55%</div></div>
+    </div>
+
+    <div class="chart-container">
+      <h3>일별 목표 달성률 (5% = 13,958h 기준)</h3>
+      <div class="chart-wrap"><canvas id="goalChart"></canvas></div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>날짜</th><th>균일가(h)</th><th>균일가(%p)</th><th>상시EB(h)</th><th>상시EB(%p)</th><th>합계(h)</th><th>합계(%p)</th><th>목표 달성률</th></tr>
+      </thead>
+      <tbody id="goalTableBody"></tbody>
+    </table>
+
+    <div style="background:#eff6ff;border-left:3px solid #2563eb;padding:16px 20px;border-radius:0 8px 8px 0;margin-top:24px;">
+      <p style="font-size:14px;font-weight:600;color:#1e40af;margin-bottom:8px;">주말 vs 평일 격차</p>
+      <p style="font-size:13px;color:#334155;">4/5(일) 7.22%로 목표 초과, 4/6(월) 2.58%로 목표 절반. 평일 가동 확대가 핵심 과제.</p>
+    </div>
+  </div>
+
+  <!-- Tab 1: Car Model -->
+  <div class="tab-panel" id="panel-1">
+    <h2 style="font-size:18px;font-weight:700;margin-bottom:4px;">차종별 얼리버드 현황</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:24px;">4/3~4/6 | 4월 균일가 vs 상시 얼리버드 | car_model 기준</p>
+
+    <div class="chart-container">
+      <h3>차종별 얼리버드 이용시간 (4일 합계)</h3>
+      <div class="chart-wrap"><canvas id="carModelChart"></canvas></div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>차종</th><th colspan="3" style="text-align:center;background:#eff6ff">4월 균일가</th><th colspan="3" style="text-align:center;background:#f0fdf4">상시 얼리버드</th><th colspan="3" style="text-align:center">합계</th></tr>
+        <tr><th></th><th>건수</th><th>시간</th><th>매출</th><th>건수</th><th>시간</th><th>매출</th><th>건수</th><th>시간</th><th>매출</th></tr>
+      </thead>
+      <tbody id="carModelBody"></tbody>
+    </table>
+  </div>
+
+  <!-- Tab 2: Summary -->
+  <div class="tab-panel" id="panel-2">
 
     <div class="group-title"><span class="dot" style="background:#2563eb"></span> 4월 미리예약 균일가 <span style="font-size:13px;font-weight:400;color:#64748b;">PID 16264~16271 | 3/26 런칭</span></div>
     <div class="kpi-row">
@@ -146,7 +197,7 @@
   </div>
 
   <!-- Tab 1: Created Daily -->
-  <div class="tab-panel" id="panel-1">
+  <div class="tab-panel" id="panel-3">
     <div class="chart-container">
       <h3>생성 기준 일별 이용건수</h3>
       <div class="chart-wrap"><canvas id="chartCreatedCnt"></canvas></div>
@@ -158,7 +209,7 @@
   </div>
 
   <!-- Tab 2: Return Daily -->
-  <div class="tab-panel" id="panel-2">
+  <div class="tab-panel" id="panel-4">
     <div class="chart-container">
       <h3>반납 기준 일별 이용건수</h3>
       <div class="chart-wrap"><canvas id="chartReturnCnt"></canvas></div>
@@ -204,7 +255,7 @@
   </div>
 
   <!-- Tab 3: Plan -->
-  <div class="tab-panel" id="panel-3">
+  <div class="tab-panel" id="panel-5">
 
     <div class="plan-section">
       <h3>전주 실행 내용 및 실적</h3>
@@ -284,7 +335,7 @@
   </div>
 
   <!-- Tab 4: 매출/가동 기여 -->
-  <div class="tab-panel" id="panel-4">
+  <div class="tab-panel" id="panel-6">
 
     <div class="group-title"><span class="dot" style="background:#8b5cf6"></span> 매출/가동 기여도 분석 <span style="font-size:13px;font-weight:400;color:#64748b;">반납 기준 | 얼리버드 전체(균일가+2주+4주)</span></div>
 
@@ -373,7 +424,7 @@
   </div>
 
   <!-- Tab 5: 사전예약 vs 당일 -->
-  <div class="tab-panel" id="panel-5">
+  <div class="tab-panel" id="panel-7">
 
     <!-- Insight Banner -->
     <div style="background: linear-gradient(135deg, #7c3aed, #a855f7); border-radius: 12px; padding: 28px 32px; margin-bottom: 24px; color: #fff;">
@@ -512,7 +563,7 @@
 </div>
 
   <!-- Tab 6: Utilization -->
-  <div class="tab-panel" id="panel-6">
+  <div class="tab-panel" id="panel-8">
     <h2 style="font-size:18px;font-weight:700;margin-bottom:4px;">가동률 분석 (op_h / dp_h)</h2>
     <p style="font-size:13px;color:#64748b;margin-bottom:24px;">2026.03.23~04.05 | dp_h = 배포차량 × 24h | op_h = car_daily.utime(h) | EB = rsv.utime/60</p>
 
@@ -566,11 +617,13 @@
 function switchTab(idx) {
   document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === idx));
   document.querySelectorAll('.tab-panel').forEach((p, i) => p.classList.toggle('active', i === idx));
-  if (idx === 1 && !window._createdInit) { initCreatedCharts(); window._createdInit = true; }
-  if (idx === 2 && !window._returnInit) { initReturnCharts(); window._returnInit = true; }
-  if (idx === 4 && !window._contribInit) { initContribCharts(); window._contribInit = true; }
-  if (idx === 5 && !window._compareInit) { initCompareCharts(); window._compareInit = true; }
-  if (idx === 6 && !window._utilInit) { initUtilCharts(); window._utilInit = true; }
+  if (idx === 0 && !window._goalInit) { initGoalCharts(); window._goalInit = true; }
+  if (idx === 1 && !window._carModelInit) { initCarModelCharts(); window._carModelInit = true; }
+  if (idx === 3 && !window._createdInit) { initCreatedCharts(); window._createdInit = true; }
+  if (idx === 4 && !window._returnInit) { initReturnCharts(); window._returnInit = true; }
+  if (idx === 6 && !window._contribInit) { initContribCharts(); window._contribInit = true; }
+  if (idx === 7 && !window._compareInit) { initCompareCharts(); window._compareInit = true; }
+  if (idx === 8 && !window._utilInit) { initUtilCharts(); window._utilInit = true; }
 }
 
 const COLORS = { april: '#2563eb', eb2w: '#10b981', eb4w: '#f59e0b' };
@@ -1285,6 +1338,160 @@ function initUtilCharts() {
       + '</tr>';
   });
 }
+
+// === Tab 0: Goal Progress ===
+function initGoalCharts() {
+  const DP = 11632;
+  const TARGET_H = DP * 24 * 0.05; // 13958.4
+  const goalData = [
+    {date:'4/3', uni_h:70, pct_h:2937},
+    {date:'4/4', uni_h:688, pct_h:5252},
+    {date:'4/5', uni_h:4795, pct_h:15341},
+    {date:'4/6', uni_h:2065, pct_h:5129},
+  ];
+
+  const labels = goalData.map(d => d.date);
+  const totalH = goalData.map(d => d.uni_h + d.pct_h);
+  const pctOfDp = goalData.map(d => (d.uni_h + d.pct_h) / (DP * 24) * 100);
+
+  new Chart(document.getElementById('goalChart'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label: '균일가', data: goalData.map(d => d.uni_h), backgroundColor: 'rgba(37,99,235,.6)', borderRadius: 4, stack: 'a' },
+        { label: '상시 EB', data: goalData.map(d => d.pct_h), backgroundColor: 'rgba(16,185,129,.6)', borderRadius: 4, stack: 'a' },
+        { label: '달성률 (%)', data: pctOfDp, type: 'line', borderColor: '#f59e0b', borderWidth: 2.5, pointRadius: 5, pointBackgroundColor: '#f59e0b', yAxisID: 'y1', tension: 0.3, order: 0 },
+      ]
+    },
+    plugins: [{
+      id: 'targetLine',
+      afterDraw(chart) {
+        const y = chart.scales.y;
+        const yPos = y.getPixelForValue(TARGET_H);
+        const ctx = chart.ctx;
+        ctx.save();
+        ctx.setLineDash([6, 4]);
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(chart.chartArea.left, yPos);
+        ctx.lineTo(chart.chartArea.right, yPos);
+        ctx.stroke();
+        ctx.fillStyle = '#ef4444';
+        ctx.font = '11px sans-serif';
+        ctx.fillText('목표 5% (13,958h)', chart.chartArea.right - 120, yPos - 6);
+        ctx.restore();
+      }
+    }],
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'top', labels: { usePointStyle: true, padding: 14 } },
+        tooltip: { callbacks: { label: ctx => {
+          if (ctx.dataset.yAxisID === 'y1') return ctx.parsed.y.toFixed(2) + '%';
+          return ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString() + 'h';
+        }}}
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: { stacked: true, title: { display: true, text: '이용시간 (h)' }, grid: { color: '#f1f5f9' }, beginAtZero: true },
+        y1: { position: 'right', title: { display: true, text: '가동률 (%)' }, grid: { drawOnChartArea: false }, min: 0, max: 10,
+          ticks: { callback: v => v + '%' }
+        }
+      }
+    }
+  });
+
+  // Table
+  const tbody = document.getElementById('goalTableBody');
+  goalData.forEach(d => {
+    const total = d.uni_h + d.pct_h;
+    const dp_h = DP * 24;
+    const uniPct = (d.uni_h / dp_h * 100).toFixed(2);
+    const pctPct = (d.pct_h / dp_h * 100).toFixed(2);
+    const totalPct = (total / dp_h * 100).toFixed(2);
+    const achieve = (total / TARGET_H * 100).toFixed(0);
+    const color = achieve >= 100 ? '#10b981' : achieve >= 50 ? '#f59e0b' : '#ef4444';
+    tbody.innerHTML += '<tr>'
+      + '<td style="text-align:left;font-weight:600">' + d.date + '</td>'
+      + '<td>' + d.uni_h.toLocaleString() + 'h</td>'
+      + '<td>' + uniPct + '%</td>'
+      + '<td>' + d.pct_h.toLocaleString() + 'h</td>'
+      + '<td>' + pctPct + '%</td>'
+      + '<td style="font-weight:600">' + total.toLocaleString() + 'h</td>'
+      + '<td style="font-weight:600">' + totalPct + '%</td>'
+      + '<td style="font-weight:700;color:' + color + '">' + achieve + '%</td>'
+      + '</tr>';
+  });
+}
+
+// === Tab 1: Car Model ===
+function initCarModelCharts() {
+  const raw = [
+    {m:'경형',uni_cnt:16,uni_h:582,uni_rev:2.5,pct_cnt:156,pct_h:5774,pct_rev:21.2},
+    {m:'소형SUV',uni_cnt:76,uni_h:2819,uni_rev:13.7,pct_cnt:180,pct_h:6392,pct_rev:31.7},
+    {m:'준중형',uni_cnt:61,uni_h:2268,uni_rev:10.3,pct_cnt:162,pct_h:5810,pct_rev:27.0},
+    {m:'준중형SUV',uni_cnt:4,uni_h:153,uni_rev:1.1,pct_cnt:46,pct_h:1951,pct_rev:9.1},
+    {m:'중형SUV',uni_cnt:21,uni_h:842,uni_rev:4.2,pct_cnt:47,pct_h:1910,pct_rev:10.6},
+    {m:'RV',uni_cnt:0,uni_h:0,uni_rev:0,pct_cnt:79,pct_h:2837,pct_rev:21.0},
+    {m:'중형',uni_cnt:5,uni_h:226,uni_rev:1.0,pct_cnt:23,pct_h:834,pct_rev:4.6},
+    {m:'준대형',uni_cnt:11,uni_h:455,uni_rev:2.1,pct_cnt:20,pct_h:901,pct_rev:5.6},
+    {m:'EV',uni_cnt:0,uni_h:0,uni_rev:0,pct_cnt:35,pct_h:1251,pct_rev:7.3},
+    {m:'승합',uni_cnt:0,uni_h:0,uni_rev:0,pct_cnt:20,pct_h:861,pct_rev:7.1},
+    {m:'준대형SUV',uni_cnt:7,uni_h:272,uni_rev:1.8,pct_cnt:8,pct_h:289,pct_rev:2.2},
+    {m:'수입',uni_cnt:0,uni_h:0,uni_rev:0,pct_cnt:7,pct_h:283,pct_rev:1.8},
+  ];
+
+  // Sort by total hours desc
+  raw.sort((a,b) => (b.uni_h + b.pct_h) - (a.uni_h + a.pct_h));
+
+  const labels = raw.map(d => d.m);
+
+  new Chart(document.getElementById('carModelChart'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label: '균일가', data: raw.map(d => d.uni_h), backgroundColor: 'rgba(37,99,235,.6)', borderRadius: 3, stack: 'a' },
+        { label: '상시 EB', data: raw.map(d => d.pct_h), backgroundColor: 'rgba(16,185,129,.6)', borderRadius: 3, stack: 'a' },
+      ]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'top', labels: { usePointStyle: true, padding: 14 } },
+        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.x.toLocaleString() + 'h' } }
+      },
+      scales: {
+        x: { stacked: true, title: { display: true, text: '이용시간 (h)' }, grid: { color: '#f1f5f9' } },
+        y: { stacked: true, grid: { display: false } }
+      }
+    }
+  });
+
+  // Table
+  const tbody = document.getElementById('carModelBody');
+  raw.forEach(d => {
+    tbody.innerHTML += '<tr>'
+      + '<td style="text-align:left;font-weight:600">' + d.m + '</td>'
+      + '<td>' + d.uni_cnt + '</td>'
+      + '<td>' + d.uni_h.toLocaleString() + 'h</td>'
+      + '<td>' + d.uni_rev.toFixed(1) + 'M</td>'
+      + '<td>' + d.pct_cnt + '</td>'
+      + '<td>' + d.pct_h.toLocaleString() + 'h</td>'
+      + '<td>' + d.pct_rev.toFixed(1) + 'M</td>'
+      + '<td style="font-weight:600">' + (d.uni_cnt + d.pct_cnt) + '</td>'
+      + '<td style="font-weight:600">' + (d.uni_h + d.pct_h).toLocaleString() + 'h</td>'
+      + '<td style="font-weight:600">' + (d.uni_rev + d.pct_rev).toFixed(1) + 'M</td>'
+      + '</tr>';
+  });
+}
+
+// Auto-init first tab
+initGoalCharts();
+window._goalInit = true;
 </script>
 </body>
 </html>

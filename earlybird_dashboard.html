@@ -104,20 +104,20 @@
     <p style="font-size:13px;color:#64748b;margin-bottom:24px;">운영대수 11,632대 기준 | 가동률 5% 목표 = 일 13,958시간 | 4/3~</p>
 
     <div class="kpi-row-4">
-      <div class="kpi-card"><div class="label">목표 (일 5%)</div><div class="value" style="color:#64748b">13,958h</div><div class="sub">11,632대 × 24h × 5%</div></div>
-      <div class="kpi-card"><div class="label">4/5(일) 달성</div><div class="value" style="color:#10b981">20,136h</div><div class="sub">7.22% — 목표 초과!</div></div>
-      <div class="kpi-card"><div class="label">4/6(월) 달성</div><div class="value" style="color:#f59e0b">7,194h</div><div class="sub">2.58% — 목표 52%</div></div>
-      <div class="kpi-card"><div class="label">4일 평균</div><div class="value" style="color:#2563eb">2.75%</div><div class="sub">목표의 55%</div></div>
+      <div class="kpi-card"><div class="label">목표 (일 5%)</div><div class="value" style="color:#64748b">13,958시간</div><div class="sub">11,632대 × 24h × 5%</div></div>
+      <div class="kpi-card"><div class="label">4/5(일) 달성</div><div class="value" style="color:#10b981">20,136시간</div><div class="sub">7.22% — 목표 초과!</div></div>
+      <div class="kpi-card"><div class="label">4/12(토) 예정</div><div class="value" style="color:#8b5cf6">33,671시간</div><div class="sub">12.06% — 주말 피크</div></div>
+      <div class="kpi-card"><div class="label">4월 평균 예상</div><div class="value" style="color:#2563eb">3.72%</div><div class="sub">18일 기준 일평균</div></div>
     </div>
 
     <div class="chart-container">
-      <h3>일별 목표 달성률 (5% = 13,958h 기준)</h3>
+      <h3>일별 목표 달성률 (5% = 13,958시간 기준, 확정+예정)</h3>
       <div class="chart-wrap"><canvas id="goalChart"></canvas></div>
     </div>
 
     <table class="data-table">
       <thead>
-        <tr><th>날짜</th><th>균일가(h)</th><th>균일가(%p)</th><th>상시EB(h)</th><th>상시EB(%p)</th><th>합계(h)</th><th>합계(%p)</th><th>목표 달성률</th></tr>
+        <tr><th>날짜</th><th>구분</th><th>균일가(h)</th><th>균일가(%p)</th><th>상시EB(h)</th><th>상시EB(%p)</th><th>합계(h)</th><th>합계(%p)</th><th>목표 달성률</th></tr>
       </thead>
       <tbody id="goalTableBody"></tbody>
     </table>
@@ -133,9 +133,15 @@
     <h2 style="font-size:18px;font-weight:700;margin-bottom:4px;">차종별 얼리버드 현황</h2>
     <p style="font-size:13px;color:#64748b;margin-bottom:24px;">4/3~4/6 | 4월 균일가 vs 상시 얼리버드 | car_model 기준</p>
 
-    <div class="chart-container">
-      <h3>차종별 얼리버드 이용시간 (4일 합계)</h3>
-      <div class="chart-wrap"><canvas id="carModelChart"></canvas></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
+      <div class="chart-container" style="margin-bottom:0;">
+        <h3>확정 실적 (4/3~4/6)</h3>
+        <div class="chart-wrap"><canvas id="carModelChart"></canvas></div>
+      </div>
+      <div class="chart-container" style="margin-bottom:0;">
+        <h3>파이프라인 (4/7~4/13)</h3>
+        <div class="chart-wrap"><canvas id="carModelPipelineChart"></canvas></div>
+      </div>
     </div>
 
     <table class="data-table">
@@ -1344,23 +1350,41 @@ function initGoalCharts() {
   const DP = 11632;
   const TARGET_H = DP * 24 * 0.05; // 13958.4
   const goalData = [
-    {date:'4/3', uni_h:70, pct_h:2937},
-    {date:'4/4', uni_h:688, pct_h:5252},
-    {date:'4/5', uni_h:4795, pct_h:15341},
-    {date:'4/6', uni_h:2065, pct_h:5129},
+    // actual (from profit table, returned)
+    {date:'4/3', uni_h:70, pct_h:2937, type:'actual'},
+    {date:'4/4', uni_h:688, pct_h:5252, type:'actual'},
+    {date:'4/5', uni_h:4795, pct_h:15341, type:'actual'},
+    {date:'4/6', uni_h:2065, pct_h:5129, type:'actual'},
+    // pipeline (from tianjin, expected return)
+    {date:'4/7', uni_h:772, pct_h:2889, type:'pipeline'},
+    {date:'4/8', uni_h:1336, pct_h:2669, type:'pipeline'},
+    {date:'4/9', uni_h:1308, pct_h:2176, type:'pipeline'},
+    {date:'4/10', uni_h:2196, pct_h:2585, type:'pipeline'},
+    {date:'4/11', uni_h:4822, pct_h:6368, type:'pipeline'},
+    {date:'4/12', uni_h:17400, pct_h:16271, type:'pipeline'},
+    {date:'4/13', uni_h:4642, pct_h:5341, type:'pipeline'},
+    {date:'4/14', uni_h:2541, pct_h:2890, type:'pipeline'},
+    {date:'4/15', uni_h:2373, pct_h:2269, type:'pipeline'},
+    {date:'4/16', uni_h:2339, pct_h:1950, type:'pipeline'},
+    {date:'4/17', uni_h:2383, pct_h:2354, type:'pipeline'},
+    {date:'4/18', uni_h:4730, pct_h:5242, type:'pipeline'},
+    {date:'4/19', uni_h:14083, pct_h:11950, type:'pipeline'},
+    {date:'4/20', uni_h:3322, pct_h:4394, type:'pipeline'},
   ];
 
   const labels = goalData.map(d => d.date);
-  const totalH = goalData.map(d => d.uni_h + d.pct_h);
-  const pctOfDp = goalData.map(d => (d.uni_h + d.pct_h) / (DP * 24) * 100);
+  const dp_h = DP * 24;
+  const pctOfDp = goalData.map(d => (d.uni_h + d.pct_h) / dp_h * 100);
 
   new Chart(document.getElementById('goalChart'), {
     type: 'bar',
     data: {
       labels,
       datasets: [
-        { label: '균일가', data: goalData.map(d => d.uni_h), backgroundColor: 'rgba(37,99,235,.6)', borderRadius: 4, stack: 'a' },
-        { label: '상시 EB', data: goalData.map(d => d.pct_h), backgroundColor: 'rgba(16,185,129,.6)', borderRadius: 4, stack: 'a' },
+        { label: '균일가 (확정)', data: goalData.map(d => d.type === 'actual' ? d.uni_h : 0), backgroundColor: 'rgba(37,99,235,.8)', borderRadius: 4, stack: 'a' },
+        { label: '상시EB (확정)', data: goalData.map(d => d.type === 'actual' ? d.pct_h : 0), backgroundColor: 'rgba(16,185,129,.8)', borderRadius: 4, stack: 'a' },
+        { label: '균일가 (예정)', data: goalData.map(d => d.type === 'pipeline' ? d.uni_h : 0), backgroundColor: 'rgba(37,99,235,.3)', borderColor: 'rgba(37,99,235,.5)', borderWidth: 1, borderDash: [4,4], borderRadius: 4, stack: 'a' },
+        { label: '상시EB (예정)', data: goalData.map(d => d.type === 'pipeline' ? d.pct_h : 0), backgroundColor: 'rgba(16,185,129,.3)', borderColor: 'rgba(16,185,129,.5)', borderWidth: 1, borderDash: [4,4], borderRadius: 4, stack: 'a' },
         { label: '달성률 (%)', data: pctOfDp, type: 'line', borderColor: '#f59e0b', borderWidth: 2.5, pointRadius: 5, pointBackgroundColor: '#f59e0b', yAxisID: 'y1', tension: 0.3, order: 0 },
       ]
     },
@@ -1380,7 +1404,7 @@ function initGoalCharts() {
         ctx.stroke();
         ctx.fillStyle = '#ef4444';
         ctx.font = '11px sans-serif';
-        ctx.fillText('목표 5% (13,958h)', chart.chartArea.right - 120, yPos - 6);
+        ctx.fillText('목표 5% (13,958시간)', chart.chartArea.right - 130, yPos - 6);
         ctx.restore();
       }
     }],
@@ -1390,13 +1414,15 @@ function initGoalCharts() {
         legend: { position: 'top', labels: { usePointStyle: true, padding: 14 } },
         tooltip: { callbacks: { label: ctx => {
           if (ctx.dataset.yAxisID === 'y1') return ctx.parsed.y.toFixed(2) + '%';
-          return ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString() + 'h';
+          return ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString() + '시간';
         }}}
       },
       scales: {
         x: { grid: { display: false } },
-        y: { stacked: true, title: { display: true, text: '이용시간 (h)' }, grid: { color: '#f1f5f9' }, beginAtZero: true },
-        y1: { position: 'right', title: { display: true, text: '가동률 (%)' }, grid: { drawOnChartArea: false }, min: 0, max: 10,
+        y: { stacked: true, title: { display: true, text: '이용시간' }, grid: { color: '#f1f5f9' }, beginAtZero: true,
+          ticks: { callback: v => v.toLocaleString() + '시간' }
+        },
+        y1: { position: 'right', title: { display: true, text: '가동률 (%)' }, grid: { drawOnChartArea: false }, min: 0, max: 15,
           ticks: { callback: v => v + '%' }
         }
       }
@@ -1407,19 +1433,20 @@ function initGoalCharts() {
   const tbody = document.getElementById('goalTableBody');
   goalData.forEach(d => {
     const total = d.uni_h + d.pct_h;
-    const dp_h = DP * 24;
     const uniPct = (d.uni_h / dp_h * 100).toFixed(2);
     const pctPct = (d.pct_h / dp_h * 100).toFixed(2);
     const totalPct = (total / dp_h * 100).toFixed(2);
     const achieve = (total / TARGET_H * 100).toFixed(0);
     const color = achieve >= 100 ? '#10b981' : achieve >= 50 ? '#f59e0b' : '#ef4444';
-    tbody.innerHTML += '<tr>'
+    const typeLabel = d.type === 'actual' ? '<span style="color:#10b981;font-weight:600">확정</span>' : '<span style="color:#8b5cf6;font-weight:600">예정</span>';
+    tbody.innerHTML += '<tr' + (d.type === 'pipeline' ? ' style="opacity:.75"' : '') + '>'
       + '<td style="text-align:left;font-weight:600">' + d.date + '</td>'
-      + '<td>' + d.uni_h.toLocaleString() + 'h</td>'
+      + '<td>' + typeLabel + '</td>'
+      + '<td>' + d.uni_h.toLocaleString() + '시간</td>'
       + '<td>' + uniPct + '%</td>'
-      + '<td>' + d.pct_h.toLocaleString() + 'h</td>'
+      + '<td>' + d.pct_h.toLocaleString() + '시간</td>'
       + '<td>' + pctPct + '%</td>'
-      + '<td style="font-weight:600">' + total.toLocaleString() + 'h</td>'
+      + '<td style="font-weight:600">' + total.toLocaleString() + '시간</td>'
       + '<td style="font-weight:600">' + totalPct + '%</td>'
       + '<td style="font-weight:700;color:' + color + '">' + achieve + '%</td>'
       + '</tr>';
@@ -1448,13 +1475,14 @@ function initCarModelCharts() {
 
   const labels = raw.map(d => d.m);
 
+  // Actual chart (left)
   new Chart(document.getElementById('carModelChart'), {
     type: 'bar',
     data: {
       labels,
       datasets: [
-        { label: '균일가', data: raw.map(d => d.uni_h), backgroundColor: 'rgba(37,99,235,.6)', borderRadius: 3, stack: 'a' },
-        { label: '상시 EB', data: raw.map(d => d.pct_h), backgroundColor: 'rgba(16,185,129,.6)', borderRadius: 3, stack: 'a' },
+        { label: '균일가', data: raw.map(d => d.uni_h), backgroundColor: 'rgba(37,99,235,.8)', borderRadius: 3, stack: 'a' },
+        { label: '상시 EB', data: raw.map(d => d.pct_h), backgroundColor: 'rgba(16,185,129,.8)', borderRadius: 3, stack: 'a' },
       ]
     },
     options: {
@@ -1462,10 +1490,59 @@ function initCarModelCharts() {
       responsive: true, maintainAspectRatio: false,
       plugins: {
         legend: { position: 'top', labels: { usePointStyle: true, padding: 14 } },
-        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.x.toLocaleString() + 'h' } }
+        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.x.toLocaleString() + '시간' } }
       },
       scales: {
-        x: { stacked: true, title: { display: true, text: '이용시간 (h)' }, grid: { color: '#f1f5f9' } },
+        x: { stacked: true, title: { display: true, text: '이용시간' }, grid: { color: '#f1f5f9' },
+          ticks: { callback: v => v.toLocaleString() + '시간' }
+        },
+        y: { stacked: true, grid: { display: false } }
+      }
+    }
+  });
+
+  // Pipeline car model data (4/7~4/13 aggregated)
+  const pipelineCarModel = [
+    {m:'소형SUV', uni_cnt:332, uni_h:14018, pct_cnt:206, pct_h:7475},
+    {m:'준중형', uni_cnt:191, uni_h:7812, pct_cnt:148, pct_h:5566},
+    {m:'경형', uni_cnt:40, uni_h:1696, pct_cnt:189, pct_h:6830},
+    {m:'준대형', uni_cnt:51, uni_h:2426, pct_cnt:12, pct_h:1101},
+    {m:'RV', uni_cnt:0, uni_h:0, pct_cnt:104, pct_h:3897},
+    {m:'중형SUV', uni_cnt:70, uni_h:3030, pct_cnt:50, pct_h:1855},
+    {m:'준중형SUV', uni_cnt:24, uni_h:1106, pct_cnt:30, pct_h:1305},
+    {m:'승합', uni_cnt:0, uni_h:0, pct_cnt:55, pct_h:2023},
+    {m:'준대형SUV', uni_cnt:23, uni_h:1019, pct_cnt:13, pct_h:552},
+    {m:'EV', uni_cnt:0, uni_h:0, pct_cnt:37, pct_h:1364},
+    {m:'중형', uni_cnt:13, uni_h:570, pct_cnt:22, pct_h:983},
+    {m:'수입', uni_cnt:0, uni_h:0, pct_cnt:6, pct_h:225},
+  ];
+
+  // Sort pipeline by total hours desc
+  pipelineCarModel.sort((a,b) => (b.uni_h + b.pct_h) - (a.uni_h + a.pct_h));
+
+  const pLabels = pipelineCarModel.map(d => d.m);
+
+  // Pipeline chart (right)
+  new Chart(document.getElementById('carModelPipelineChart'), {
+    type: 'bar',
+    data: {
+      labels: pLabels,
+      datasets: [
+        { label: '균일가 (예정)', data: pipelineCarModel.map(d => d.uni_h), backgroundColor: 'rgba(37,99,235,.3)', borderColor: 'rgba(37,99,235,.5)', borderWidth: 1, borderRadius: 3, stack: 'a' },
+        { label: '상시EB (예정)', data: pipelineCarModel.map(d => d.pct_h), backgroundColor: 'rgba(16,185,129,.3)', borderColor: 'rgba(16,185,129,.5)', borderWidth: 1, borderRadius: 3, stack: 'a' },
+      ]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'top', labels: { usePointStyle: true, padding: 14 } },
+        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.x.toLocaleString() + '시간' } }
+      },
+      scales: {
+        x: { stacked: true, title: { display: true, text: '이용시간' }, grid: { color: '#f1f5f9' },
+          ticks: { callback: v => v.toLocaleString() + '시간' }
+        },
         y: { stacked: true, grid: { display: false } }
       }
     }
@@ -1477,14 +1554,14 @@ function initCarModelCharts() {
     tbody.innerHTML += '<tr>'
       + '<td style="text-align:left;font-weight:600">' + d.m + '</td>'
       + '<td>' + d.uni_cnt + '</td>'
-      + '<td>' + d.uni_h.toLocaleString() + 'h</td>'
-      + '<td>' + d.uni_rev.toFixed(1) + 'M</td>'
+      + '<td>' + d.uni_h.toLocaleString() + '시간</td>'
+      + '<td>' + d.uni_rev.toFixed(1) + '백만원</td>'
       + '<td>' + d.pct_cnt + '</td>'
-      + '<td>' + d.pct_h.toLocaleString() + 'h</td>'
-      + '<td>' + d.pct_rev.toFixed(1) + 'M</td>'
+      + '<td>' + d.pct_h.toLocaleString() + '시간</td>'
+      + '<td>' + d.pct_rev.toFixed(1) + '백만원</td>'
       + '<td style="font-weight:600">' + (d.uni_cnt + d.pct_cnt) + '</td>'
-      + '<td style="font-weight:600">' + (d.uni_h + d.pct_h).toLocaleString() + 'h</td>'
-      + '<td style="font-weight:600">' + (d.uni_rev + d.pct_rev).toFixed(1) + 'M</td>'
+      + '<td style="font-weight:600">' + (d.uni_h + d.pct_h).toLocaleString() + '시간</td>'
+      + '<td style="font-weight:600">' + (d.uni_rev + d.pct_rev).toFixed(1) + '백만원</td>'
       + '</tr>';
   });
 }

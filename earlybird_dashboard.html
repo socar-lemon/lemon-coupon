@@ -1225,20 +1225,20 @@ function initCompareCharts() {
 // === Tab 6: Utilization Charts ===
 function initUtilCharts() {
   const utilData = [
-    {date:'3/23',dp:14573,dp_h:349752,op_h:112057,util:32.0,idle:68.0,eb_h:2823,eb_cnt:76,eb_util:0.81,eb_idle:1.2,cp_h:110408,cp_util:31.6},
-    {date:'3/24',dp:14570,dp_h:349680,op_h:108828,util:31.1,idle:68.9,eb_h:1741,eb_cnt:47,eb_util:0.50,eb_idle:0.7,cp_h:107503,cp_util:30.7},
-    {date:'3/25',dp:14132,dp_h:339168,op_h:115606,util:34.1,idle:65.9,eb_h:1638,eb_cnt:40,eb_util:0.48,eb_idle:0.7,cp_h:115520,cp_util:34.1},
-    {date:'3/26',dp:14072,dp_h:337728,op_h:124276,util:36.8,idle:63.2,eb_h:1901,eb_cnt:56,eb_util:0.56,eb_idle:0.9,cp_h:123164,cp_util:36.5},
-    {date:'3/27',dp:14070,dp_h:337680,op_h:141840,util:42.0,idle:58.0,eb_h:2958,eb_cnt:80,eb_util:0.88,eb_idle:1.5,cp_h:140400,cp_util:41.6},
-    {date:'3/28',dp:14071,dp_h:337704,op_h:121758,util:36.1,idle:63.9,eb_h:3772,eb_cnt:116,eb_util:1.12,eb_idle:1.7,cp_h:121036,cp_util:35.8},
-    {date:'3/29',dp:14071,dp_h:337704,op_h:174144,util:51.6,idle:48.4,eb_h:11808,eb_cnt:339,eb_util:3.50,eb_idle:7.2,cp_h:173046,cp_util:51.2},
-    {date:'3/30',dp:14069,dp_h:337656,op_h:123126,util:36.5,idle:63.5,eb_h:5306,eb_cnt:139,eb_util:1.57,eb_idle:2.5,cp_h:121661,cp_util:36.0},
-    {date:'3/31',dp:14085,dp_h:338040,op_h:120750,util:35.7,idle:64.3,eb_h:3424,eb_cnt:81,eb_util:1.01,eb_idle:1.6,cp_h:119159,cp_util:35.2},
-    {date:'4/1',dp:14084,dp_h:338016,op_h:110801,util:32.8,idle:67.2,eb_h:1915,eb_cnt:45,eb_util:0.57,eb_idle:0.8,cp_h:109581,cp_util:32.4},
-    {date:'4/2',dp:14084,dp_h:338016,op_h:123030,util:36.4,idle:63.6,eb_h:2289,eb_cnt:61,eb_util:0.68,eb_idle:1.1,cp_h:122988,cp_util:36.4},
-    {date:'4/3',dp:14209,dp_h:341016,op_h:143927,util:42.2,idle:57.8,eb_h:3007,eb_cnt:79,eb_util:0.88,eb_idle:1.5,cp_h:142969,cp_util:41.9},
-    {date:'4/4',dp:14452,dp_h:346848,op_h:124621,util:35.9,idle:64.1,eb_h:5946,eb_cnt:166,eb_util:1.71,eb_idle:2.7,cp_h:123864,cp_util:35.7},
-    {date:'4/5',dp:14452,dp_h:346848,op_h:195422,util:56.3,idle:43.7,eb_h:20166,eb_cnt:570,eb_util:5.81,eb_idle:13.3,cp_h:194686,cp_util:56.1},
+    {date:'3/23(월)',dp:14573,dp_h:349752,op_h:112057,util:32.0,idle:68.0,eb_h:2823,eb_cnt:76,eb_util:0.81,eb_idle:1.2,cp_h:110408,cp_util:31.6},
+    {date:'3/24(화)',dp:14570,dp_h:349680,op_h:108828,util:31.1,idle:68.9,eb_h:1741,eb_cnt:47,eb_util:0.50,eb_idle:0.7,cp_h:107503,cp_util:30.7},
+    {date:'3/25(수)',dp:14132,dp_h:339168,op_h:115606,util:34.1,idle:65.9,eb_h:1638,eb_cnt:40,eb_util:0.48,eb_idle:0.7,cp_h:115520,cp_util:34.1},
+    {date:'3/26(목)',dp:14072,dp_h:337728,op_h:124276,util:36.8,idle:63.2,eb_h:1901,eb_cnt:56,eb_util:0.56,eb_idle:0.9,cp_h:123164,cp_util:36.5},
+    {date:'3/27(금)',dp:14070,dp_h:337680,op_h:141840,util:42.0,idle:58.0,eb_h:2958,eb_cnt:80,eb_util:0.88,eb_idle:1.5,cp_h:140400,cp_util:41.6},
+    {date:'3/28(토)',dp:14071,dp_h:337704,op_h:121758,util:36.1,idle:63.9,eb_h:3772,eb_cnt:116,eb_util:1.12,eb_idle:1.7,cp_h:121036,cp_util:35.8},
+    {date:'3/29(일)',dp:14071,dp_h:337704,op_h:174144,util:51.6,idle:48.4,eb_h:11808,eb_cnt:339,eb_util:3.50,eb_idle:7.2,cp_h:173046,cp_util:51.2},
+    {date:'3/30(월)',dp:14069,dp_h:337656,op_h:123126,util:36.5,idle:63.5,eb_h:5306,eb_cnt:139,eb_util:1.57,eb_idle:2.5,cp_h:121661,cp_util:36.0},
+    {date:'3/31(화)',dp:14085,dp_h:338040,op_h:120750,util:35.7,idle:64.3,eb_h:3424,eb_cnt:81,eb_util:1.01,eb_idle:1.6,cp_h:119159,cp_util:35.2},
+    {date:'4/1(수)',dp:14084,dp_h:338016,op_h:110801,util:32.8,idle:67.2,eb_h:1915,eb_cnt:45,eb_util:0.57,eb_idle:0.8,cp_h:109581,cp_util:32.4},
+    {date:'4/2(목)',dp:14084,dp_h:338016,op_h:123030,util:36.4,idle:63.6,eb_h:2289,eb_cnt:61,eb_util:0.68,eb_idle:1.1,cp_h:122988,cp_util:36.4},
+    {date:'4/3(금)',dp:14209,dp_h:341016,op_h:143927,util:42.2,idle:57.8,eb_h:3007,eb_cnt:79,eb_util:0.88,eb_idle:1.5,cp_h:142969,cp_util:41.9},
+    {date:'4/4(토)',dp:14452,dp_h:346848,op_h:124621,util:35.9,idle:64.1,eb_h:5946,eb_cnt:166,eb_util:1.71,eb_idle:2.7,cp_h:123864,cp_util:35.7},
+    {date:'4/5(일)',dp:14452,dp_h:346848,op_h:195422,util:56.3,idle:43.7,eb_h:20166,eb_cnt:570,eb_util:5.81,eb_idle:13.3,cp_h:194686,cp_util:56.1},
   ];
 
   const labels = utilData.map(d => d.date);
@@ -1351,25 +1351,25 @@ function initGoalCharts() {
   const TARGET_H = DP * 24 * 0.05; // 13958.4
   const goalData = [
     // actual (from profit table, returned)
-    {date:'4/3', uni_h:70, pct_h:2937, type:'actual'},
-    {date:'4/4', uni_h:688, pct_h:5252, type:'actual'},
-    {date:'4/5', uni_h:4795, pct_h:15341, type:'actual'},
-    {date:'4/6', uni_h:2065, pct_h:5129, type:'actual'},
+    {date:'4/3(목)', uni_h:70, pct_h:2937, type:'actual'},
+    {date:'4/4(금)', uni_h:688, pct_h:5252, type:'actual'},
+    {date:'4/5(토)', uni_h:4795, pct_h:15341, type:'actual'},
+    {date:'4/6(일)', uni_h:2065, pct_h:5129, type:'actual'},
     // pipeline (from tianjin, expected return)
-    {date:'4/7', uni_h:772, pct_h:2889, type:'pipeline'},
-    {date:'4/8', uni_h:1336, pct_h:2669, type:'pipeline'},
-    {date:'4/9', uni_h:1308, pct_h:2176, type:'pipeline'},
-    {date:'4/10', uni_h:2196, pct_h:2585, type:'pipeline'},
-    {date:'4/11', uni_h:4822, pct_h:6368, type:'pipeline'},
-    {date:'4/12', uni_h:17400, pct_h:16271, type:'pipeline'},
-    {date:'4/13', uni_h:4642, pct_h:5341, type:'pipeline'},
-    {date:'4/14', uni_h:2541, pct_h:2890, type:'pipeline'},
-    {date:'4/15', uni_h:2373, pct_h:2269, type:'pipeline'},
-    {date:'4/16', uni_h:2339, pct_h:1950, type:'pipeline'},
-    {date:'4/17', uni_h:2383, pct_h:2354, type:'pipeline'},
-    {date:'4/18', uni_h:4730, pct_h:5242, type:'pipeline'},
-    {date:'4/19', uni_h:14083, pct_h:11950, type:'pipeline'},
-    {date:'4/20', uni_h:3322, pct_h:4394, type:'pipeline'},
+    {date:'4/7(월)', uni_h:772, pct_h:2889, type:'pipeline'},
+    {date:'4/8(화)', uni_h:1336, pct_h:2669, type:'pipeline'},
+    {date:'4/9(수)', uni_h:1308, pct_h:2176, type:'pipeline'},
+    {date:'4/10(목)', uni_h:2196, pct_h:2585, type:'pipeline'},
+    {date:'4/11(금)', uni_h:4822, pct_h:6368, type:'pipeline'},
+    {date:'4/12(토)', uni_h:17400, pct_h:16271, type:'pipeline'},
+    {date:'4/13(일)', uni_h:4642, pct_h:5341, type:'pipeline'},
+    {date:'4/14(월)', uni_h:2541, pct_h:2890, type:'pipeline'},
+    {date:'4/15(화)', uni_h:2373, pct_h:2269, type:'pipeline'},
+    {date:'4/16(수)', uni_h:2339, pct_h:1950, type:'pipeline'},
+    {date:'4/17(목)', uni_h:2383, pct_h:2354, type:'pipeline'},
+    {date:'4/18(금)', uni_h:4730, pct_h:5242, type:'pipeline'},
+    {date:'4/19(토)', uni_h:14083, pct_h:11950, type:'pipeline'},
+    {date:'4/20(일)', uni_h:3322, pct_h:4394, type:'pipeline'},
   ];
 
   const labels = goalData.map(d => d.date);

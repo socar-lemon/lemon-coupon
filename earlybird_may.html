@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5월 얼리버드 쿠폰 파이프라인</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.2.1/dist/chartjs-plugin-annotation.min.js"></script>
+    <style>
+        * {margin:0;padding:0;box-sizing:border-box}
+        :root {
+            --bg:#0c0e14;--card:#14161e;--border:#1e2130;
+            --text:#e2e4ed;--text2:#8b8fa3;--text3:#565972;
+            --red:#ff4d6a;--yellow:#ffb84d;--green:#34d399;--blue:#5b8cff;
+            --purple:#a78bfa;--cyan:#22d3ee;--orange:#fb923c;
+        }
+        body {background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;padding:24px 32px 48px;line-height:1.6}
+        .mono {font-family:'JetBrains Mono',monospace}
+        h1 {font-size:24px;font-weight:700;color:#fff;margin-bottom:4px}
+        .subtitle {font-size:13px;color:var(--text2);margin-bottom:24px;font-weight:400}
+        .tab-nav {display:flex;gap:4px;margin-bottom:28px;padding:4px;background:var(--card);border:1px solid var(--border);border-radius:12px;overflow-x:auto}
+        .tab-btn {font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;padding:10px 20px;background:none;border:none;color:var(--text3);cursor:pointer;border-radius:8px;transition:all .2s;white-space:nowrap}
+        .tab-btn:hover {color:var(--text2);background:rgba(91,140,255,.08)}
+        .tab-btn.active {color:#fff;background:var(--blue);box-shadow:0 2px 8px rgba(91,140,255,.3)}
+        .tab-content {display:none}
+        .tab-content.active {display:block}
+        .kpi-row {display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px}
+        .kpi-card {background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px}
+        .kpi-label {font-size:12px;color:var(--text2);margin-bottom:8px;font-weight:500}
+        .kpi-value {font-size:28px;font-weight:700;font-family:'JetBrains Mono',monospace}
+        .kpi-sub {font-size:12px;color:var(--text3);margin-top:4px}
+        .kpi-value.blue {color:var(--blue)}
+        .kpi-value.green {color:var(--green)}
+        .kpi-value.yellow {color:var(--yellow)}
+        .kpi-value.red {color:var(--red)}
+        .kpi-value.purple {color:var(--purple)}
+        .kpi-value.cyan {color:var(--cyan)}
+        .chart-section {background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:32px}
+        .chart-section h2 {font-size:15px;font-weight:600;margin-bottom:16px;color:#fff}
+        .chart-wrap {position:relative;height:360px}
+        .tbl-wrap {background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:32px}
+        .tbl-wrap h2 {font-size:15px;font-weight:600;padding:20px 24px 0;color:#fff}
+        .tbl-wrap p.desc {font-size:12px;color:var(--text2);padding:4px 24px 12px}
+        table {width:100%;border-collapse:collapse;font-size:13px}
+        thead th {background:#181a24;padding:12px 14px;text-align:right;color:var(--text2);font-weight:600;font-size:12px;border-bottom:1px solid var(--border);white-space:nowrap;position:sticky;top:0}
+        thead th:first-child {text-align:left}
+        tbody td {padding:10px 14px;text-align:right;border-bottom:1px solid rgba(30,33,48,.5);font-family:'JetBrains Mono',monospace;font-size:12px}
+        tbody td:first-child {text-align:left;font-family:'Noto Sans KR',sans-serif;font-weight:500}
+        tbody tr:hover {background:rgba(91,140,255,.04)}
+        tbody tr.total-row {background:rgba(91,140,255,.08);font-weight:700}
+        tbody tr.total-row td {border-top:2px solid var(--blue)}
+        tbody tr.peak-row {background:rgba(255,184,77,.06)}
+        .tbl-scroll {max-height:600px;overflow-y:auto}
+        .badge {display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600;font-family:'JetBrains Mono',monospace}
+        .badge-red {background:rgba(255,77,106,.12);color:var(--red)}
+        .badge-yellow {background:rgba(255,184,77,.12);color:var(--yellow)}
+        .badge-green {background:rgba(52,211,153,.12);color:var(--green)}
+        .badge-blue {background:rgba(91,140,255,.12);color:var(--blue)}
+        .badge-purple {background:rgba(167,139,250,.12);color:var(--purple)}
+        .wbr-section {background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:24px}
+        .wbr-section h3 {font-size:15px;font-weight:700;color:#fff;margin-bottom:12px}
+        .wbr-section ul {padding-left:20px;font-size:13px;color:var(--text);line-height:2}
+        .wbr-section li::marker {color:var(--blue)}
+        .action-item {background:rgba(91,140,255,.06);border-left:3px solid var(--blue);padding:12px 16px;border-radius:0 8px 8px 0;margin-bottom:8px;font-size:13px}
+        .action-item.warn {border-left-color:var(--yellow);background:rgba(255,184,77,.06)}
+        .action-item.danger {border-left-color:var(--red);background:rgba(255,77,106,.06)}
+        .insight-grid {display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:32px}
+        .insight-card {background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px}
+        .insight-card h4 {font-size:13px;font-weight:600;color:var(--text2);margin-bottom:8px}
+        .insight-card .val {font-size:22px;font-weight:700;font-family:'JetBrains Mono',monospace;margin-bottom:4px}
+        .insight-card .sub {font-size:12px;color:var(--text3)}
+        .holiday-bar {display:flex;gap:2px;margin-bottom:16px;height:40px;align-items:flex-end}
+        .holiday-bar div {background:var(--blue);border-radius:4px 4px 0 0;min-width:40px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff}
+        @media(max-width:900px) {
+            .kpi-row {grid-template-columns:repeat(2,1fr)}
+            .insight-grid {grid-template-columns:1fr}
+            body {padding:16px}
+        }
+    </style>
+</head>
+<body>
+    <h1>5월 얼리버드 쿠폰 파이프라인</h1>
+    <p class="subtitle">예약확정 기준 | 반납 예상일 기준 집계 | 2026-05-01 ~ 2026-05-31 | 운영대수 13,212대 | dp_h 317,088h/day</p>
+
+    <div class="tab-nav">
+        <button class="tab-btn active" onclick="switchTab('overview')">Overview</button>
+        <button class="tab-btn" onclick="switchTab('daily')">일별추이</button>
+        <button class="tab-btn" onclick="switchTab('weekly')">주차별</button>
+        <button class="tab-btn" onclick="switchTab('holiday')">연휴분석</button>
+    </div>
+
+    <!-- ===== OVERVIEW ===== -->
+    <div id="tab-overview" class="tab-content active">
+        <div class="kpi-row">
+            <div class="kpi-card">
+                <div class="kpi-label">총 파이프라인 건수</div>
+                <div class="kpi-value blue">2,531</div>
+                <div class="kpi-sub">4주EB 2,481 + 2주EB 50 + 균일가 0</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">예상 매출</div>
+                <div class="kpi-value green">450.5백만</div>
+                <div class="kpi-sub">건당 가중평균 ~178,000원</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">예상 이용시간</div>
+                <div class="kpi-value yellow">117,289h</div>
+                <div class="kpi-sub">4주EB 115,491h / 2주EB 1,798h</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">일평균 가동률 기여</div>
+                <div class="kpi-value purple">1.19%</div>
+                <div class="kpi-sub">117,289h / 31일 / 317,088h</div>
+            </div>
+        </div>
+
+        <!-- 파이프라인 구성 차트 -->
+        <div class="chart-section">
+            <h2>EB 유형별 파이프라인 구성</h2>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+                <div class="chart-wrap" style="height:280px"><canvas id="pieCount"></canvas></div>
+                <div class="chart-wrap" style="height:280px"><canvas id="pieHours"></canvas></div>
+            </div>
+        </div>
+
+        <!-- 인사이트 -->
+        <div class="wbr-section">
+            <h3>핵심 인사이트</h3>
+            <div class="action-item danger"><strong>[균일가 미런칭]</strong> 5월 균일가 0건 — 아직 런칭되지 않음. 균일가는 평일 가동률 핵심 레버. 빠른 런칭 필요</div>
+            <div class="action-item warn"><strong>[2주EB 고갈]</strong> 2주EB 50건(2.0%)으로 사실상 소진. W19 이후 2건만 존재. 5월 중순 이후 신규 공급 검토 필요</div>
+            <div class="action-item"><strong>[4주EB 집중]</strong> 전체 파이프라인의 98.0%가 4주EB. 건당 매출 176,798원, 일요일 반납 집중 패턴 뚜렷 (5/3, 5/10, 5/17, 5/24, 5/25, 5/31)</div>
+            <div class="action-item warn"><strong>[연휴 피크]</strong> 5/1~5/5 연휴 5일간 1,126건(44.5%) 집중. 5/3(일) 단일 최대 397건/18,924h — 반납 병목 주의</div>
+            <div class="action-item"><strong>[일평균 가동률]</strong> EB 파이프라인만으로 일평균 1.19% 기여 (목표 5% 대비 23.8%). 나머지 3.81%p는 일반/타겟/패스포트에서 충당 필요</div>
+        </div>
+    </div>
+
+    <!-- ===== 일별추이 ===== -->
+    <div id="tab-daily" class="tab-content">
+        <div class="chart-section">
+            <h2>일별 반납 예상 건수 (Stacked: 2주EB + 4주EB)</h2>
+            <div class="chart-wrap"><canvas id="dailyCountChart"></canvas></div>
+        </div>
+
+        <div class="chart-section">
+            <h2>일별 이용시간 추이 (5% 목표선 = 15,854h/day)</h2>
+            <div class="chart-wrap"><canvas id="dailyHoursChart"></canvas></div>
+        </div>
+
+        <!-- 일별 상세 테이블 -->
+        <div class="tbl-wrap">
+            <h2>일별 상세 데이터</h2>
+            <p class="desc">반납 예상일 기준 | 피크일 하이라이트</p>
+            <div class="tbl-scroll">
+                <table id="dailyTable">
+                    <thead>
+                        <tr>
+                            <th>날짜</th>
+                            <th>요일</th>
+                            <th>2주EB 건수</th>
+                            <th>2주EB 시간</th>
+                            <th>4주EB 건수</th>
+                            <th>4주EB 시간</th>
+                            <th>합계 건수</th>
+                            <th>합계 시간</th>
+                            <th>가동률 기여</th>
+                            <th>비고</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dailyTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 주차별 ===== -->
+    <div id="tab-weekly" class="tab-content">
+        <div class="kpi-row">
+            <div class="kpi-card">
+                <div class="kpi-label">최대 주차</div>
+                <div class="kpi-value blue">W18</div>
+                <div class="kpi-sub">890건 / 43,785h</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">최소 주차</div>
+                <div class="kpi-value yellow">W20</div>
+                <div class="kpi-sub">260건 / 11,791h</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">주간 평균</div>
+                <div class="kpi-value green">506건</div>
+                <div class="kpi-sub">23,458h / 5주 평균</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">W18/W20 편차</div>
+                <div class="kpi-value red">3.4x</div>
+                <div class="kpi-sub">주차간 불균형 심각</div>
+            </div>
+        </div>
+
+        <div class="chart-section">
+            <h2>주차별 건수 / 이용시간</h2>
+            <div class="chart-wrap"><canvas id="weeklyChart"></canvas></div>
+        </div>
+
+        <div class="tbl-wrap">
+            <h2>주차별 요약</h2>
+            <p class="desc">예약확정 기준, 반납 예상일 기준 집계</p>
+            <div class="tbl-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>주차</th>
+                            <th>기간</th>
+                            <th>2주EB 건수</th>
+                            <th>2주EB 시간</th>
+                            <th>4주EB 건수</th>
+                            <th>4주EB 시간</th>
+                            <th>합계 건수</th>
+                            <th>합계 시간</th>
+                            <th>비중</th>
+                            <th>예상 매출</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>W17</td><td>5/1~3</td>
+                            <td>30</td><td>1,145</td><td>613</td><td>26,734</td>
+                            <td><strong>643</strong></td><td><strong>27,879</strong></td>
+                            <td><span class="badge badge-blue">25.4%</span></td>
+                            <td>114.5백만</td>
+                        </tr>
+                        <tr>
+                            <td>W18</td><td>5/4~10</td>
+                            <td>29</td><td>1,062</td><td>861</td><td>42,723</td>
+                            <td><strong>890</strong></td><td><strong>43,785</strong></td>
+                            <td><span class="badge badge-blue">35.2%</span></td>
+                            <td>158.4백만</td>
+                        </tr>
+                        <tr>
+                            <td>W19</td><td>5/11~17</td>
+                            <td>2</td><td>71</td><td>405</td><td>17,131</td>
+                            <td><strong>407</strong></td><td><strong>17,202</strong></td>
+                            <td><span class="badge badge-yellow">16.1%</span></td>
+                            <td>72.4백만</td>
+                        </tr>
+                        <tr>
+                            <td>W20</td><td>5/18~24</td>
+                            <td>0</td><td>0</td><td>260</td><td>11,791</td>
+                            <td><strong>260</strong></td><td><strong>11,791</strong></td>
+                            <td><span class="badge badge-yellow">10.3%</span></td>
+                            <td>46.3백만</td>
+                        </tr>
+                        <tr>
+                            <td>W21</td><td>5/25~31</td>
+                            <td>0</td><td>0</td><td>418</td><td>21,626</td>
+                            <td><strong>418</strong></td><td><strong>21,626</strong></td>
+                            <td><span class="badge badge-yellow">16.5%</span></td>
+                            <td>74.4백만</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td>합계</td><td>5/1~31</td>
+                            <td>61*</td><td>2,278*</td><td>2,557*</td><td>120,005*</td>
+                            <td><strong>2,531</strong></td><td><strong>117,289</strong></td>
+                            <td><span class="badge badge-green">100%</span></td>
+                            <td>450.5백만</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 연휴분석 ===== -->
+    <div id="tab-holiday" class="tab-content">
+        <div class="kpi-row">
+            <div class="kpi-card">
+                <div class="kpi-label">연휴 기간 (5/1~5/5)</div>
+                <div class="kpi-value blue">1,126건</div>
+                <div class="kpi-sub">전체 대비 44.5%</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">연휴 이용시간</div>
+                <div class="kpi-value yellow">54,965h</div>
+                <div class="kpi-sub">전체 대비 46.9%</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">피크일 (5/3 일)</div>
+                <div class="kpi-value red">397건</div>
+                <div class="kpi-sub">18,924h / 가동률 5.97%</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">연휴 예상 매출</div>
+                <div class="kpi-value green">200.4백만</div>
+                <div class="kpi-sub">5일간 집중</div>
+            </div>
+        </div>
+
+        <div class="chart-section">
+            <h2>연휴 5일간 일별 건수 vs 비연휴 일평균</h2>
+            <div class="chart-wrap"><canvas id="holidayChart"></canvas></div>
+        </div>
+
+        <div class="tbl-wrap">
+            <h2>연휴 일별 상세</h2>
+            <p class="desc">5/1(목) ~ 5/5(월, 어린이날) 반납 예상 기준</p>
+            <div class="tbl-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>날짜</th>
+                            <th>요일</th>
+                            <th>2주EB</th>
+                            <th>4주EB</th>
+                            <th>합계 건수</th>
+                            <th>합계 시간</th>
+                            <th>가동률 기여</th>
+                            <th>이벤트</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>5/1</td><td>목</td><td>7건 / 273h</td><td>38건 / 1,602h</td>
+                            <td><strong>45</strong></td><td><strong>1,875</strong></td>
+                            <td>0.59%</td><td><span class="badge badge-blue">근로자의 날</span></td>
+                        </tr>
+                        <tr>
+                            <td>5/2</td><td>금</td><td>13건 / 469h</td><td>188건 / 6,612h</td>
+                            <td><strong>201</strong></td><td><strong>7,081</strong></td>
+                            <td>2.23%</td><td><span class="badge badge-yellow">샌드위치</span></td>
+                        </tr>
+                        <tr class="peak-row">
+                            <td>5/3</td><td>일</td><td>10건 / 404h</td><td>387건 / 18,520h</td>
+                            <td><strong>397</strong></td><td><strong>18,924</strong></td>
+                            <td><span class="badge badge-red">5.97%</span></td><td><span class="badge badge-red">연휴 피크</span></td>
+                        </tr>
+                        <tr class="peak-row">
+                            <td>5/4</td><td>월</td><td>9건 / 434h</td><td>260건 / 14,225h</td>
+                            <td><strong>269</strong></td><td><strong>14,659</strong></td>
+                            <td><span class="badge badge-yellow">4.62%</span></td><td><span class="badge badge-yellow">대체휴일</span></td>
+                        </tr>
+                        <tr>
+                            <td>5/5</td><td>화</td><td>3건 / 128h</td><td>224건 / 13,232h</td>
+                            <td><strong>227</strong></td><td><strong>13,360</strong></td>
+                            <td>4.21%</td><td><span class="badge badge-purple">어린이날</span></td>
+                        </tr>
+                        <tr class="total-row">
+                            <td>합계</td><td>5일</td><td>42건 / 1,708h</td><td>1,097건 / 54,191h</td>
+                            <td><strong>1,126*</strong></td><td><strong>54,965*</strong></td>
+                            <td>avg 3.47%</td><td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="wbr-section">
+            <h3>연휴 피크 분석</h3>
+            <ul>
+                <li><strong>5/3(일) 단일 최대</strong>: 397건 / 18,924h — EB만으로 가동률 5.97% (일일 목표 5% 초과). 일요일 반납 집중 패턴</li>
+                <li><strong>5/3~5/5 3일간</strong>: 893건(35.3%) / 46,943h — 전체 파이프라인의 1/3 이상이 이 3일에 집중</li>
+                <li><strong>반납 병목 리스크</strong>: 5/3 387건 4주EB 반납 → 차량 수거/세차/재배차 운영 부담 극대화</li>
+                <li><strong>2주EB 연휴 소진</strong>: 연휴 5일간 42건으로 전체 2주EB(50건)의 84% 소진. 이후 잔여 8건뿐</li>
+            </ul>
+        </div>
+
+        <div class="wbr-section">
+            <h3>연휴 대응 액션</h3>
+            <div class="action-item danger"><strong>[반납 운영]</strong> 5/3(일) 387건 4주EB 반납 — 수거/세차 인력 사전 배치. 반납 시간대 분산 유도 검토</div>
+            <div class="action-item warn"><strong>[가동률]</strong> 5/3~5/5 EB만으로 가동률 4~6% — 일반/타겟 쿠폰 투입량 조절하여 과잉 할인 방지</div>
+            <div class="action-item"><strong>[재배차]</strong> 5/3 대량 반납 차량을 5/4~5/5 어린이날 수요에 즉시 재배차 연계</div>
+        </div>
+    </div>
+
+    <script>
+    // ===== DATA =====
+    const DAILY = [
+        {d:'5/1', dow:'목',e2c:7,e2h:273,e4c:38,e4h:1602,note:'근로자의 날'},
+        {d:'5/2', dow:'금',e2c:13,e2h:469,e4c:188,e4h:6612,note:''},
+        {d:'5/3', dow:'일',e2c:10,e2h:404,e4c:387,e4h:18520,note:'연휴 피크'},
+        {d:'5/4', dow:'월',e2c:9,e2h:434,e4c:260,e4h:14225,note:''},
+        {d:'5/5', dow:'화',e2c:3,e2h:128,e4c:224,e4h:13232,note:'어린이날'},
+        {d:'5/6', dow:'수',e2c:3,e2h:94,e4c:42,e4h:2642,note:''},
+        {d:'5/7', dow:'목',e2c:1,e2h:24,e4c:30,e4h:1157,note:''},
+        {d:'5/8', dow:'금',e2c:5,e2h:135,e4c:33,e4h:1615,note:''},
+        {d:'5/9', dow:'토',e2c:1,e2h:26,e4c:53,e4h:1898,note:''},
+        {d:'5/10',dow:'일',e2c:7,e2h:221,e4c:219,e4h:7953,note:''},
+        {d:'5/11',dow:'월',e2c:2,e2h:71,e4c:67,e4h:2595,note:''},
+        {d:'5/12',dow:'화',e2c:0,e2h:0,e4c:40,e4h:1653,note:''},
+        {d:'5/13',dow:'수',e2c:0,e2h:0,e4c:29,e4h:1687,note:''},
+        {d:'5/14',dow:'목',e2c:0,e2h:0,e4c:31,e4h:1373,note:''},
+        {d:'5/15',dow:'금',e2c:0,e2h:0,e4c:31,e4h:1381,note:''},
+        {d:'5/16',dow:'토',e2c:0,e2h:0,e4c:43,e4h:1937,note:''},
+        {d:'5/17',dow:'일',e2c:0,e2h:0,e4c:164,e4h:6505,note:''},
+        {d:'5/18',dow:'월',e2c:0,e2h:0,e4c:59,e4h:2760,note:''},
+        {d:'5/19',dow:'화',e2c:0,e2h:0,e4c:23,e4h:1071,note:''},
+        {d:'5/20',dow:'수',e2c:0,e2h:0,e4c:16,e4h:721,note:''},
+        {d:'5/21',dow:'목',e2c:0,e2h:0,e4c:11,e4h:401,note:''},
+        {d:'5/22',dow:'금',e2c:0,e2h:0,e4c:23,e4h:1157,note:''},
+        {d:'5/23',dow:'토',e2c:0,e2h:0,e4c:22,e4h:1495,note:''},
+        {d:'5/24',dow:'일',e2c:0,e2h:0,e4c:106,e4h:4186,note:''},
+        {d:'5/25',dow:'일',e2c:0,e2h:0,e4c:251,e4h:12621,note:'피크'},
+        {d:'5/26',dow:'월',e2c:0,e2h:0,e4c:35,e4h:2062,note:''},
+        {d:'5/27',dow:'화',e2c:0,e2h:0,e4c:17,e4h:1240,note:''},
+        {d:'5/28',dow:'수',e2c:0,e2h:0,e4c:10,e4h:855,note:''},
+        {d:'5/29',dow:'목',e2c:0,e2h:0,e4c:19,e4h:936,note:''},
+        {d:'5/30',dow:'금',e2c:0,e2h:0,e4c:15,e4h:566,note:''},
+        {d:'5/31',dow:'일',e2c:0,e2h:0,e4c:71,e4h:3347,note:''},
+    ];
+
+    const DP_H = 317088;
+    const TARGET_5PCT = 15854;
+    const fmt = n => n.toLocaleString('ko-KR');
+
+    // ===== TAB =====
+    function switchTab(id) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById('tab-' + id).classList.add('active');
+        event.target.classList.add('active');
+    }
+
+    // ===== CHART DEFAULTS =====
+    Chart.defaults.color = '#8b8fa3';
+    Chart.defaults.borderColor = '#1e2130';
+    Chart.defaults.font.family = "'JetBrains Mono', monospace";
+    Chart.defaults.font.size = 11;
+
+    // ===== PIE CHARTS =====
+    new Chart(document.getElementById('pieCount'), {
+        type: 'doughnut',
+        data: {
+            labels: ['4주EB', '2주EB', '균일가'],
+            datasets: [{
+                data: [2481, 50, 0],
+                backgroundColor: ['#5b8cff', '#a78bfa', '#565972'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+                title: { display: true, text: '건수 구성', color: '#e2e4ed', font: { size: 13 } },
+                legend: { position: 'bottom', labels: { padding: 16 } }
+            }
+        }
+    });
+
+    new Chart(document.getElementById('pieHours'), {
+        type: 'doughnut',
+        data: {
+            labels: ['4주EB', '2주EB', '균일가'],
+            datasets: [{
+                data: [115491, 1798, 0],
+                backgroundColor: ['#5b8cff', '#a78bfa', '#565972'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+                title: { display: true, text: '이용시간 구성', color: '#e2e4ed', font: { size: 13 } },
+                legend: { position: 'bottom', labels: { padding: 16 } }
+            }
+        }
+    });
+
+    // ===== DAILY COUNT CHART =====
+    const labels = DAILY.map(d => d.d);
+    new Chart(document.getElementById('dailyCountChart'), {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: '2주EB',
+                    data: DAILY.map(d => d.e2c),
+                    backgroundColor: '#a78bfa',
+                    borderRadius: 2,
+                },
+                {
+                    label: '4주EB',
+                    data: DAILY.map(d => d.e4c),
+                    backgroundColor: '#5b8cff',
+                    borderRadius: 2,
+                }
+            ]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            scales: {
+                x: { stacked: true, grid: { display: false } },
+                y: { stacked: true, title: { display: true, text: '건수' } }
+            },
+            plugins: {
+                legend: { position: 'top' },
+                tooltip: {
+                    callbacks: {
+                        afterBody: function(ctx) {
+                            const i = ctx[0].dataIndex;
+                            const d = DAILY[i];
+                            return `합계: ${d.e2c + d.e4c}건 (${d.dow})${d.note ? ' / ' + d.note : ''}`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // ===== DAILY HOURS CHART =====
+    new Chart(document.getElementById('dailyHoursChart'), {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: '2주EB',
+                    data: DAILY.map(d => d.e2h),
+                    backgroundColor: '#a78bfa',
+                    borderRadius: 2,
+                },
+                {
+                    label: '4주EB',
+                    data: DAILY.map(d => d.e4h),
+                    backgroundColor: '#5b8cff',
+                    borderRadius: 2,
+                }
+            ]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            scales: {
+                x: { stacked: true, grid: { display: false } },
+                y: {
+                    stacked: true,
+                    title: { display: true, text: '이용시간(h)' },
+                    max: 22000
+                }
+            },
+            plugins: {
+                legend: { position: 'top' },
+                annotation: {
+                    annotations: {
+                        target: {
+                            type: 'line',
+                            yMin: TARGET_5PCT,
+                            yMax: TARGET_5PCT,
+                            borderColor: '#ff4d6a',
+                            borderWidth: 2,
+                            borderDash: [6, 4],
+                            label: {
+                                display: true,
+                                content: '5% 목표 (15,854h)',
+                                position: 'start',
+                                backgroundColor: 'rgba(255,77,106,.15)',
+                                color: '#ff4d6a',
+                                font: { size: 11 }
+                            }
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        afterBody: function(ctx) {
+                            const i = ctx[0].dataIndex;
+                            const d = DAILY[i];
+                            const total = d.e2h + d.e4h;
+                            const pct = (total / DP_H * 100).toFixed(2);
+                            return `합계: ${fmt(total)}h (가동률 ${pct}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // ===== DAILY TABLE =====
+    const tbody = document.getElementById('dailyTableBody');
+    DAILY.forEach(d => {
+        const tc = d.e2c + d.e4c;
+        const th = d.e2h + d.e4h;
+        const pct = (th / DP_H * 100).toFixed(2);
+        const isPeak = tc >= 200;
+        const tr = document.createElement('tr');
+        if (isPeak) tr.classList.add('peak-row');
+        tr.innerHTML = `
+            <td>${d.d}</td>
+            <td>${d.dow}</td>
+            <td>${d.e2c || '-'}</td>
+            <td>${d.e2h ? fmt(d.e2h) : '-'}</td>
+            <td>${fmt(d.e4c)}</td>
+            <td>${fmt(d.e4h)}</td>
+            <td><strong>${fmt(tc)}</strong></td>
+            <td><strong>${fmt(th)}</strong></td>
+            <td>${pct}%</td>
+            <td>${d.note ? '<span class="badge badge-yellow">' + d.note + '</span>' : d.dow === '일' ? '<span class="badge badge-blue">일요일</span>' : ''}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+
+    // Total row
+    const totalRow = document.createElement('tr');
+    totalRow.classList.add('total-row');
+    const te2c = DAILY.reduce((s,d) => s + d.e2c, 0);
+    const te2h = DAILY.reduce((s,d) => s + d.e2h, 0);
+    const te4c = DAILY.reduce((s,d) => s + d.e4c, 0);
+    const te4h = DAILY.reduce((s,d) => s + d.e4h, 0);
+    totalRow.innerHTML = `
+        <td>합계</td><td>31일</td>
+        <td>${fmt(te2c)}</td><td>${fmt(te2h)}</td>
+        <td>${fmt(te4c)}</td><td>${fmt(te4h)}</td>
+        <td><strong>${fmt(te2c+te4c)}</strong></td>
+        <td><strong>${fmt(te2h+te4h)}</strong></td>
+        <td>${((te2h+te4h)/31/DP_H*100).toFixed(2)}%</td>
+        <td></td>
+    `;
+    tbody.appendChild(totalRow);
+
+    // ===== WEEKLY CHART =====
+    new Chart(document.getElementById('weeklyChart'), {
+        type: 'bar',
+        data: {
+            labels: ['W17 (5/1~3)', 'W18 (5/4~10)', 'W19 (5/11~17)', 'W20 (5/18~24)', 'W21 (5/25~31)'],
+            datasets: [
+                {
+                    label: '건수',
+                    data: [643, 890, 407, 260, 418],
+                    backgroundColor: '#5b8cff',
+                    borderRadius: 4,
+                    yAxisID: 'y'
+                },
+                {
+                    label: '이용시간(h)',
+                    data: [27879, 43785, 17202, 11791, 21626],
+                    type: 'line',
+                    borderColor: '#ffb84d',
+                    backgroundColor: 'rgba(255,184,77,.1)',
+                    pointBackgroundColor: '#ffb84d',
+                    pointRadius: 5,
+                    tension: 0.3,
+                    fill: true,
+                    yAxisID: 'y1'
+                }
+            ]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            scales: {
+                y: { position: 'left', title: { display: true, text: '건수' }, grid: { color: 'rgba(30,33,48,.5)' } },
+                y1: { position: 'right', title: { display: true, text: '이용시간(h)' }, grid: { display: false } }
+            },
+            plugins: { legend: { position: 'top' } }
+        }
+    });
+
+    // ===== HOLIDAY CHART =====
+    const holidayDays = DAILY.slice(0, 5);
+    const nonHolidayDays = DAILY.slice(5);
+    const nonHolidayAvg = nonHolidayDays.reduce((s,d) => s + d.e2c + d.e4c, 0) / nonHolidayDays.length;
+
+    new Chart(document.getElementById('holidayChart'), {
+        type: 'bar',
+        data: {
+            labels: ['5/1(목)\n근로자의날', '5/2(금)', '5/3(일)\n피크', '5/4(월)', '5/5(화)\n어린이날'],
+            datasets: [
+                {
+                    label: '연휴 건수',
+                    data: holidayDays.map(d => d.e2c + d.e4c),
+                    backgroundColor: ['#5b8cff','#5b8cff','#ff4d6a','#ffb84d','#a78bfa'],
+                    borderRadius: 4,
+                },
+                {
+                    label: '비연휴 일평균',
+                    data: Array(5).fill(Math.round(nonHolidayAvg)),
+                    type: 'line',
+                    borderColor: '#565972',
+                    borderDash: [6, 4],
+                    pointRadius: 0,
+                    borderWidth: 2,
+                }
+            ]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            scales: {
+                x: { grid: { display: false } },
+                y: { title: { display: true, text: '건수' } }
+            },
+            plugins: { legend: { position: 'top' } }
+        }
+    });
+
+    </script>
+</body>
+</html>

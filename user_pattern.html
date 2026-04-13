@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>쿠폰 이용자 패턴 분석</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {margin:0;padding:0;box-sizing:border-box}
+        :root {
+            --bg:#0c0e14;--card:#14161e;--border:#1e2130;
+            --text:#e2e4ed;--text2:#8b8fa3;--text3:#565972;
+            --red:#ff4d6a;--yellow:#ffb84d;--green:#34d399;--blue:#5b8cff;
+            --purple:#a78bfa;--cyan:#22d3ee;
+        }
+        body {background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;padding:24px 32px 48px;line-height:1.6}
+        .mono {font-family:'JetBrains Mono',monospace}
+        h1 {font-size:24px;font-weight:700;color:#fff;margin-bottom:4px}
+        .subtitle {font-size:13px;color:var(--text2);margin-bottom:24px;font-weight:400}
+        .tab-nav {display:flex;gap:4px;margin-bottom:28px;padding:4px;background:var(--card);border:1px solid var(--border);border-radius:12px;overflow-x:auto}
+        .tab-btn {font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;padding:10px 20px;background:none;border:none;color:var(--text3);cursor:pointer;border-radius:8px;transition:all .2s;white-space:nowrap}
+        .tab-btn:hover {color:var(--text2);background:rgba(91,140,255,.08)}
+        .tab-btn.active {color:#fff;background:var(--blue);box-shadow:0 2px 8px rgba(91,140,255,.3)}
+        .tab-content {display:none}
+        .tab-content.active {display:block}
+        .kpi-row {display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px}
+        .kpi-card {background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px}
+        .kpi-label {font-size:12px;color:var(--text2);margin-bottom:8px;font-weight:500}
+        .kpi-value {font-size:28px;font-weight:700;font-family:'JetBrains Mono',monospace}
+        .kpi-sub {font-size:12px;color:var(--text3);margin-top:4px}
+        .kpi-value.blue {color:var(--blue)}
+        .kpi-value.green {color:var(--green)}
+        .kpi-value.yellow {color:var(--yellow)}
+        .kpi-value.red {color:var(--red)}
+        .kpi-value.purple {color:var(--purple)}
+        .kpi-value.cyan {color:var(--cyan)}
+        .chart-section {background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:32px}
+        .chart-section h2 {font-size:15px;font-weight:600;margin-bottom:16px;color:#fff}
+        .chart-wrap {position:relative;height:320px}
+        .chart-grid {display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px}
+        .chart-grid .chart-section {margin-bottom:0}
+        .tbl-wrap {background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:32px}
+        .tbl-wrap h2 {font-size:15px;font-weight:600;padding:20px 24px 0;color:#fff}
+        .tbl-wrap p.desc {font-size:12px;color:var(--text2);padding:4px 24px 12px}
+        table {width:100%;border-collapse:collapse;font-size:13px}
+        thead th {background:#181a24;padding:12px 14px;text-align:right;color:var(--text2);font-weight:600;font-size:12px;border-bottom:1px solid var(--border);white-space:nowrap;position:sticky;top:0}
+        thead th:first-child {text-align:left}
+        tbody td {padding:10px 14px;text-align:right;border-bottom:1px solid rgba(30,33,48,.5);font-family:'JetBrains Mono',monospace;font-size:12px}
+        tbody td:first-child {text-align:left;font-family:'Noto Sans KR',sans-serif;font-weight:500}
+        tbody tr:hover {background:rgba(91,140,255,.04)}
+        .tbl-scroll {max-height:600px;overflow-y:auto}
+        .badge {display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600;font-family:'JetBrains Mono',monospace}
+        .badge-red {background:rgba(255,77,106,.12);color:var(--red)}
+        .badge-yellow {background:rgba(255,184,77,.12);color:var(--yellow)}
+        .badge-green {background:rgba(52,211,153,.12);color:var(--green)}
+        .badge-blue {background:rgba(91,140,255,.12);color:var(--blue)}
+        .up {color:var(--green)}.down {color:var(--red)}.flat {color:var(--text2)}
+        .comment-box {background:var(--card);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:0 12px 12px 0;padding:20px 24px;margin-bottom:32px;font-size:13px;color:var(--text);line-height:1.8}
+        .comment-box strong {color:#fff}
+        .heatmap-wrap {background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:32px}
+        .heatmap-wrap h2 {font-size:15px;font-weight:600;padding:20px 24px 12px;color:#fff}
+        .heatmap-table {width:100%;border-collapse:collapse}
+        .heatmap-table th {background:#181a24;padding:12px 14px;text-align:center;color:var(--text2);font-weight:600;font-size:12px;border-bottom:1px solid var(--border)}
+        .heatmap-table td {padding:14px 10px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;border-bottom:1px solid rgba(30,33,48,.5)}
+        .heatmap-table td:first-child {font-family:'Noto Sans KR',sans-serif;color:var(--text2);font-weight:600}
+        .doughnut-wrap {position:relative;height:320px;max-width:400px;margin:0 auto}
+        @media(max-width:900px) {
+            .kpi-row {grid-template-columns:repeat(2,1fr)}
+            .chart-grid {grid-template-columns:1fr}
+            body {padding:16px}
+        }
+    </style>
+</head>
+<body>
+    <h1>쿠폰 이용자 패턴 분석</h1>
+    <p class="subtitle">2026년 1~4월 쿠폰 예약 데이터 기준 | 총 934,522건 | 단위: 백만원, 원 | GPM 목표 25%</p>
+
+    <div class="tab-nav">
+        <button class="tab-btn active" onclick="switchTab('leadtime')">예약리드타임</button>
+        <button class="tab-btn" onclick="switchTab('dowhour')">요일/시간대</button>
+        <button class="tab-btn" onclick="switchTab('duration')">이용시간</button>
+        <button class="tab-btn" onclick="switchTab('heatmap')">히트맵</button>
+        <button class="tab-btn" onclick="switchTab('monthly')">월별추이</button>
+    </div>
+
+    <!-- Tab 1: 예약리드타임 -->
+    <div id="tab-leadtime" class="tab-content active">
+        <div class="kpi-row">
+            <div class="kpi-card">
+                <div class="kpi-label">즉시예약 비중 (1h 미만)</div>
+                <div class="kpi-value yellow">23%</div>
+                <div class="kpi-sub">215,360건 / GPM -3.6%</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">당일예약 비중 (~1일)</div>
+                <div class="kpi-value blue">77%</div>
+                <div class="kpi-sub">719,276건 (즉시+1일)</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">사전예약 GPM (1~4주)</div>
+                <div class="kpi-value green">30%+</div>
+                <div class="kpi-sub">건당매출 137,806~158,740원</div>
+            </div>
+        </div>
+        <div class="chart-grid">
+            <div class="chart-section">
+                <h2>리드타임별 건수 + GPM</h2>
+                <div class="chart-wrap"><canvas id="ltCntGpm"></canvas></div>
+            </div>
+            <div class="chart-section">
+                <h2>리드타임별 건당매출 + 평균이용시간</h2>
+                <div class="chart-wrap"><canvas id="ltRpuHour"></canvas></div>
+            </div>
+        </div>
+        <div class="tbl-wrap">
+            <h2>리드타임 구간별 상세</h2>
+            <div class="tbl-scroll">
+                <table id="ltTable">
+                    <thead><tr><th>구간</th><th>건수</th><th>매출(백만)</th><th>GPM(%)</th><th>건당매출</th><th>평균이용(h)</th></tr></thead>
+                    <tbody id="ltBody"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="comment-box">
+            <strong>Insight |</strong> 리드타임이 길수록 건당매출/GPM/이용시간 모두 상승. 즉시예약(23%) GPM -3.6% 적자, 1~2주 사전예약 GPM 30.1%. 사전예약 비중 확대가 수익성 개선의 핵심 레버. 얼리버드(2~4주) 구간이 GPM 32.1%로 최고효율.
+        </div>
+    </div>
+
+    <!-- Tab 2: 요일/시간대 -->
+    <div id="tab-dowhour" class="tab-content">
+        <div class="kpi-row">
+            <div class="kpi-card">
+                <div class="kpi-label">토요일 건당매출 (최고)</div>
+                <div class="kpi-value green">95,618</div>
+                <div class="kpi-sub">150,447건 / 매출 143.9억</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">목요일 건당매출 (최저)</div>
+                <div class="kpi-value red">64,884</div>
+                <div class="kpi-sub">140,337건 / 매출 91.1억</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">월요일 GPM (최고)</div>
+                <div class="kpi-value blue">17.3%</div>
+                <div class="kpi-sub">123,070건 / 건당 72,063원</div>
+            </div>
+        </div>
+        <div class="chart-section">
+            <h2>요일별 건수 + 매출</h2>
+            <div class="chart-wrap"><canvas id="dowChart"></canvas></div>
+        </div>
+        <div class="chart-grid">
+            <div class="chart-section">
+                <h2>시간대별 건수 분포 (24h)</h2>
+                <div class="chart-wrap"><canvas id="hourCntChart"></canvas></div>
+            </div>
+            <div class="chart-section">
+                <h2>시간대별 건당매출 (24h)</h2>
+                <div class="chart-wrap"><canvas id="hourRpuChart"></canvas></div>
+            </div>
+        </div>
+        <div class="comment-box">
+            <strong>Insight |</strong> 토요일 건당 95,618원 최고(장시간 레저 수요), 목요일 64,884원 최저. 출발 피크는 9~10시(78,960건), 18시대에 퇴근시간 2차 피크(57,621건). 18시 이후 건당매출 47,000원대로 급락 — 퇴출근쿠폰(9,900원) 영향. 조조(5~7시) 건당매출 116,000~121,000원으로 최고 — 장거리 여행 출발 수요.
+        </div>
+    </div>
+
+    <!-- Tab 3: 이용시간 -->
+    <div id="tab-duration" class="tab-content">
+        <div class="kpi-row">
+            <div class="kpi-card">
+                <div class="kpi-label">최대 비중 구간</div>
+                <div class="kpi-value blue">4~8h</div>
+                <div class="kpi-sub">290,732건 (31%) / GPM 6.8%</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">최적 수익 구간</div>
+                <div class="kpi-value green">1~2일</div>
+                <div class="kpi-sub">GPM 31.6% / 건당 164,536원</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">~2시간 GPM (적자)</div>
+                <div class="kpi-value red">-52.4%</div>
+                <div class="kpi-sub">105,007건 / 건당 22,349원</div>
+            </div>
+        </div>
+        <div class="chart-grid">
+            <div class="chart-section">
+                <h2>이용시간 구성비</h2>
+                <div class="doughnut-wrap"><canvas id="durDoughnut"></canvas></div>
+            </div>
+            <div class="chart-section">
+                <h2>이용시간별 건수 + GPM</h2>
+                <div class="chart-wrap"><canvas id="durBarChart"></canvas></div>
+            </div>
+        </div>
+        <div class="tbl-wrap">
+            <h2>이용시간 구간별 상세</h2>
+            <div class="tbl-scroll">
+                <table>
+                    <thead><tr><th>구간</th><th>건수</th><th>매출(백만)</th><th>GPM(%)</th><th>건당매출</th></tr></thead>
+                    <tbody id="durBody"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="comment-box">
+            <strong>Insight |</strong> 4~8시간이 건수 31%(290,732건)로 최대 비중이나 GPM 6.8%. ~2시간 GPM -52.4% 심각, 2~4시간 -8.0% 적자. 1~2일 이용이 GPM 31.6%/건당 164,536원으로 수익성 최적 구간. 장시간 이용일수록 수익성이 좋아지는 명확한 패턴 — 단시간 고할인이 수익 구조를 훼손.
+        </div>
+    </div>
+
+    <!-- Tab 4: 히트맵 -->
+    <div id="tab-heatmap" class="tab-content">
+        <div class="heatmap-wrap">
+            <h2>요일 x 시간대 건수 히트맵</h2>
+            <table class="heatmap-table" id="heatCntTable"></table>
+        </div>
+        <div class="heatmap-wrap">
+            <h2>요일 x 시간대 건당매출 히트맵</h2>
+            <table class="heatmap-table" id="heatRpuTable"></table>
+        </div>
+        <div class="comment-box">
+            <strong>Insight |</strong> 최대 수요: 토요일 10~14시 53,075건. 최고 단가: 토요일 06~10시 125,531원. 평일 18~22시 건당 37,740~42,042원으로 전 구간 최저 — 퇴근시간 단시간 저가 이용 집중. 금요일 14시 이후 건당매출 급등(79,997원) — 주말 여행 출발 수요.
+        </div>
+    </div>
+
+    <!-- Tab 5: 월별추이 -->
+    <div id="tab-monthly" class="tab-content">
+        <div class="kpi-row">
+            <div class="kpi-card">
+                <div class="kpi-label">3월 GPM (최저)</div>
+                <div class="kpi-value red">10.5%</div>
+                <div class="kpi-sub">50% 전환 과도기</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">4월 GPM (MTD 회복)</div>
+                <div class="kpi-value green">16.9%</div>
+                <div class="kpi-sub">건당매출 74,602원 반등</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">4월 리드타임 회복</div>
+                <div class="kpi-value blue">42.6h</div>
+                <div class="kpi-sub">3월 34.8h → 4월 42.6h</div>
+            </div>
+        </div>
+        <div class="chart-grid">
+            <div class="chart-section">
+                <h2>월별 건수 + GPM + 건당매출</h2>
+                <div class="chart-wrap"><canvas id="monthCombo"></canvas></div>
+            </div>
+            <div class="chart-section">
+                <h2>월별 평균 이용시간 + 리드타임</h2>
+                <div class="chart-wrap"><canvas id="monthLine"></canvas></div>
+            </div>
+        </div>
+        <div class="tbl-wrap">
+            <h2>월별 상세 데이터</h2>
+            <div class="tbl-scroll">
+                <table>
+                    <thead><tr><th>월</th><th>건수</th><th>매출(백만)</th><th>GPM(%)</th><th>건당매출</th><th>평균이용(h)</th><th>평균리드(h)</th></tr></thead>
+                    <tbody id="monthBody"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="comment-box">
+            <strong>Insight |</strong> 3월 GPM 10.5%로 최저 — 가격제 50% 전환 과도기 영향. 4월(MTD) GPM 16.9%로 회복 중. 3월 건당매출 69,112원 최저(50% 확대), 4월 74,602원 반등. 리드타임 2월 43.2h → 3월 34.8h 단축 후 4월 42.6h 회복 — 사전예약 패턴 정상화.
+        </div>
+    </div>
+
+<script>
+// ─── Data ───
+const LEADTIME = [
+  {label:'1h미만(즉시)',cnt:215360,rev:9415.0,gpm:-3.6,rpu:43718,avgH:6.3},
+  {label:'1h~1일',cnt:503916,rev:34873.5,gpm:11.7,rpu:69205,avgH:11.4},
+  {label:'1~3일',cnt:98921,rev:10243.4,gpm:23.9,rpu:103551,avgH:16.8},
+  {label:'3일~1주',cnt:62206,rev:7211.9,gpm:26.4,rpu:115936,avgH:19.3},
+  {label:'1~2주',cnt:28368,rev:3909.3,gpm:30.1,rpu:137806,avgH:23.7},
+  {label:'2~4주',cnt:18741,rev:2975.0,gpm:32.1,rpu:158740,avgH:28.6},
+  {label:'4주+',cnt:7010,rev:1268.9,gpm:29.0,rpu:181008,avgH:35.7}
+];
+
+const DOW = [
+  {dow:'일',cnt:139329,rev:10208.1,gpm:13.0,rpu:73266,avgH:11.1},
+  {dow:'월',cnt:123070,rev:8868.8,gpm:17.3,rpu:72063,avgH:13.6},
+  {dow:'화',cnt:125425,rev:8370.3,gpm:16.5,rpu:66735,avgH:11.8},
+  {dow:'수',cnt:132817,rev:8838.8,gpm:15.8,rpu:66549,avgH:11.7},
+  {dow:'목',cnt:140337,rev:9105.7,gpm:14.6,rpu:64884,avgH:11.1},
+  {dow:'금',cnt:123097,rev:10119.8,gpm:13.8,rpu:82210,avgH:12.7},
+  {dow:'토',cnt:150447,rev:14385.5,gpm:15.4,rpu:95618,avgH:13.5}
+];
+
+const HOURS = [
+  {h:0,cnt:15611,rev:746.3,rpu:47806,avgH:7.9},
+  {h:1,cnt:9575,rev:451.7,rpu:47172,avgH:6.8},
+  {h:2,cnt:6271,rev:351.3,rpu:56023,avgH:7.7},
+  {h:3,cnt:5200,rev:363.9,rpu:69978,avgH:9.7},
+  {h:4,cnt:5430,rev:527.9,rpu:97219,avgH:14.4},
+  {h:5,cnt:9082,rev:1058.4,rpu:116533,avgH:17.8},
+  {h:6,cnt:17622,rev:2144.3,rpu:121682,avgH:19.2},
+  {h:7,cnt:32574,rev:3636.5,rpu:111638,avgH:17.2},
+  {h:8,cnt:56351,rev:5675.2,rpu:100712,avgH:14.8},
+  {h:9,cnt:75472,rev:7200.3,rpu:95403,avgH:13.7},
+  {h:10,cnt:78960,rev:7232.1,rpu:91592,avgH:13.3},
+  {h:11,cnt:68669,rev:5967.7,rpu:86905,avgH:13.2},
+  {h:12,cnt:65730,rev:5501.2,rpu:83693,avgH:13.0},
+  {h:13,cnt:59907,rev:4701.4,rpu:78478,avgH:12.2},
+  {h:14,cnt:49958,rev:3786.7,rpu:75797,avgH:11.7},
+  {h:15,cnt:45423,rev:3244.7,rpu:71433,avgH:11.4},
+  {h:16,cnt:39486,rev:2771.9,rpu:70199,avgH:11.5},
+  {h:17,cnt:52874,rev:2821.3,rpu:53358,avgH:11.4},
+  {h:18,cnt:57621,rev:2735.0,rpu:47466,avgH:11.4},
+  {h:19,cnt:52711,rev:2463.3,rpu:46733,avgH:10.6},
+  {h:20,cnt:39397,rev:2017.2,rpu:51202,avgH:10.1},
+  {h:21,cnt:35402,rev:1775.5,rpu:50152,avgH:9.1},
+  {h:22,cnt:31212,rev:1553.0,rpu:49756,avgH:8.7},
+  {h:23,cnt:23984,rev:1170.3,rpu:48796,avgH:8.5}
+];
+
+const DURATION = [
+  {label:'~2h',cnt:105007,rev:2346.8,gpm:-52.4,rpu:22349},
+  {label:'2~4h',cnt:162944,rev:6152.4,gpm:-8.0,rpu:37758},
+  {label:'4~8h',cnt:290732,rev:16235.4,gpm:6.8,rpu:55843},
+  {label:'8~12h',cnt:128316,rev:9975.5,gpm:16.3,rpu:77742},
+  {label:'12~24h',cnt:123974,rev:9599.0,gpm:9.2,rpu:77427},
+  {label:'1~2일',cnt:86511,rev:14234.2,gpm:31.6,rpu:164536},
+  {label:'2~3일',cnt:22712,rev:5696.1,gpm:37.8,rpu:250796},
+  {label:'3일+',cnt:14326,rev:5657.5,gpm:36.2,rpu:394910}
+];
+
+const HEATMAP = {
+  '일': [21672,44582,29783,27240,16052],
+  '월': [23440,33943,24003,27160,14524],
+  '화': [26422,33532,23268,28290,13913],
+  '수': [25998,35201,25315,31319,14984],
+  '목': [27612,36571,26380,32623,17151],
+  '금': [25436,36362,25421,21002,14876],
+  '토': [31439,53075,33571,17497,14865]
+};
+const HEATMAP_RPU = {
+  '일': [104845,84193,67108,46643,56889],
+  '월': [108804,84745,62100,41591,56574],
+  '화': [95873,79465,58031,38531,52625],
+  '수': [93595,79763,59270,42042,52102],
+  '목': [91399,79091,57157,37740,55420],
+  '금': [94236,84126,79997,80807,62725],
+  '토': [125531,100774,81711,71773,73420]
+};
+
+const MONTHLY = [
+  {month:'2026-01',cnt:258431,rev:19670.1,gpm:15.4,rpu:76114,avgH:12.0,avgLead:37.9},
+  {month:'2026-02',cnt:261769,rev:20939.9,gpm:18.7,rpu:79994,avgH:12.9,avgLead:43.2},
+  {month:'2026-03',cnt:295495,rev:20422.2,gpm:10.5,rpu:69112,avgH:11.7,avgLead:34.8},
+  {month:'2026-04',cnt:118827,rev:8864.7,gpm:16.9,rpu:74602,avgH:12.1,avgLead:42.6}
+];
+
+// ─── Helpers ───
+const fmt = n => n.toLocaleString('ko-KR');
+const fmtM = n => n.toFixed(1);
+const gpmBadge = v => {
+    const cls = v >= 25 ? 'badge-green' : v >= 10 ? 'badge-yellow' : 'badge-red';
+    return `<span class="badge ${cls}">${v.toFixed(1)}%</span>`;
+};
+
+Chart.defaults.color = '#8b8fa3';
+Chart.defaults.borderColor = 'rgba(30,33,48,.6)';
+Chart.defaults.font.family = "'JetBrains Mono','Noto Sans KR',sans-serif";
+Chart.defaults.font.size = 11;
+Chart.defaults.plugins.legend.labels.usePointStyle = true;
+Chart.defaults.plugins.legend.labels.pointStyleWidth = 8;
+Chart.defaults.plugins.legend.labels.boxHeight = 8;
+
+// ─── Tab switch ───
+function switchTab(id) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    event.target.classList.add('active');
+}
+
+// ─── Tab 1: Leadtime Charts ───
+new Chart(document.getElementById('ltCntGpm'), {
+    type: 'bar',
+    data: {
+        labels: LEADTIME.map(d => d.label),
+        datasets: [
+            {label:'건수',data:LEADTIME.map(d=>d.cnt),backgroundColor:'rgba(91,140,255,.6)',borderRadius:4,yAxisID:'y',order:2},
+            {label:'GPM(%)',data:LEADTIME.map(d=>d.gpm),type:'line',borderColor:'#34d399',backgroundColor:'#34d399',pointRadius:4,pointHoverRadius:6,tension:.3,yAxisID:'y1',order:1}
+        ]
+    },
+    options:{
+        responsive:true,maintainAspectRatio:false,
+        scales:{
+            y:{beginAtZero:true,ticks:{callback:v=>fmt(v)},grid:{color:'rgba(30,33,48,.4)'}},
+            y1:{position:'right',ticks:{callback:v=>v+'%'},grid:{display:false},min:-10,max:40}
+        }
+    }
+});
+
+new Chart(document.getElementById('ltRpuHour'), {
+    type: 'bar',
+    data: {
+        labels: LEADTIME.map(d => d.label),
+        datasets: [
+            {label:'건당매출',data:LEADTIME.map(d=>d.rpu),backgroundColor:'rgba(167,139,250,.6)',borderRadius:4,yAxisID:'y',order:2},
+            {label:'평균이용(h)',data:LEADTIME.map(d=>d.avgH),type:'line',borderColor:'#ffb84d',backgroundColor:'#ffb84d',pointRadius:4,pointHoverRadius:6,tension:.3,yAxisID:'y1',order:1}
+        ]
+    },
+    options:{
+        responsive:true,maintainAspectRatio:false,
+        scales:{
+            y:{beginAtZero:true,ticks:{callback:v=>fmt(v)+'원'},grid:{color:'rgba(30,33,48,.4)'}},
+            y1:{position:'right',ticks:{callback:v=>v+'h'},grid:{display:false}}
+        }
+    }
+});
+
+// Leadtime table
+document.getElementById('ltBody').innerHTML = LEADTIME.map(d =>
+    `<tr><td>${d.label}</td><td>${fmt(d.cnt)}</td><td>${fmtM(d.rev)}</td><td>${gpmBadge(d.gpm)}</td><td>${fmt(d.rpu)}원</td><td>${d.avgH}h</td></tr>`
+).join('');
+
+// ─── Tab 2: DOW + Hour Charts ───
+new Chart(document.getElementById('dowChart'), {
+    type: 'bar',
+    data: {
+        labels: DOW.map(d => d.dow),
+        datasets: [
+            {label:'건수',data:DOW.map(d=>d.cnt),backgroundColor:'rgba(91,140,255,.6)',borderRadius:4,yAxisID:'y'},
+            {label:'매출(백만)',data:DOW.map(d=>d.rev),backgroundColor:'rgba(34,211,238,.5)',borderRadius:4,yAxisID:'y1'}
+        ]
+    },
+    options:{
+        responsive:true,maintainAspectRatio:false,
+        scales:{
+            y:{beginAtZero:true,ticks:{callback:v=>(v/1000)+'K'},grid:{color:'rgba(30,33,48,.4)'}},
+            y1:{position:'right',ticks:{callback:v=>fmtM(v)},grid:{display:false}}
+        }
+    }
+});
+
+new Chart(document.getElementById('hourCntChart'), {
+    type: 'line',
+    data: {
+        labels: HOURS.map(d => d.h+'시'),
+        datasets: [{
+            label:'건수',data:HOURS.map(d=>d.cnt),
+            borderColor:'#5b8cff',backgroundColor:'rgba(91,140,255,.15)',
+            fill:true,tension:.3,pointRadius:3,pointHoverRadius:5
+        }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true,ticks:{callback:v=>fmt(v)},grid:{color:'rgba(30,33,48,.4)'}}}}
+});
+
+new Chart(document.getElementById('hourRpuChart'), {
+    type: 'line',
+    data: {
+        labels: HOURS.map(d => d.h+'시'),
+        datasets: [{
+            label:'건당매출',data:HOURS.map(d=>d.rpu),
+            borderColor:'#a78bfa',backgroundColor:'rgba(167,139,250,.15)',
+            fill:true,tension:.3,pointRadius:3,pointHoverRadius:5
+        }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true,ticks:{callback:v=>fmt(v)+'원'},grid:{color:'rgba(30,33,48,.4)'}}}}
+});
+
+// ─── Tab 3: Duration ───
+const durTotal = DURATION.reduce((s,d)=>s+d.cnt,0);
+const durColors = ['#ff4d6a','#ffb84d','#5b8cff','#22d3ee','#a78bfa','#34d399','#6ee7b7','#93c5fd'];
+
+new Chart(document.getElementById('durDoughnut'), {
+    type: 'doughnut',
+    data: {
+        labels: DURATION.map(d => d.label),
+        datasets: [{
+            data: DURATION.map(d => d.cnt),
+            backgroundColor: durColors,
+            borderWidth: 0,
+            hoverOffset: 8
+        }]
+    },
+    options: {
+        responsive:true,maintainAspectRatio:false,
+        cutout:'55%',
+        plugins:{
+            legend:{position:'right',labels:{padding:12,font:{size:12}}},
+            tooltip:{callbacks:{label:ctx=>{const v=ctx.raw;return ` ${fmt(v)}건 (${(v/durTotal*100).toFixed(1)}%)`}}}
+        }
+    }
+});
+
+new Chart(document.getElementById('durBarChart'), {
+    type: 'bar',
+    data: {
+        labels: DURATION.map(d => d.label),
+        datasets: [
+            {label:'건수',data:DURATION.map(d=>d.cnt),backgroundColor:'rgba(91,140,255,.6)',borderRadius:4,yAxisID:'y',order:2},
+            {label:'GPM(%)',data:DURATION.map(d=>d.gpm),type:'line',borderColor:'#34d399',backgroundColor:'#34d399',pointRadius:4,pointHoverRadius:6,tension:.3,yAxisID:'y1',order:1}
+        ]
+    },
+    options:{
+        responsive:true,maintainAspectRatio:false,
+        scales:{
+            y:{beginAtZero:true,ticks:{callback:v=>fmt(v)},grid:{color:'rgba(30,33,48,.4)'}},
+            y1:{position:'right',ticks:{callback:v=>v+'%'},grid:{display:false},min:-60,max:50}
+        }
+    }
+});
+
+document.getElementById('durBody').innerHTML = DURATION.map(d =>
+    `<tr><td>${d.label}</td><td>${fmt(d.cnt)}</td><td>${fmtM(d.rev)}</td><td>${gpmBadge(d.gpm)}</td><td>${fmt(d.rpu)}원</td></tr>`
+).join('');
+
+// ─── Tab 4: Heatmap Tables ───
+function buildHeatmap(tableId, data, isCurrency) {
+    const timeBlocks = ['06~10','10~14','14~18','18~22','22~06'];
+    const days = ['일','월','화','수','목','금','토'];
+    let allVals = [];
+    days.forEach(d => data[d].forEach(v => allVals.push(v)));
+    const minV = Math.min(...allVals), maxV = Math.max(...allVals);
+
+    function cellColor(v) {
+        const ratio = (v - minV) / (maxV - minV);
+        if (ratio > 0.7) return 'background:rgba(91,140,255,.35);color:#93bbff';
+        if (ratio > 0.4) return 'background:rgba(91,140,255,.18);color:#7aa8ff';
+        if (ratio > 0.2) return 'background:rgba(91,140,255,.08);color:#8b8fa3';
+        return 'background:rgba(91,140,255,.03);color:#565972';
+    }
+
+    let html = '<thead><tr><th style="text-align:center">요일</th>';
+    timeBlocks.forEach(t => html += `<th>${t}</th>`);
+    html += '</tr></thead><tbody>';
+    days.forEach(d => {
+        html += `<tr><td>${d}</td>`;
+        data[d].forEach(v => {
+            const display = isCurrency ? fmt(v) + '원' : fmt(v);
+            html += `<td style="${cellColor(v)}">${display}</td>`;
+        });
+        html += '</tr>';
+    });
+    html += '</tbody>';
+    document.getElementById(tableId).innerHTML = html;
+}
+buildHeatmap('heatCntTable', HEATMAP, false);
+buildHeatmap('heatRpuTable', HEATMAP_RPU, true);
+
+// ─── Tab 5: Monthly Charts ───
+new Chart(document.getElementById('monthCombo'), {
+    type: 'bar',
+    data: {
+        labels: MONTHLY.map(d => d.month),
+        datasets: [
+            {label:'건수',data:MONTHLY.map(d=>d.cnt),backgroundColor:'rgba(91,140,255,.6)',borderRadius:4,yAxisID:'y',order:3},
+            {label:'GPM(%)',data:MONTHLY.map(d=>d.gpm),type:'line',borderColor:'#34d399',backgroundColor:'#34d399',pointRadius:5,pointHoverRadius:7,tension:.3,yAxisID:'y1',order:1},
+            {label:'건당매출',data:MONTHLY.map(d=>d.rpu),type:'line',borderColor:'#a78bfa',backgroundColor:'#a78bfa',pointRadius:5,pointHoverRadius:7,tension:.3,yAxisID:'y2',order:2}
+        ]
+    },
+    options:{
+        responsive:true,maintainAspectRatio:false,
+        scales:{
+            y:{beginAtZero:true,ticks:{callback:v=>(v/10000).toFixed(0)+'만'},grid:{color:'rgba(30,33,48,.4)'}},
+            y1:{position:'right',ticks:{callback:v=>v+'%'},grid:{display:false},min:0,max:30},
+            y2:{display:false}
+        }
+    }
+});
+
+new Chart(document.getElementById('monthLine'), {
+    type: 'line',
+    data: {
+        labels: MONTHLY.map(d => d.month),
+        datasets: [
+            {label:'평균이용(h)',data:MONTHLY.map(d=>d.avgH),borderColor:'#22d3ee',backgroundColor:'rgba(34,211,238,.15)',fill:true,tension:.3,pointRadius:5,yAxisID:'y'},
+            {label:'평균리드(h)',data:MONTHLY.map(d=>d.avgLead),borderColor:'#ffb84d',backgroundColor:'rgba(255,184,77,.15)',fill:true,tension:.3,pointRadius:5,yAxisID:'y1'}
+        ]
+    },
+    options:{
+        responsive:true,maintainAspectRatio:false,
+        scales:{
+            y:{ticks:{callback:v=>v+'h'},grid:{color:'rgba(30,33,48,.4)'},min:0,max:20},
+            y1:{position:'right',ticks:{callback:v=>v+'h'},grid:{display:false},min:0,max:60}
+        }
+    }
+});
+
+document.getElementById('monthBody').innerHTML = MONTHLY.map(d =>
+    `<tr><td>${d.month}</td><td>${fmt(d.cnt)}</td><td>${fmtM(d.rev)}</td><td>${gpmBadge(d.gpm)}</td><td>${fmt(d.rpu)}원</td><td>${d.avgH}h</td><td>${d.avgLead}h</td></tr>`
+).join('');
+</script>
+</body>
+</html>

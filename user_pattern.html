@@ -168,18 +168,18 @@
     <div id="tab-duration" class="tab-content">
         <div class="kpi-row">
             <div class="kpi-card">
-                <div class="kpi-label">최대 비중 구간</div>
-                <div class="kpi-value blue">4~8h</div>
-                <div class="kpi-sub">290,732건 (31%) / GPM 6.8%</div>
+                <div class="kpi-label">8시간 미만 (적자 구간)</div>
+                <div class="kpi-value red">60%</div>
+                <div class="kpi-sub">558,683건 / GP -6.2억 (GPM 목표 25% 미달)</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-label">최적 수익 구간</div>
-                <div class="kpi-value green">1~2일</div>
-                <div class="kpi-sub">GPM 31.6% / 건당 164,536원</div>
+                <div class="kpi-label">1박+ 이익 기여</div>
+                <div class="kpi-value green">82%</div>
+                <div class="kpi-sub">GP 87.1억 / 건수 비중 13%</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-label">~2시간 GPM (적자)</div>
-                <div class="kpi-value red">-52.4%</div>
+                <div class="kpi-label">4시간 미만 GP</div>
+                <div class="kpi-value red">-17.2억</div>
                 <div class="kpi-sub">105,007건 / 건당 22,349원</div>
             </div>
         </div>
@@ -203,7 +203,7 @@
             </div>
         </div>
         <div class="comment-box">
-            <strong>Insight |</strong> 4~8시간이 건수 31%(290,732건)로 최대 비중이나 GPM 6.8%. ~2시간 GPM -52.4% 심각, 2~4시간 -8.0% 적자. 1~2일 이용이 GPM 31.6%/건당 164,536원으로 수익성 최적 구간. 장시간 이용일수록 수익성이 좋아지는 명확한 패턴 — 단시간 고할인이 수익 구조를 훼손.
+            <strong>Insight |</strong> 4시간 미만 29%(267,951건) GP -17.2억 적자, 4~8시간 31%(290,732건) GPM 6.8%. 8시간 미만 합산 60%가 GPM 목표 25% 미달. 반면 1박2일 이상(13%)이 GP 87.1억으로 전체 이익의 82% 기여. 1박2일 GPM 31.6%/건당 164,536원이 수익 최적 구간. 단시간 볼륨 의존에서 장시간 고단가 이용 확대로 믹스 전환이 핵심.
         </div>
     </div>
 
@@ -315,14 +315,12 @@ const HOURS = [
 ];
 
 const DURATION = [
-  {label:'~2h',cnt:105007,rev:2346.8,gpm:-52.4,rpu:22349},
-  {label:'2~4h',cnt:162944,rev:6152.4,gpm:-8.0,rpu:37758},
-  {label:'4~8h',cnt:290732,rev:16235.4,gpm:6.8,rpu:55843},
-  {label:'8~12h',cnt:128316,rev:9975.5,gpm:16.3,rpu:77742},
-  {label:'12~24h',cnt:123974,rev:9599.0,gpm:9.2,rpu:77427},
-  {label:'1~2일',cnt:86511,rev:14234.2,gpm:31.6,rpu:164536},
-  {label:'2~3일',cnt:22712,rev:5696.1,gpm:37.8,rpu:250796},
-  {label:'3일+',cnt:14326,rev:5657.5,gpm:36.2,rpu:394910}
+  {label:'4시간 미만',cnt:267951,rev:8499.3,gpm:-20.3,rpu:31719,gp:-1721.2},
+  {label:'4~8시간',cnt:290732,rev:16235.4,gpm:6.8,rpu:55843,gp:1098.0},
+  {label:'8~24시간',cnt:252290,rev:19574.5,gpm:12.8,rpu:77587,gp:2506.7},
+  {label:'1박2일',cnt:86511,rev:14234.2,gpm:31.6,rpu:164536,gp:4500.2},
+  {label:'2박3일',cnt:22712,rev:5696.1,gpm:37.8,rpu:250796,gp:2155.5},
+  {label:'3일 이상',cnt:14326,rev:5657.5,gpm:36.2,rpu:394910,gp:2050.7}
 ];
 
 const HEATMAP = {

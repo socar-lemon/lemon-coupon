@@ -81,7 +81,7 @@
 
 <div class="header">
   <h1>얼리버드 쿠폰 실적 대시보드</h1>
-  <p>2026년 3~4월 | 생성/반납 기준 | 4/20 업데이트</p>
+  <p>2026년 3~4월 | 생성/반납 기준 | 4/27 업데이트</p>
 </div>
 
 <div class="tabs">
@@ -103,11 +103,12 @@
     <h2 style="font-size:18px;font-weight:700;margin-bottom:4px;">얼리버드 목표 달성 현황</h2>
     <p style="font-size:13px;color:#64748b;margin-bottom:24px;">운영대수 11,632대 기준 | 가동률 5% 목표 = 일 13,958시간 | 4/3~</p>
 
-    <div class="kpi-row-4">
+    <div class="kpi-row">
       <div class="kpi-card"><div class="label">목표 (일 5%)</div><div class="value" style="color:#64748b">13,958시간</div><div class="sub">11,632대 × 24h × 5%</div></div>
       <div class="kpi-card"><div class="label">4/12(일) 달성</div><div class="value" style="color:#10b981">31,888시간</div><div class="sub">11.42% — 목표 초과!</div></div>
-      <div class="kpi-card"><div class="label">4/19(일) 달성</div><div class="value" style="color:#10b981">29,032시간</div><div class="sub">10.40% — 2주 연속 목표 2배 초과</div></div>
-      <div class="kpi-card"><div class="label">4/1~4/19 실적 평균</div><div class="value" style="color:#2563eb">3.17%</div><div class="sub">일평균 8,844h (목표 5%의 63%)</div></div>
+      <div class="kpi-card"><div class="label">4/19(일) 달성</div><div class="value" style="color:#10b981">29,032시간</div><div class="sub">10.40% — 목표 2배 초과</div></div>
+      <div class="kpi-card"><div class="label">4/26(일) 달성</div><div class="value" style="color:#10b981">21,076시간</div><div class="sub">7.55% — 목표 달성</div></div>
+      <div class="kpi-card"><div class="label">4/1~4/26 실적 평균</div><div class="value" style="color:#2563eb">3.06%</div><div class="sub">일평균 8,545h (목표 5%의 61%)</div></div>
     </div>
 
     <div class="chart-container">
@@ -124,14 +125,14 @@
 
     <div style="background:#eff6ff;border-left:3px solid #2563eb;padding:16px 20px;border-radius:0 8px 8px 0;margin-top:24px;">
       <p style="font-size:14px;font-weight:600;color:#1e40af;margin-bottom:8px;">주말 vs 평일 격차</p>
-      <p style="font-size:13px;color:#334155;">4/12(일) 11.42%, 4/19(일) 10.40%로 2주 연속 목표 2배 초과. 평일 평균 2.5% 수준으로 평일 가동 확대가 핵심 과제.</p>
+      <p style="font-size:13px;color:#334155;">4/12(일) 11.42%, 4/19(일) 10.40%, 4/26(일) 7.55% (21,076h) — 3주 연속 목표 달성. 평일 평균 2.5% 수준으로 평일 가동 확대가 핵심 과제.</p>
     </div>
   </div>
 
   <!-- Tab 1: Car Model -->
   <div class="tab-panel" id="panel-1">
     <h2 style="font-size:18px;font-weight:700;margin-bottom:4px;">차종별 얼리버드 현황</h2>
-    <p style="font-size:13px;color:#64748b;margin-bottom:24px;">4/3~4/19 | 4월 균일가 vs 상시 얼리버드 | car_model 기준</p>
+    <p style="font-size:13px;color:#64748b;margin-bottom:24px;">4/3~4/26 | 4월 균일가 vs 상시 얼리버드 | car_model 기준</p>
 
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
       <div class="chart-container" style="margin-bottom:0;">
@@ -158,25 +159,25 @@
 
     <!-- 전체 얼리버드 합산 -->
     <div style="background:linear-gradient(135deg,#1e293b,#334155);border-radius:12px;padding:24px 28px;margin-bottom:28px;color:#fff;">
-      <h3 style="font-size:16px;font-weight:700;color:#fff;margin-bottom:16px;">얼리버드 전체 실적 (반납 기준, ~4/19)</h3>
+      <h3 style="font-size:16px;font-weight:700;color:#fff;margin-bottom:16px;">얼리버드 전체 실적 (반납 기준, ~4/26)</h3>
       <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:16px;">
-        <div><div style="font-size:11px;color:#94a3b8;">이용건수</div><div style="font-size:22px;font-weight:700;">5,829건</div></div>
-        <div><div style="font-size:11px;color:#94a3b8;">매출</div><div style="font-size:22px;font-weight:700;">10.98억원</div></div>
-        <div><div style="font-size:11px;color:#94a3b8;">GP</div><div style="font-size:22px;font-weight:700;">3.63억원</div><div style="font-size:11px;color:#94a3b8;">GPM 33.1%</div></div>
-        <div><div style="font-size:11px;color:#94a3b8;">CM</div><div style="font-size:22px;font-weight:700;">7.42억원</div><div style="font-size:11px;color:#94a3b8;">CM 67.6%</div></div>
-        <div><div style="font-size:11px;color:#94a3b8;">건당매출</div><div style="font-size:22px;font-weight:700;">188,373원</div></div>
-        <div><div style="font-size:11px;color:#94a3b8;">총이용시간</div><div style="font-size:22px;font-weight:700;">233,248h</div></div>
-        <div><div style="font-size:11px;color:#94a3b8;">건당GP</div><div style="font-size:22px;font-weight:700;">62,270원</div></div>
+        <div><div style="font-size:11px;color:#94a3b8;">이용건수</div><div style="font-size:22px;font-weight:700;">7,644건</div></div>
+        <div><div style="font-size:11px;color:#94a3b8;">매출</div><div style="font-size:22px;font-weight:700;">14.34억원</div></div>
+        <div><div style="font-size:11px;color:#94a3b8;">GP</div><div style="font-size:22px;font-weight:700;">4.65억원</div><div style="font-size:11px;color:#94a3b8;">GPM 32.4%</div></div>
+        <div><div style="font-size:11px;color:#94a3b8;">CM</div><div style="font-size:22px;font-weight:700;">9.68억원</div><div style="font-size:11px;color:#94a3b8;">CM 67.5%</div></div>
+        <div><div style="font-size:11px;color:#94a3b8;">건당매출</div><div style="font-size:22px;font-weight:700;">187,600원</div></div>
+        <div><div style="font-size:11px;color:#94a3b8;">총이용시간</div><div style="font-size:22px;font-weight:700;">308,329h</div></div>
+        <div><div style="font-size:11px;color:#94a3b8;">건당GP</div><div style="font-size:22px;font-weight:700;">60,862원</div></div>
       </div>
     </div>
 
     <div class="group-title"><span class="dot" style="background:#2563eb"></span> 4월 미리예약 균일가 <span style="font-size:13px;font-weight:400;color:#64748b;">PID 16264~16271 | 3/26 런칭</span></div>
     <div class="kpi-row">
-      <div class="kpi-card"><div class="label">이용건수</div><div class="value" style="color:#2563eb">1,645건</div></div>
-      <div class="kpi-card"><div class="label">매출</div><div class="value" style="color:#2563eb">3.21억원</div><div class="sub">건당 194,924원</div></div>
-      <div class="kpi-card"><div class="label">GP</div><div class="value" style="color:#2563eb">0.95억원</div><div class="sub">GPM 29.6%</div></div>
-      <div class="kpi-card"><div class="label">CM</div><div class="value" style="color:#2563eb">2.11억원</div><div class="sub">CM 65.8%</div></div>
-      <div class="kpi-card"><div class="label">총이용시간</div><div class="value" style="color:#2563eb">72,963h</div></div>
+      <div class="kpi-card"><div class="label">이용건수</div><div class="value" style="color:#2563eb">2,305건</div></div>
+      <div class="kpi-card"><div class="label">매출</div><div class="value" style="color:#2563eb">4.50억원</div><div class="sub">건당 195,340원</div></div>
+      <div class="kpi-card"><div class="label">GP</div><div class="value" style="color:#2563eb">1.32억원</div><div class="sub">GPM 29.4%</div></div>
+      <div class="kpi-card"><div class="label">CM</div><div class="value" style="color:#2563eb">2.97억원</div><div class="sub">CM 66.0%</div></div>
+      <div class="kpi-card"><div class="label">총이용시간</div><div class="value" style="color:#2563eb">103,782h</div></div>
     </div>
 
     <table class="data-table">
@@ -184,35 +185,35 @@
         <tr><th>PID</th><th>쿠폰명</th><th>건수</th><th>매출</th><th>GP</th><th>GPM</th><th>CM</th><th>CM%</th><th>건당매출</th><th>시간</th></tr>
       </thead>
       <tbody>
-        <tr><td>16264</td><td style="text-align:left">미리예약 2일 109,000원</td><td>923</td><td>149.6백만원</td><td>42.5백만원</td><td>28.4%</td><td>98.7백만원</td><td>66.0%</td><td>162,103</td><td>33,524</td></tr>
-        <tr><td>16265</td><td style="text-align:left">미리예약 2일 139,000원</td><td>262</td><td>53.5백만원</td><td>13.7백만원</td><td>25.6%</td><td>33.4백만원</td><td>62.4%</td><td>204,235</td><td>9,649</td></tr>
-        <tr><td>16266</td><td style="text-align:left">미리예약 3일 149,000원</td><td>246</td><td>54.2백만원</td><td>19.3백만원</td><td>35.7%</td><td>37.4백만원</td><td>68.9%</td><td>220,331</td><td>14,205</td></tr>
-        <tr><td>16267</td><td style="text-align:left">미리예약 3일 179,000원</td><td>120</td><td>33.8백만원</td><td>10.2백만원</td><td>30.3%</td><td>21.9백만원</td><td>64.7%</td><td>281,639</td><td>6,986</td></tr>
-        <tr><td>16268</td><td style="text-align:left">미리예약 4일 179,000원</td><td>39</td><td>10.9백만원</td><td>3.8백만원</td><td>34.8%</td><td>7.5백만원</td><td>68.4%</td><td>280,305</td><td>3,251</td></tr>
-        <tr><td>16269</td><td style="text-align:left">미리예약 4일 209,000원</td><td>28</td><td>8.5백만원</td><td>2.0백만원</td><td>23.9%</td><td>5.5백만원</td><td>64.7%</td><td>304,730</td><td>2,334</td></tr>
-        <tr><td>16270</td><td style="text-align:left">미리예약 5일 219,000원</td><td>12</td><td>4.1백만원</td><td>1.6백만원</td><td>38.3%</td><td>2.9백만원</td><td>71.9%</td><td>338,397</td><td>1,329</td></tr>
-        <tr><td>16271</td><td style="text-align:left">미리예약 5일 249,000원</td><td>15</td><td>6.0백만원</td><td>1.6백만원</td><td>26.6%</td><td>3.8백만원</td><td>64.1%</td><td>399,771</td><td>1,686</td></tr>
-        <tr style="font-weight:700;background:#f8fafc;"><td colspan="2" style="text-align:left">합계</td><td>1,645</td><td>320.6백만원</td><td>94.7백만원</td><td>29.5%</td><td>211.1백만원</td><td>65.8%</td><td>194,924</td><td>72,963</td></tr>
+        <tr><td>16264</td><td style="text-align:left">미리예약 2일 109,000원</td><td>1,254</td><td>202.4백만원</td><td>56.2백만원</td><td>27.8%</td><td>133.2백만원</td><td>65.8%</td><td>161,419</td><td>45,751</td></tr>
+        <tr><td>16265</td><td style="text-align:left">미리예약 2일 139,000원</td><td>356</td><td>71.8백만원</td><td>19.1백만원</td><td>26.6%</td><td>45.7백만원</td><td>63.7%</td><td>201,720</td><td>13,110</td></tr>
+        <tr><td>16266</td><td style="text-align:left">미리예약 3일 149,000원</td><td>379</td><td>84.4백만원</td><td>29.8백만원</td><td>35.3%</td><td>57.8백만원</td><td>68.5%</td><td>222,676</td><td>21,854</td></tr>
+        <tr><td>16267</td><td style="text-align:left">미리예약 3일 179,000원</td><td>176</td><td>48.3백만원</td><td>14.3백만원</td><td>29.6%</td><td>31.3백만원</td><td>64.8%</td><td>274,293</td><td>10,268</td></tr>
+        <tr><td>16268</td><td style="text-align:left">미리예약 4일 179,000원</td><td>58</td><td>16.1백만원</td><td>5.6백만원</td><td>34.6%</td><td>11.0백만원</td><td>68.8%</td><td>276,685</td><td>4,826</td></tr>
+        <tr><td>16269</td><td style="text-align:left">미리예약 4일 209,000원</td><td>42</td><td>12.8백만원</td><td>3.0백만원</td><td>23.8%</td><td>8.4백만원</td><td>65.4%</td><td>304,158</td><td>3,536</td></tr>
+        <tr><td>16270</td><td style="text-align:left">미리예약 5일 219,000원</td><td>17</td><td>5.6백만원</td><td>2.1백만원</td><td>36.9%</td><td>4.0백만원</td><td>72.1%</td><td>328,011</td><td>1,881</td></tr>
+        <tr><td>16271</td><td style="text-align:left">미리예약 5일 249,000원</td><td>23</td><td>9.0백만원</td><td>2.4백만원</td><td>26.8%</td><td>5.8백만원</td><td>64.5%</td><td>390,170</td><td>2,556</td></tr>
+        <tr style="font-weight:700;background:#f8fafc;"><td colspan="2" style="text-align:left">합계</td><td>2,305</td><td>450.3백만원</td><td>132.5백만원</td><td>29.4%</td><td>297.3백만원</td><td>66.0%</td><td>195,340</td><td>103,782</td></tr>
       </tbody>
     </table>
     <p style="font-size:12px;color:#64748b;margin:-24px 0 32px 4px;">* 4일/5일 쿠폰은 이용기간이 길어 4/6 이후부터 반납 시작. 파이프라인은 예약 확정(state=1,2) 기준.</p>
 
     <div class="group-title"><span class="dot" style="background:#10b981"></span> 2주 얼리버드 55% <span style="font-size:13px;font-weight:400;color:#64748b;">PID 16117 | 상시 운영</span></div>
     <div class="kpi-row">
-      <div class="kpi-card"><div class="label">이용건수</div><div class="value" style="color:#10b981">2,456건</div></div>
-      <div class="kpi-card"><div class="label">매출</div><div class="value" style="color:#10b981">4.67억원</div><div class="sub">건당 189,955원</div></div>
-      <div class="kpi-card"><div class="label">GP</div><div class="value" style="color:#10b981">1.81억원</div><div class="sub">GPM 38.9%</div></div>
-      <div class="kpi-card"><div class="label">CM</div><div class="value" style="color:#10b981">3.29억원</div><div class="sub">CM 70.5%</div></div>
-      <div class="kpi-card"><div class="label">총이용시간</div><div class="value" style="color:#10b981">90,115h</div></div>
+      <div class="kpi-card"><div class="label">이용건수</div><div class="value" style="color:#10b981">2,757건</div></div>
+      <div class="kpi-card"><div class="label">매출</div><div class="value" style="color:#10b981">5.25억원</div><div class="sub">건당 190,527원</div></div>
+      <div class="kpi-card"><div class="label">GP</div><div class="value" style="color:#10b981">2.04억원</div><div class="sub">GPM 38.8%</div></div>
+      <div class="kpi-card"><div class="label">CM</div><div class="value" style="color:#10b981">3.70억원</div><div class="sub">CM 70.5%</div></div>
+      <div class="kpi-card"><div class="label">총이용시간</div><div class="value" style="color:#10b981">100,136h</div></div>
     </div>
 
     <div class="group-title"><span class="dot" style="background:#f59e0b"></span> 4주 얼리버드 65% <span style="font-size:13px;font-weight:400;color:#64748b;">PID 16118 | 상시 운영</span></div>
     <div class="kpi-row">
-      <div class="kpi-card"><div class="label">이용건수</div><div class="value" style="color:#f59e0b">1,728건</div></div>
-      <div class="kpi-card"><div class="label">매출</div><div class="value" style="color:#f59e0b">3.10억원</div><div class="sub">건당 179,118원</div></div>
-      <div class="kpi-card"><div class="label">GP</div><div class="value" style="color:#f59e0b">0.87억원</div><div class="sub">GPM 28.2%</div></div>
-      <div class="kpi-card"><div class="label">CM</div><div class="value" style="color:#f59e0b">2.02억원</div><div class="sub">CM 65.2%</div></div>
-      <div class="kpi-card"><div class="label">총이용시간</div><div class="value" style="color:#f59e0b">70,170h</div></div>
+      <div class="kpi-card"><div class="label">이용건수</div><div class="value" style="color:#f59e0b">2,582건</div></div>
+      <div class="kpi-card"><div class="label">매출</div><div class="value" style="color:#f59e0b">4.58억원</div><div class="sub">건당 177,510원</div></div>
+      <div class="kpi-card"><div class="label">GP</div><div class="value" style="color:#f59e0b">1.29억원</div><div class="sub">GPM 28.1%</div></div>
+      <div class="kpi-card"><div class="label">CM</div><div class="value" style="color:#f59e0b">3.01억원</div><div class="sub">CM 65.6%</div></div>
+      <div class="kpi-card"><div class="label">총이용시간</div><div class="value" style="color:#f59e0b">104,411h</div></div>
     </div>
 
   </div>
@@ -243,28 +244,28 @@
     <!-- 4월 반납 예상 추이 섹션 -->
     <div style="margin-top:32px;">
       <div class="group-title"><span class="dot" style="background:#2563eb"></span> 4월 반납 예상 추이 (실적 + 파이프라인)</div>
-      <p style="font-size:13px;color:#64748b;margin-bottom:16px;">4/1~4/19 실적 반영, 4/20~ 파이프라인 추정</p>
+      <p style="font-size:13px;color:#64748b;margin-bottom:16px;">4/1~4/26 실적 확정, 4/27~ 파이프라인</p>
 
       <div class="kpi-row-4">
         <div class="kpi-card">
-          <div class="label">4월 전체 (실적+예측)</div>
-          <div class="value">5,764건</div>
-          <div class="sub">~10.99억원</div>
+          <div class="label">4월 확정 실적 (4/1~4/26)</div>
+          <div class="value">5,290건</div>
+          <div class="sub">균일가 2,309 + 2주 1,226 + 4주 1,755</div>
         </div>
         <div class="kpi-card">
-          <div class="label">균일가</div>
-          <div class="value" style="color:#2563eb;">2,529건</div>
-          <div class="sub">~4.93억원</div>
+          <div class="label">4/27~4/30 잔여 파이프라인</div>
+          <div class="value" style="color:#2563eb;">313건</div>
+          <div class="sub">균일가 93 + 2주 46 + 4주 174</div>
         </div>
         <div class="kpi-card">
-          <div class="label">2주 EB</div>
-          <div class="value" style="color:#10b981;">1,251건</div>
-          <div class="sub">~2.49억원</div>
+          <div class="label">5월 전체 파이프라인</div>
+          <div class="value" style="color:#8b5cf6;">~5,970건</div>
+          <div class="sub">5월균일가 2,366 + 4주 3,362 + 2주 242</div>
         </div>
         <div class="kpi-card">
-          <div class="label">4주 EB</div>
-          <div class="value" style="color:#f59e0b;">1,984건</div>
-          <div class="sub">~3.57억원</div>
+          <div class="label">5/1 피크 (어린이날)</div>
+          <div class="value" style="color:#f59e0b;">1,212건</div>
+          <div class="sub">5월균일가 690 + 4주 450 + 2주 72</div>
         </div>
       </div>
 
@@ -315,38 +316,38 @@
     </div>
 
     <div class="plan-section">
-      <h3>전주 실적 (W16: 4/13~4/19)</h3>
+      <h3>전주 실적 (W17: 4/20~4/26)</h3>
       <ul>
-        <li><strong>W16 반납 실적 1,552건</strong> (균일가 839 + 2주 251 + 4주 462) — W15 대비 균일가 급증</li>
-        <li><strong>4/19(일) 피크 730건, 29,032시간</strong> — 목표 5% 대비 10.40% 달성 (2주 연속 목표 2배 초과)</li>
-        <li><strong>W16 EB 매출 305.7백만원</strong> (균일가 169.2 + 4주 86.1 + 2주 50.4) — 전체 W16 쿠폰 매출의 5.75%</li>
+        <li><strong>W17 반납 실적 1,231건</strong> (균일가 664 + 2주 83 + 4주 484) — W16 1,552건 대비 감소</li>
+        <li><strong>4/26(일) 피크 535건, 21,076시간</strong> — 목표 5% 대비 7.55% 달성 (3주 연속 목표 달성)</li>
+        <li><strong>W17 EB 매출 233.3백만원</strong> — 전체 W17 쿠폰 매출의 4.37% (W16 5.75% 대비 하락)</li>
       </ul>
       <div style="display:grid;grid-template-columns:1fr;gap:16px;margin-top:12px;">
         <div style="background:#f0fdf4;border-radius:10px;padding:20px;border-left:3px solid #10b981;">
-          <div style="font-size:13px;color:#10b981;font-weight:600;margin-bottom:8px;">4월 균일가 누계 (4/3~4/30, 이용기간 기준)</div>
+          <div style="font-size:13px;color:#10b981;font-weight:600;margin-bottom:8px;">4월 균일가 누계 (반납 기준, ~4/26)</div>
           <div style="font-size:13px;color:#334155;line-height:1.8;">
-            대여PF: <strong>562백만원</strong> / 건당매출: <strong>13.7만원</strong><br>
-            이용건수: <strong>4,093건</strong><br>
-            이용시간: <strong>165,793시간</strong> / 가동률: <strong>3%</strong>
+            대여PF: <strong>450백만원</strong> / 건당매출: <strong>19.5만원</strong><br>
+            이용건수: <strong>2,305건</strong><br>
+            이용시간: <strong>103,782시간</strong> / GPM: <strong>29.4%</strong>
           </div>
         </div>
       </div>
     </div>
 
     <div class="plan-section">
-      <h3>금주 실행 계획 (4/21~4/25)</h3>
+      <h3>금주 실행 계획 (4/28~5/2)</h3>
       <div class="goal-grid">
         <div class="goal-card" style="border-left: 3px solid #2563eb;">
-          <h4 style="color:#2563eb">4월 균일가</h4>
-          <p>4/26(일) 피크 340건 예정<br>4월 말 마무리 집중 모니터링</p>
+          <h4 style="color:#2563eb">5월 균일가</h4>
+          <p>5/1 피크 690건 (PID 16272~16283)<br>어린이날 연휴 집중 모니터링</p>
         </div>
         <div class="goal-card" style="border-left: 3px solid #10b981;">
           <h4 style="color:#10b981">2주 얼리버드</h4>
-          <p>잔여 파이프라인 108건 (4/20~4/30)<br>소진 모니터링 지속</p>
+          <p>5월 파이프라인 242건<br>5/1 피크 72건 대비 준비</p>
         </div>
         <div class="goal-card" style="border-left: 3px solid #f59e0b;">
           <h4 style="color:#f59e0b">4주 얼리버드</h4>
-          <p>4/26(일) 피크 231건 예정<br>5월 사전예약 파이프라인 점검</p>
+          <p>5/1 피크 450건, 5/23 542건<br>5월 전체 3,362건 파이프라인 집중 관리</p>
         </div>
       </div>
     </div>
@@ -355,10 +356,10 @@
       <h3 style="border-bottom-color: #8b5cf6; color: #5b21b6;">파이프라인 기반 목표</h3>
       <div class="pipeline-highlight">
         <ul>
-          <li>W17 (4/20~4/26) 예상 반납: <strong>~773건+</strong> (균일가 434 + 2주 31 + 4주 308)</li>
-          <li>W17 피크일 4/26(일): <strong>~589건</strong> (균일가 340 + 2주 18 + 4주 231)</li>
-          <li>4월 잔여 (4/20~4/30): <strong>1,705건</strong> (균일가 884 + 2주 108 + 4주 713)</li>
-          <li>4월 전체 예상: <strong>5,764건, ~10.99억원</strong></li>
+          <li>W17 (4/20~4/26) 확정 실적: <strong>1,231건</strong> (균일가 664 + 2주 83 + 4주 484), 4/26 피크 535건</li>
+          <li>4월 잔여 파이프라인 (4/27~4/30): <strong>313건</strong> (균일가 93 + 2주 46 + 4주 174)</li>
+          <li>5월 전체 파이프라인 (출발 기준): <strong>~5,970건</strong> (5월균일가 2,366 + 4주 3,362 + 2주 242)</li>
+          <li>5/1 어린이날 피크: <strong>1,212건</strong> / 5/23(토) 피크: <strong>809건</strong></li>
         </ul>
       </div>
     </div>
@@ -373,24 +374,24 @@
     <!-- KPI Summary -->
     <div class="kpi-row-4">
       <div class="kpi-card" style="border-top: 3px solid #8b5cf6;">
-        <div class="label">4/1~4/19 가동 기여</div>
-        <div class="value" style="color:#8b5cf6">3.17%</div>
-        <div class="sub">일평균 8,844h / 279,168h (4/1~4/19)</div>
+        <div class="label">4/1~4/26 가동 기여</div>
+        <div class="value" style="color:#8b5cf6">3.06%</div>
+        <div class="sub">일평균 8,545h / 279,168h (4/1~4/26)</div>
       </div>
       <div class="kpi-card" style="border-top: 3px solid #8b5cf6;">
-        <div class="label">4/19(일) 피크 가동률</div>
-        <div class="value" style="color:#8b5cf6">10.40%</div>
-        <div class="sub">EB 29,032h / 279,168h (2주 연속 10%+)</div>
+        <div class="label">4/26(일) 피크 가동률</div>
+        <div class="value" style="color:#8b5cf6">7.55%</div>
+        <div class="sub">EB 21,076h / 279,168h (3주 연속 목표 달성)</div>
       </div>
       <div class="kpi-card" style="border-top: 3px solid #8b5cf6;">
-        <div class="label">W16 일평균 EB 가동률</div>
-        <div class="value" style="color:#8b5cf6">3.46%p</div>
-        <div class="sub">67,558h / (7일 × 279,168h)</div>
+        <div class="label">W17 일평균 EB 가동률</div>
+        <div class="value" style="color:#8b5cf6">2.78%p</div>
+        <div class="sub">54,246h / (7일 × 279,168h)</div>
       </div>
       <div class="kpi-card" style="border-top: 3px solid #a855f7;">
-        <div class="label">4/19(일) EB 비중</div>
-        <div class="value" style="color:#a855f7">~10.4%</div>
-        <div class="sub">29,032h / 279,168h (전체 dp_h 대비 EB)</div>
+        <div class="label">4/26(일) EB 비중</div>
+        <div class="value" style="color:#a855f7">~7.6%</div>
+        <div class="sub">21,076h / 279,168h (전체 dp_h 대비 EB)</div>
       </div>
     </div>
     <p style="font-size:12px;color:#64748b;margin:-16px 0 24px 4px;">운영대수 11,632대 기준 (제주 제외)</p>
@@ -417,24 +418,24 @@
     <div class="group-title"><span class="dot" style="background:#8b5cf6"></span> 파이프라인 요약</div>
     <div class="kpi-row-4">
       <div class="kpi-card" style="border-top: 3px solid #2563eb;">
-        <div class="label">4월 잔여 파이프라인</div>
-        <div class="value" style="color:#2563eb">~2,847건</div>
-        <div class="sub">균일가 1,765 + 2주 369 + 4주 713</div>
+        <div class="label">4/27~30 잔여 파이프라인</div>
+        <div class="value" style="color:#2563eb">313건</div>
+        <div class="sub">균일가 93 + 2주 46 + 4주 174</div>
       </div>
       <div class="kpi-card" style="border-top: 3px solid #8b5cf6;">
-        <div class="label">5월 사전예약</div>
-        <div class="value" style="color:#8b5cf6">~1,950건+</div>
-        <div class="sub">4주 얼리버드</div>
+        <div class="label">5월 파이프라인 (출발 기준)</div>
+        <div class="value" style="color:#8b5cf6">~5,970건</div>
+        <div class="sub">5월균일가 2,366 + 4주 3,362 + 2주 242</div>
       </div>
       <div class="kpi-card" style="border-top: 3px solid #ef4444;">
-        <div class="label">W16 (4/18~19) 피크</div>
-        <div class="value" style="color:#ef4444">1,072건</div>
-        <div class="sub">균일가 632 + 2주 116 + 4주 324</div>
+        <div class="label">5/1 피크 (어린이날)</div>
+        <div class="value" style="color:#ef4444">1,212건</div>
+        <div class="sub">5월균일가 690 + 4주 450 + 2주 72</div>
       </div>
       <div class="kpi-card" style="border-top: 3px solid #f59e0b;">
-        <div class="label">W17 (4/25~26) 피크</div>
-        <div class="value" style="color:#f59e0b">773건</div>
-        <div class="sub">균일가 434 + 2주 31 + 4주 308</div>
+        <div class="label">5/23(토) 피크</div>
+        <div class="value" style="color:#f59e0b">809건</div>
+        <div class="sub">4주 542 + 5월균일가 267</div>
       </div>
     </div>
 
@@ -442,13 +443,13 @@
     <div class="insight-box">
       <h3>시사점</h3>
       <ul>
-        <li>얼리버드는 전체 쿠폰 매출의 2~7%를 사전에 깔아두는 역할 — 주말 피크엔 10~15%</li>
-        <li>W10 → W15 기여율 0.1% → 6.9%, W16 5.75%로 안정적 고원 형성</li>
-        <li>4/12(일) 31,888h, 4/19(일) 29,032h — 2주 연속 목표(13,958h) 2배 초과</li>
-        <li>운영대수 11,632대 기준, W16 EB 일평균 가동 기여 3.46%p (W15 2.56%p 대비 +0.9%p)</li>
-        <li>4월 잔여 파이프라인 1,705건 (4/20~4/30) — 4/26(일) 피크 ~589건 예정</li>
-        <li>4월 전체 예상 5,764건, 10.99억원 (실적 4,059건 + 파이프라인 1,705건)</li>
-        <li>5월 사전예약 (4주 얼리버드) 파이프라인 지속 확보 중</li>
+        <li>얼리버드는 전체 쿠폰 매출의 2~7%를 사전에 깔아두는 역할 — 주말 피크엔 7~11%</li>
+        <li>W10 → W15 기여율 0.1% → 5.7%, W16/W17 5.75%/4.37% (W17 균일가 소진에 따른 자연 하락)</li>
+        <li>4/12(일) 31,888h, 4/19(일) 29,032h, 4/26(일) 21,076h — 3주 연속 목표(13,958h) 달성</li>
+        <li>W17 EB 일평균 가동 기여 2.78%p (54,246h / 7일 / 279,168h)</li>
+        <li>4월 확정 실적 5,290건 (4/1~4/26), 4/27~30 잔여 파이프라인 313건</li>
+        <li>5월 파이프라인 ~5,970건 (5월균일가 2,366건 + 4주 3,362건 + 2주 242건)</li>
+        <li>5/1 어린이날 피크 1,212건 / 5/23(토) 809건 — 5월 주말 중심 집중 대응 필요</li>
       </ul>
     </div>
 
@@ -650,7 +651,7 @@
 
 </div><!-- end .content -->
 
-<div class="footer">최종 업데이트: 2026-04-20</div>
+<div class="footer">최종 업데이트: 2026-04-27</div>
 
 <script>
 // Tab switching
@@ -685,13 +686,13 @@ function mapData(labels, raw) {
   return labels.map(l => raw[l] ?? null);
 }
 
-const allLabelsCreated = dateRange('2026-03-01', '2026-04-13');
-const allLabelsReturn = dateRange('2026-03-06', '2026-04-19');
+const allLabelsCreated = dateRange('2026-03-01', '2026-04-26');
+const allLabelsReturn = dateRange('2026-03-06', '2026-04-26');
 
 // Created data
-const createdApril = {'3/26':160,'3/27':187,'3/28':151,'3/29':152,'3/30':156,'3/31':140,'4/1':241,'4/2':219,'4/3':218,'4/4':158,'4/5':153,'4/6':118,'4/7':117,'4/8':135,'4/9':107,'4/10':148,'4/11':121,'4/12':74,'4/13':12};
-const createdEb2w = {'3/1':72,'3/2':67,'3/3':76,'3/4':85,'3/5':71,'3/6':58,'3/7':75,'3/8':100,'3/9':82,'3/10':100,'3/11':88,'3/12':88,'3/13':76,'3/14':62,'3/15':66,'3/16':78,'3/17':72,'3/18':69,'3/19':77,'3/20':64,'3/21':67,'3/22':81,'3/23':86,'3/24':68,'3/25':78,'3/26':60,'3/27':30,'3/28':38,'3/29':41,'3/30':42,'3/31':44,'4/1':0,'4/2':1,'4/3':0,'4/4':0,'4/5':1,'4/6':0,'4/7':1,'4/8':0,'4/9':1,'4/10':2,'4/11':0,'4/12':2,'4/13':0};
-const createdEb4w = {'3/1':73,'3/2':92,'3/3':68,'3/4':88,'3/5':147,'3/6':97,'3/7':98,'3/8':93,'3/9':84,'3/10':121,'3/11':102,'3/12':122,'3/13':115,'3/14':103,'3/15':99,'3/16':92,'3/17':95,'3/18':111,'3/19':131,'3/20':100,'3/21':74,'3/22':93,'3/23':100,'3/24':98,'3/25':121,'3/26':129,'3/27':104,'3/28':81,'3/29':99,'3/30':106,'3/31':96,'4/1':134,'4/2':215,'4/3':240,'4/4':152,'4/5':156,'4/6':90,'4/7':104,'4/8':97,'4/9':99,'4/10':152,'4/11':130,'4/12':104,'4/13':17};
+const createdApril = {'3/26':160,'3/27':187,'3/28':151,'3/29':152,'3/30':156,'3/31':140,'4/1':241,'4/2':219,'4/3':218,'4/4':158,'4/5':153,'4/6':118,'4/7':117,'4/8':135,'4/9':107,'4/10':148,'4/11':121,'4/12':74,'4/13':12,'4/14':7,'4/15':10,'4/16':2,'4/17':1,'4/18':0,'4/19':0,'4/20':0,'4/21':0,'4/22':0,'4/23':0,'4/24':0,'4/25':0,'4/26':0};
+const createdEb2w = {'3/1':72,'3/2':67,'3/3':76,'3/4':85,'3/5':71,'3/6':58,'3/7':75,'3/8':100,'3/9':82,'3/10':100,'3/11':88,'3/12':88,'3/13':76,'3/14':62,'3/15':66,'3/16':78,'3/17':72,'3/18':69,'3/19':77,'3/20':64,'3/21':67,'3/22':81,'3/23':86,'3/24':68,'3/25':78,'3/26':60,'3/27':30,'3/28':38,'3/29':41,'3/30':42,'3/31':44,'4/1':0,'4/2':1,'4/3':0,'4/4':0,'4/5':1,'4/6':0,'4/7':1,'4/8':0,'4/9':1,'4/10':2,'4/11':0,'4/12':2,'4/13':0,'4/14':1,'4/15':1,'4/16':0,'4/17':0,'4/18':0,'4/19':0,'4/20':0,'4/21':0,'4/22':0,'4/23':0,'4/24':0,'4/25':0,'4/26':0};
+const createdEb4w = {'3/1':73,'3/2':92,'3/3':68,'3/4':88,'3/5':147,'3/6':97,'3/7':98,'3/8':93,'3/9':84,'3/10':121,'3/11':102,'3/12':122,'3/13':115,'3/14':103,'3/15':99,'3/16':92,'3/17':95,'3/18':111,'3/19':131,'3/20':100,'3/21':74,'3/22':93,'3/23':100,'3/24':98,'3/25':121,'3/26':129,'3/27':104,'3/28':81,'3/29':99,'3/30':106,'3/31':96,'4/1':134,'4/2':215,'4/3':240,'4/4':152,'4/5':156,'4/6':90,'4/7':104,'4/8':97,'4/9':99,'4/10':152,'4/11':130,'4/12':104,'4/13':17,'4/14':1,'4/15':0,'4/16':2,'4/17':0,'4/18':0,'4/19':0,'4/20':1,'4/21':0,'4/22':0,'4/23':1,'4/24':0,'4/25':0,'4/26':0};
 
 // Revenue approximation (cnt * avg_rev / 1e6)
 const avgRevApril = 176744, avgRevEb2w = 188603, avgRevEb4w = 166613;
@@ -705,9 +706,9 @@ const createdEb2wRev = revData(createdEb2w, avgRevEb2w);
 const createdEb4wRev = revData(createdEb4w, avgRevEb4w);
 
 // Return data
-const returnApril = {'4/3':3,'4/4':21,'4/5':133,'4/6':44,'4/7':18,'4/8':26,'4/9':22,'4/10':40,'4/11':110,'4/12':389,'4/13':88,'4/14':38,'4/15':35,'4/16':43,'4/17':49,'4/18':143,'4/19':443};
-const returnEb2w = {'3/6':1,'3/7':1,'3/8':28,'3/9':10,'3/10':11,'3/11':9,'3/12':21,'3/13':24,'3/14':40,'3/15':123,'3/16':41,'3/17':22,'3/18':22,'3/19':31,'3/20':42,'3/21':61,'3/22':149,'3/23':55,'3/24':35,'3/25':28,'3/26':47,'3/27':62,'3/28':94,'3/29':219,'3/30':86,'3/31':51,'4/1':30,'4/2':42,'4/3':47,'4/4':92,'4/5':237,'4/6':73,'4/7':34,'4/8':43,'4/9':29,'4/10':37,'4/11':72,'4/12':156,'4/13':54,'4/14':28,'4/15':23,'4/16':11,'4/17':30,'4/18':40,'4/19':65};
-const returnEb4w = {'3/11':1,'3/12':2,'3/13':5,'3/14':7,'3/15':28,'3/16':9,'3/17':5,'3/18':4,'3/19':1,'3/20':9,'3/21':24,'3/22':66,'3/23':20,'3/24':13,'3/25':12,'3/26':11,'3/27':20,'3/28':24,'3/29':117,'3/30':52,'3/31':29,'4/1':15,'4/2':19,'4/3':28,'4/4':52,'4/5':197,'4/6':51,'4/7':34,'4/8':25,'4/9':17,'4/10':27,'4/11':83,'4/12':261,'4/13':66,'4/14':28,'4/15':20,'4/16':24,'4/17':24,'4/18':78,'4/19':222};
+const returnApril = {'4/3':3,'4/4':21,'4/5':133,'4/6':44,'4/7':18,'4/8':26,'4/9':22,'4/10':40,'4/11':110,'4/12':389,'4/13':88,'4/14':38,'4/15':35,'4/16':43,'4/17':49,'4/18':140,'4/19':442,'4/20':100,'4/21':46,'4/22':47,'4/23':47,'4/24':36,'4/25':86,'4/26':302};
+const returnEb2w = {'3/6':1,'3/7':1,'3/8':28,'3/9':10,'3/10':11,'3/11':9,'3/12':21,'3/13':24,'3/14':40,'3/15':123,'3/16':41,'3/17':22,'3/18':22,'3/19':31,'3/20':42,'3/21':61,'3/22':149,'3/23':55,'3/24':35,'3/25':28,'3/26':47,'3/27':62,'3/28':94,'3/29':219,'3/30':86,'3/31':51,'4/1':30,'4/2':42,'4/3':47,'4/4':92,'4/5':237,'4/6':73,'4/7':34,'4/8':43,'4/9':29,'4/10':37,'4/11':72,'4/12':156,'4/13':54,'4/14':28,'4/15':23,'4/16':11,'4/17':30,'4/18':40,'4/19':65,'4/20':22,'4/21':13,'4/22':6,'4/23':9,'4/24':9,'4/25':10,'4/26':14};
+const returnEb4w = {'3/11':1,'3/12':2,'3/13':5,'3/14':7,'3/15':28,'3/16':9,'3/17':5,'3/18':4,'3/19':1,'3/20':9,'3/21':24,'3/22':66,'3/23':20,'3/24':13,'3/25':12,'3/26':11,'3/27':20,'3/28':24,'3/29':117,'3/30':52,'3/31':29,'4/1':15,'4/2':19,'4/3':28,'4/4':52,'4/5':197,'4/6':51,'4/7':34,'4/8':25,'4/9':17,'4/10':27,'4/11':83,'4/12':261,'4/13':66,'4/14':28,'4/15':20,'4/16':24,'4/17':24,'4/18':76,'4/19':222,'4/20':60,'4/21':46,'4/22':33,'4/23':19,'4/24':39,'4/25':68,'4/26':219};
 
 const returnAprilRev = revData(returnApril, avgRevApril);
 const returnEb2wRev = revData(returnEb2w, avgRevEb2w);
@@ -763,9 +764,9 @@ function initReturnCharts() {
   const aprilForecastLabels = [];
   for (let d = 1; d <= 30; d++) aprilForecastLabels.push('4/' + d);
 
-  const fcApril = [0,0,3,21,133,44,18,26,22,40,110,389,88,38,35,43,49,143,443,122,60,36,36,37,94,340,97,23,20,19];
-  const fcEb2w = [30,42,47,92,237,73,34,43,29,37,72,156,54,28,23,11,30,40,65,27,18,7,10,9,13,18,3,2,1,0];
-  const fcEb4w = [15,19,28,52,197,51,34,25,17,27,83,261,66,28,20,24,24,78,222,72,41,32,27,43,77,231,87,42,33,28];
+  const fcApril = [0,0,3,21,133,44,18,26,22,40,110,389,88,38,35,43,49,140,442,100,46,47,47,36,86,302,48,28,17,0];
+  const fcEb2w = [30,42,47,92,237,73,34,43,29,37,72,156,54,28,23,11,30,40,65,22,13,6,9,9,10,14,3,5,16,22];
+  const fcEb4w = [15,19,28,52,197,51,34,25,17,27,83,261,66,28,20,24,24,76,222,60,46,33,19,39,68,219,35,27,24,88];
 
   const totalPlugin = {
     id: 'totalOnTop',
@@ -844,10 +845,10 @@ function initReturnCharts() {
 // === Tab 4: Contribution Charts ===
 function initContribCharts() {
   // 1. Revenue Contribution combo chart
-  const revWeeks = ['W10 (3/2~)', 'W11 (3/9~)', 'W12 (3/16~)', 'W13 (3/23~)', 'W14 (3/30~)', 'W15 (4/6~)', 'W16 (4/13~)'];
-  const totalRev = [4907, 4768, 4823, 5120, 5383, 5200, 5317];
-  const ebRev = [5.8, 48.6, 85.9, 138.0, 212.1, 359.7, 305.7];
-  const ebPct = [0.12, 1.02, 1.78, 2.70, 3.94, 6.92, 5.75];
+  const revWeeks = ['W10 (3/2~)', 'W11 (3/9~)', 'W12 (3/16~)', 'W13 (3/23~)', 'W14 (3/30~)', 'W15 (4/6~)', 'W16 (4/13~)', 'W17 (4/20~)'];
+  const totalRev = [4886, 4736, 4803, 5094, 5308, 5287, 5286, 5340];
+  const ebRev = [5.8, 48.5, 85.9, 138.0, 209.6, 303.1, 303.8, 233.3];
+  const ebPct = [0.12, 1.02, 1.79, 2.71, 3.95, 5.73, 5.75, 4.37];
 
   new Chart(document.getElementById('chartRevContrib'), {
     type: 'bar',
@@ -935,10 +936,12 @@ function initContribCharts() {
     '3/21':[114787,2617],'3/22':[158625,7269],'3/23':[110381,2809],'3/24':[106693,1725],'3/25':[114413,1628],
     '3/26':[122153,1882],'3/27':[139924,2936],'3/28':[119682,3749],'3/29':[171878,11732],'3/30':[121202,5274],
     '3/31':[118677,3403],'4/1':[108860,1907],'4/2':[122064,2276],'4/3':[142329,2981],'4/4':[122507,5915],'4/5':[193099,20026],
-    '4/6':[299181,7029],'4/7':[201381,3629],'4/8':[234025,4024],'4/9':[311528,2939],'4/10':[263933,4674],'4/11':[178743,9719],'4/12':[246280,30024]
+    '4/6':[299181,7029],'4/7':[201381,3629],'4/8':[234025,4024],'4/9':[311528,2939],'4/10':[263933,4674],'4/11':[178743,9719],'4/12':[246280,30024],
+    '4/13':[136950,9709],'4/14':[131482,4352],'4/15':[132782,3826],'4/16':[142567,4141],'4/17':[155315,5447],'4/18':[134347,10717],'4/19':[207745,28985],
+    '4/20':[133848,8637],'4/21':[131387,5757],'4/22':[133333,4319],'4/23':[138689,3520],'4/24':[161579,4149],'4/25':[140851,6786],'4/26':[203519,21075]
   };
 
-  const utilLabels = dateRange('2026-03-01', '2026-04-12');
+  const utilLabels = dateRange('2026-03-01', '2026-04-26');
   const utilTotal = utilLabels.map(l => { const d = utilDailyData[l]; return d ? d[0] : null; });
   const utilEB = utilLabels.map(l => { const d = utilDailyData[l]; return d ? d[1] : null; });
   const utilNonEB = utilLabels.map(l => { const d = utilDailyData[l]; return d ? d[0] - d[1] : null; });
@@ -1027,11 +1030,12 @@ function initContribCharts() {
   });
 
   // 3. Pipeline Stacked Bar Chart
-  const aprilFixed = {'4/13':78,'4/14':38,'4/15':39,'4/16':43,'4/17':51,'4/18':142,'4/19':490,'4/20':122,'4/21':60,'4/22':36,'4/23':36,'4/24':37,'4/25':94,'4/26':340,'4/27':97,'4/28':23,'4/29':20,'4/30':19};
-  const eb2wPipe = {'4/13':47,'4/14':30,'4/15':23,'4/16':13,'4/17':32,'4/18':45,'4/19':71,'4/20':27,'4/21':18,'4/22':7,'4/23':10,'4/24':9,'4/25':13,'4/26':18,'4/27':3,'4/28':2,'4/29':1};
-  const eb4wApril = {'4/13':51,'4/14':35,'4/15':23,'4/16':22,'4/17':27,'4/18':77,'4/19':247,'4/20':72,'4/21':41,'4/22':32,'4/23':27,'4/24':43,'4/25':77,'4/26':231,'4/27':87,'4/28':42,'4/29':33,'4/30':28};
+  const aprilFixed = {'4/27':48,'4/28':28,'4/29':17};
+  const eb2wPipe = {'4/27':3,'4/28':5,'4/29':16,'4/30':22,'5/1':72,'5/2':57,'5/3':29,'5/4':10,'5/5':10,'5/6':3,'5/7':10,'5/8':10,'5/9':33,'5/10':8};
+  const eb4wPipe = {'4/27':35,'4/28':27,'4/29':24,'4/30':88,'5/1':450,'5/2':240,'5/3':173,'5/4':45,'5/5':24,'5/6':29,'5/7':29,'5/8':83,'5/9':179,'5/10':57,'5/11':36,'5/12':27,'5/13':38,'5/14':51,'5/15':139,'5/16':238,'5/17':67,'5/18':46,'5/19':31,'5/20':49,'5/21':57,'5/22':149,'5/23':542,'5/24':189,'5/25':58,'5/26':29,'5/27':32,'5/28':28,'5/29':78,'5/30':113,'5/31':35};
+  const mayUniPipe = {'5/1':690,'5/2':355,'5/3':276,'5/4':105,'5/5':26,'5/6':23,'5/7':28,'5/8':77,'5/9':121,'5/10':19,'5/11':12,'5/12':15,'5/13':11,'5/14':19,'5/15':52,'5/16':73,'5/17':12,'5/18':8,'5/19':11,'5/20':5,'5/21':15,'5/22':71,'5/23':267,'5/24':52,'5/25':2,'5/26':1,'5/28':2,'5/29':7,'5/30':12};
 
-  const pipeLabels = dateRange('2026-04-13', '2026-04-30');
+  const pipeLabels = dateRange('2026-04-27', '2026-05-31');
 
   new Chart(document.getElementById('chartPipeline'), {
     type: 'bar',
@@ -1039,22 +1043,29 @@ function initContribCharts() {
       labels: pipeLabels,
       datasets: [
         {
-          label: '균일가 (state=1)',
+          label: '4월 균일가 잔여',
           data: mapData(pipeLabels, aprilFixed),
           backgroundColor: 'rgba(37,99,235,.7)',
           borderColor: '#2563eb',
           borderWidth: 1
         },
         {
-          label: '2주 얼리버드 (state=1)',
+          label: '5월 균일가 (PID 16272~83)',
+          data: mapData(pipeLabels, mayUniPipe),
+          backgroundColor: 'rgba(99,102,241,.7)',
+          borderColor: '#6366f1',
+          borderWidth: 1
+        },
+        {
+          label: '2주 얼리버드',
           data: mapData(pipeLabels, eb2wPipe),
           backgroundColor: 'rgba(16,185,129,.7)',
           borderColor: '#10b981',
           borderWidth: 1
         },
         {
-          label: '4주 얼리버드 (state=1)',
-          data: mapData(pipeLabels, eb4wApril),
+          label: '4주 얼리버드',
+          data: mapData(pipeLabels, eb4wPipe),
           backgroundColor: 'rgba(245,158,11,.7)',
           borderColor: '#f59e0b',
           borderWidth: 1
@@ -1409,17 +1420,17 @@ function initGoalCharts() {
     {date:'4/17(금)', uni_h:2866, pct_h:2582, type:'actual'},
     {date:'4/18(토)', uni_h:6242, pct_h:4810, type:'actual'},
     {date:'4/19(일)', uni_h:18503, pct_h:10529, type:'actual'},
-    {date:'4/20(월)', uni_h:5967, pct_h:4391, type:'pipeline'},
-    {date:'4/21(화)', uni_h:3361, pct_h:3053, type:'pipeline'},
-    {date:'4/22(수)', uni_h:2166, pct_h:1585, type:'pipeline'},
-    {date:'4/23(목)', uni_h:1882, pct_h:1527, type:'pipeline'},
-    {date:'4/24(금)', uni_h:2175, pct_h:2333, type:'pipeline'},
-    {date:'4/25(토)', uni_h:3891, pct_h:3321, type:'pipeline'},
-    {date:'4/26(일)', uni_h:14042, pct_h:8826, type:'pipeline'},
-    {date:'4/27(월)', uni_h:5157, pct_h:3556, type:'pipeline'},
-    {date:'4/28(화)', uni_h:1305, pct_h:2234, type:'pipeline'},
-    {date:'4/29(수)', uni_h:978, pct_h:1542, type:'pipeline'},
-    {date:'4/30(목)', uni_h:1202, pct_h:1216, type:'pipeline'},
+    {date:'4/20(월)', uni_h:4967, pct_h:3670, type:'actual'},
+    {date:'4/21(화)', uni_h:2600, pct_h:3158, type:'actual'},
+    {date:'4/22(수)', uni_h:2628, pct_h:1691, type:'actual'},
+    {date:'4/23(목)', uni_h:2394, pct_h:1126, type:'actual'},
+    {date:'4/24(금)', uni_h:1956, pct_h:2193, type:'actual'},
+    {date:'4/25(토)', uni_h:3783, pct_h:3004, type:'actual'},
+    {date:'4/26(일)', uni_h:12763, pct_h:8313, type:'actual'},
+    {date:'4/27(월)', uni_h:2030, pct_h:1523, type:'pipeline'},
+    {date:'4/28(화)', uni_h:1184, pct_h:1273, type:'pipeline'},
+    {date:'4/29(수)', uni_h:719, pct_h:1551, type:'pipeline'},
+    {date:'4/30(목)', uni_h:0, pct_h:4354, type:'pipeline'},
   ];
 
   const labels = goalData.map(d => d.date);

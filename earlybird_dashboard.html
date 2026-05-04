@@ -94,6 +94,7 @@
   <div class="tab" onclick="switchTab(6)">매출/가동 기여</div>
   <div class="tab" onclick="switchTab(7)">사전예약 vs 당일</div>
   <div class="tab" onclick="switchTab(8)">가동률 분석</div>
+  <div class="tab" onclick="switchTab(9)">연휴 얼리버드</div>
 </div>
 
 <div class="content">
@@ -649,6 +650,182 @@
     </div>
   </div>
 
+  <!-- Tab 9: 연휴 얼리버드 -->
+  <div class="tab-panel" id="panel-9">
+    <h2 style="font-size:18px;font-weight:700;margin-bottom:4px;">연휴 얼리버드 현황 (5/1~5/5)</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:24px;">반납 기준 | 제주 제외 | 인벤토리 14,259대 | 5/4 업데이트</p>
+
+    <!-- 상단 KPI -->
+    <div class="kpi-row">
+      <div class="kpi-card" style="border-top:3px solid #ef4444;">
+        <div class="label">연휴 총 이용건수</div>
+        <div class="value" style="color:#ef4444">3,000건+</div>
+        <div class="sub">5/1~5/3 확정 + 5/4~5/5 예정</div>
+      </div>
+      <div class="kpi-card" style="border-top:3px solid #ef4444;">
+        <div class="label">연휴 총 매출</div>
+        <div class="value" style="color:#ef4444">5.4억원+</div>
+        <div class="sub">5/1~5/3 5.17억 + 5/4~5/5 0.26억 예정</div>
+      </div>
+      <div class="kpi-card" style="border-top:3px solid #ef4444;">
+        <div class="label">연휴 총 이용시간</div>
+        <div class="value" style="color:#ef4444">127,643시간</div>
+        <div class="sub">5/1~5/5 합산</div>
+      </div>
+      <div class="kpi-card" style="border-top:3px solid #ef4444;">
+        <div class="label">5일 전체 점유율</div>
+        <div class="value" style="color:#ef4444">~7.5%</div>
+        <div class="sub">127,643h / (14,259×24×5)</div>
+      </div>
+      <div class="kpi-card" style="border-top:3px solid #64748b;">
+        <div class="label">피크일</div>
+        <div class="value" style="color:#334155">5/3(토)</div>
+        <div class="sub">1,640건 · 76,861시간 · 22.5%</div>
+      </div>
+    </div>
+
+    <!-- 일별 점유율 차트 -->
+    <div class="chart-container">
+      <h3>연휴 일별 반납건수 및 점유율 (인벤토리 대비)</h3>
+      <div class="chart-wrap"><canvas id="chartHoliday"></canvas></div>
+    </div>
+
+    <!-- 반납 기준 일별 테이블 -->
+    <div class="group-title"><span class="dot" style="background:#ef4444"></span> 반납 기준 일별 실적 (확정)</div>
+    <table class="data-table">
+      <thead>
+        <tr><th>반납일</th><th>쿠폰명</th><th>건수</th><th>이용시간(h)</th><th>매출</th><th>일 점유율*</th></tr>
+      </thead>
+      <tbody>
+        <tr style="background:#fef2f2;"><td rowspan="4" style="font-weight:700;color:#64748b;vertical-align:middle;">5/1 (금)</td><td style="text-align:left;">미리예약 2일 99,000원 + 배달무료!</td><td>14</td><td>424</td><td>185만원</td><td rowspan="4" style="font-weight:700;vertical-align:middle;color:#94a3b8;">0.7%</td></tr>
+        <tr style="background:#fef2f2;"><td style="text-align:left;">4주 미리예약 65%할인</td><td>5</td><td>135</td><td>67만원</td></tr>
+        <tr style="background:#fef2f2;"><td style="text-align:left;">미리예약 3일 129,000원 + 배달무료!</td><td>2</td><td>118</td><td>28만원</td></tr>
+        <tr style="background:#fef2f2;"><td style="text-align:left;">2주 미리예약 55%할인</td><td>1</td><td>24</td><td>10만원</td></tr>
+        <tr style="font-weight:700;background:#fee2e2;"><td style="color:#ef4444;">5/1 소계</td><td></td><td>64건</td><td>2,401h</td><td>1,120만원</td><td style="color:#94a3b8;">0.7%</td></tr>
+
+        <tr><td rowspan="5" style="font-weight:700;color:#64748b;vertical-align:middle;">5/2 (토)</td><td style="text-align:left;">미리예약 2일 99,000원 + 배달무료!</td><td>848</td><td>29,126</td><td>1억 3,360만원</td><td rowspan="5" style="font-weight:700;vertical-align:middle;color:#f59e0b;">11.8%</td></tr>
+        <tr><td style="text-align:left;">4주 미리예약 65%할인</td><td>136</td><td>4,343</td><td>2,286만원</td></tr>
+        <tr><td style="text-align:left;">미리예약 2일 89,000원 + 배달무료!</td><td>75</td><td>2,550</td><td>973만원</td></tr>
+        <tr><td style="text-align:left;">2주 미리예약 55%할인</td><td>27</td><td>867</td><td>619만원</td></tr>
+        <tr><td style="text-align:left;">미리예약 3일 129,000원 + 배달무료!</td><td>16</td><td>958</td><td>227만원</td></tr>
+        <tr style="font-weight:700;background:#fef9c3;"><td style="color:#d97706;">5/2 소계</td><td></td><td>1,148건</td><td>40,338h</td><td>1억 8,670만원</td><td style="color:#f59e0b;">11.8%</td></tr>
+
+        <tr style="background:#f0fdf4;"><td rowspan="5" style="font-weight:700;color:#64748b;vertical-align:middle;">5/3 (일) 📌피크</td><td style="text-align:left;">미리예약 2일 99,000원 + 배달무료!</td><td>642</td><td>23,977</td><td>1억 389만원</td><td rowspan="5" style="font-weight:700;vertical-align:middle;color:#16a34a;">22.5%</td></tr>
+        <tr style="background:#f0fdf4;"><td style="text-align:left;">미리예약 3일 129,000원 + 배달무료!</td><td>542</td><td>31,645</td><td>1억 1,606만원</td></tr>
+        <tr style="background:#f0fdf4;"><td style="text-align:left;">4주 미리예약 65%할인</td><td>301</td><td>13,870</td><td>6,617만원</td></tr>
+        <tr style="background:#f0fdf4;"><td style="text-align:left;">미리예약 2일 89,000원 + 배달무료!</td><td>63</td><td>2,384</td><td>837만원</td></tr>
+        <tr style="background:#f0fdf4;"><td style="text-align:left;">2주 미리예약 55%할인</td><td>59</td><td>2,454</td><td>1,459만원</td></tr>
+        <tr style="font-weight:700;background:#dcfce7;"><td style="color:#16a34a;">5/3 소계</td><td></td><td>1,640건</td><td>76,861h</td><td>3억 1,941만원</td><td style="color:#16a34a;">22.5%</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:12px;color:#94a3b8;margin:-24px 0 32px 4px;">* 일 점유율 = 이용시간 / (14,259대 × 24h). 반납 기준 이용시간은 2일 이상 쿠폰 특성상 복수 날짜에 걸친 합산값이므로 참고 지표로 활용.</p>
+
+    <!-- 5/4~5/5 반납 예정 -->
+    <div class="group-title"><span class="dot" style="background:#8b5cf6"></span> 반납 예정 (end_at 기준)</div>
+    <table class="data-table">
+      <thead>
+        <tr><th>예정일</th><th>쿠폰명</th><th>건수</th><th>이용시간(h)</th><th>매출</th><th>점유율 예정</th></tr>
+      </thead>
+      <tbody>
+        <tr><td rowspan="5" style="font-weight:700;color:#64748b;vertical-align:middle;">5/4 (월)</td><td style="text-align:left;">미리예약 3일 129,000원 + 배달무료!</td><td>56</td><td>3,789</td><td>1,091만원</td><td rowspan="5" style="font-weight:700;vertical-align:middle;color:#8b5cf6;">2.1%</td></tr>
+        <tr><td style="text-align:left;">미리예약 2일 99,000원 + 배달무료!</td><td>55</td><td>2,323</td><td>870만원</td></tr>
+        <tr><td style="text-align:left;">4주 미리예약 65%할인</td><td>16</td><td>725</td><td>248만원</td></tr>
+        <tr><td style="text-align:left;">2주 미리예약 55%할인</td><td>5</td><td>265</td><td>168만원</td></tr>
+        <tr><td style="text-align:left;">미리예약 2일 89,000원 + 배달무료!</td><td>5</td><td>212</td><td>55만원</td></tr>
+        <tr style="font-weight:700;background:#faf5ff;"><td style="color:#8b5cf6;">5/4 소계</td><td></td><td>137건</td><td>7,314h</td><td>2,432만원</td><td style="color:#8b5cf6;">2.1%</td></tr>
+
+        <tr><td rowspan="3" style="font-weight:700;color:#64748b;vertical-align:middle;">5/5 (화)</td><td style="text-align:left;">미리예약 3일 129,000원 + 배달무료!</td><td>6</td><td>350</td><td>76만원</td><td rowspan="3" style="font-weight:700;vertical-align:middle;color:#94a3b8;">0.2%</td></tr>
+        <tr><td style="text-align:left;">4주 미리예약 65%할인</td><td>4</td><td>326</td><td>70만원</td></tr>
+        <tr><td style="text-align:left;">미리예약 2일 99,000원 + 배달무료!</td><td>1</td><td>53</td><td>16만원</td></tr>
+        <tr style="font-weight:700;background:#f8fafc;"><td style="color:#64748b;">5/5 소계</td><td></td><td>11건</td><td>729h</td><td>162만원</td><td style="color:#94a3b8;">0.2%</td></tr>
+      </tbody>
+    </table>
+
+    <!-- 차종별 현황 -->
+    <div class="group-title"><span class="dot" style="background:#2563eb"></span> 차종별 현황 (5/1~5/5 전체 합산)</div>
+    <div class="chart-container">
+      <h3>날짜별 차종 이용건수 (상위 5종)</h3>
+      <div class="chart-wrap"><canvas id="chartHolidayCar"></canvas></div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>날짜</th><th>차종</th><th>건수</th><th>이용시간(h)</th><th>매출</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- 5/1 -->
+        <tr style="background:#fef2f2;"><td rowspan="10" style="font-weight:700;color:#64748b;vertical-align:middle;">5/1 (금)</td><td style="text-align:left;">준중형</td><td>21</td><td>756</td><td>320만원</td></tr>
+        <tr style="background:#fef2f2;"><td style="text-align:left;">소형SUV</td><td>13</td><td>439</td><td>204만원</td></tr>
+        <tr style="background:#fef2f2;"><td style="text-align:left;">경형</td><td>9</td><td>369</td><td>153만원</td></tr>
+        <tr style="background:#fef2f2;"><td style="text-align:left;">EV</td><td>5</td><td>226</td><td>81만원</td></tr>
+        <tr style="background:#fef2f2;"><td style="text-align:left;">RV</td><td>5</td><td>145</td><td>117만원</td></tr>
+        <tr style="background:#fef2f2;"><td style="text-align:left;">중형</td><td>4</td><td>199</td><td>80만원</td></tr>
+        <tr style="background:#fef2f2;"><td style="text-align:left;">준중형SUV</td><td>3</td><td>158</td><td>110만원</td></tr>
+        <tr style="background:#fef2f2;"><td style="text-align:left;">중형SUV</td><td>2</td><td>53</td><td>24만원</td></tr>
+        <tr style="background:#fef2f2;"><td style="text-align:left;">승합</td><td>1</td><td>24</td><td>16만원</td></tr>
+        <tr style="background:#fef2f2;"><td style="text-align:left;">준대형</td><td>1</td><td>31</td><td>14만원</td></tr>
+        <tr style="font-weight:700;background:#fee2e2;"><td style="color:#ef4444;">5/1 소계</td><td></td><td>64건</td><td>2,400h</td><td>1,120만원</td></tr>
+        <!-- 5/2 -->
+        <tr><td rowspan="12" style="font-weight:700;color:#64748b;vertical-align:middle;">5/2 (토)</td><td style="text-align:left;">준중형</td><td>560</td><td>19,463</td><td>8,954만원</td></tr>
+        <tr><td style="text-align:left;">소형SUV</td><td>341</td><td>12,103</td><td>5,386만원</td></tr>
+        <tr><td style="text-align:left;">경형</td><td>170</td><td>5,827</td><td>2,317만원</td></tr>
+        <tr><td style="text-align:left;">RV</td><td>19</td><td>770</td><td>595만원</td></tr>
+        <tr><td style="text-align:left;">중형SUV</td><td>15</td><td>661</td><td>377만원</td></tr>
+        <tr><td style="text-align:left;">준중형SUV</td><td>9</td><td>319</td><td>175만원</td></tr>
+        <tr><td style="text-align:left;">승합</td><td>9</td><td>310</td><td>288만원</td></tr>
+        <tr><td style="text-align:left;">EV</td><td>7</td><td>278</td><td>190만원</td></tr>
+        <tr><td style="text-align:left;">준대형SUV</td><td>7</td><td>236</td><td>178만원</td></tr>
+        <tr><td style="text-align:left;">준대형</td><td>5</td><td>191</td><td>96만원</td></tr>
+        <tr><td style="text-align:left;">중형</td><td>4</td><td>131</td><td>70만원</td></tr>
+        <tr><td style="text-align:left;">수입</td><td>2</td><td>50</td><td>45만원</td></tr>
+        <tr style="font-weight:700;background:#fef9c3;"><td style="color:#d97706;">5/2 소계</td><td></td><td>1,148건</td><td>40,339h</td><td>1억 8,671만원</td></tr>
+        <!-- 5/3 -->
+        <tr style="background:#f0fdf4;"><td rowspan="12" style="font-weight:700;color:#64748b;vertical-align:middle;">5/3 (일) 📌피크</td><td style="text-align:left;">준중형</td><td>766</td><td>36,055</td><td>1억 4,256만원</td></tr>
+        <tr style="background:#f0fdf4;"><td style="text-align:left;">소형SUV</td><td>498</td><td>23,497</td><td>9,640만원</td></tr>
+        <tr style="background:#f0fdf4;"><td style="text-align:left;">경형</td><td>193</td><td>8,330</td><td>2,892만원</td></tr>
+        <tr style="background:#f0fdf4;"><td style="text-align:left;">RV</td><td>49</td><td>2,568</td><td>1,827만원</td></tr>
+        <tr style="background:#f0fdf4;"><td style="text-align:left;">중형SUV</td><td>32</td><td>1,573</td><td>821만원</td></tr>
+        <tr style="background:#f0fdf4;"><td style="text-align:left;">준중형SUV</td><td>27</td><td>1,357</td><td>599만원</td></tr>
+        <tr style="background:#f0fdf4;"><td style="text-align:left;">중형</td><td>25</td><td>1,204</td><td>557만원</td></tr>
+        <tr style="background:#f0fdf4;"><td style="text-align:left;">EV</td><td>17</td><td>696</td><td>381만원</td></tr>
+        <tr style="background:#f0fdf4;"><td style="text-align:left;">준대형</td><td>13</td><td>696</td><td>361만원</td></tr>
+        <tr style="background:#f0fdf4;"><td style="text-align:left;">승합</td><td>9</td><td>400</td><td>266만원</td></tr>
+        <tr style="background:#f0fdf4;"><td style="text-align:left;">수입</td><td>6</td><td>239</td><td>145만원</td></tr>
+        <tr style="background:#f0fdf4;"><td style="text-align:left;">준대형SUV</td><td>5</td><td>247</td><td>195만원</td></tr>
+        <tr style="font-weight:700;background:#dcfce7;"><td style="color:#16a34a;">5/3 소계</td><td></td><td>1,640건</td><td>76,862h</td><td>3억 1,940만원</td></tr>
+        <!-- 5/4 -->
+        <tr><td rowspan="7" style="font-weight:700;color:#64748b;vertical-align:middle;">5/4 (월) 예정</td><td style="text-align:left;">준중형</td><td>62</td><td>3,582</td><td>1,121만원</td></tr>
+        <tr><td style="text-align:left;">소형SUV</td><td>51</td><td>2,669</td><td>923만원</td></tr>
+        <tr><td style="text-align:left;">경형</td><td>16</td><td>733</td><td>205만원</td></tr>
+        <tr><td style="text-align:left;">EV</td><td>4</td><td>96</td><td>37만원</td></tr>
+        <tr><td style="text-align:left;">RV</td><td>2</td><td>139</td><td>102만원</td></tr>
+        <tr><td style="text-align:left;">수입</td><td>1</td><td>24</td><td>16만원</td></tr>
+        <tr><td style="text-align:left;">중형</td><td>1</td><td>72</td><td>27만원</td></tr>
+        <tr style="font-weight:700;background:#faf5ff;"><td style="color:#8b5cf6;">5/4 소계</td><td></td><td>137건</td><td>7,315h</td><td>2,431만원</td></tr>
+        <!-- 5/5 -->
+        <tr><td rowspan="4" style="font-weight:700;color:#64748b;vertical-align:middle;">5/5 (화) 예정</td><td style="text-align:left;">소형SUV</td><td>4</td><td>259</td><td>65만원</td></tr>
+        <tr><td style="text-align:left;">준중형</td><td>4</td><td>219</td><td>47만원</td></tr>
+        <tr><td style="text-align:left;">준중형SUV</td><td>2</td><td>130</td><td>35만원</td></tr>
+        <tr><td style="text-align:left;">EV</td><td>1</td><td>121</td><td>14만원</td></tr>
+        <tr style="font-weight:700;background:#f8fafc;"><td style="color:#64748b;">5/5 소계</td><td></td><td>11건</td><td>729h</td><td>161만원</td></tr>
+      </tbody>
+    </table>
+
+    <!-- 인사이트 -->
+    <div class="insight-box">
+      <h3>연휴 얼리버드 시사점</h3>
+      <ul>
+        <li><strong>5/3(토) 피크</strong>: 반납 1,640건, 이용시간 76,861h, 일 점유율 22.5% — 연휴 최대 기여일</li>
+        <li><strong>미리예약 2일 99,000원 + 배달무료</strong>가 절대 1위 쿠폰: 5/2 848건, 5/3 642건으로 연휴 물량 주도</li>
+        <li><strong>5/1(목) 극소</strong>: 64건, 0.7% — 연휴 전날임에도 저조. 목요일 출발 수요 미반영된 것으로 보임</li>
+        <li><strong>5/4~5/5 잔여</strong>: 148건, 8,043h — 연휴 마무리 단계. 추가 이슈 없으면 무리 없이 마감 예상</li>
+        <li>5일 전체 점유율 <strong>~7.5%</strong> (127,643h / 1,711,080h) — 4/26(일) 7.55% 수준과 유사한 연휴 전체 효과</li>
+      </ul>
+    </div>
+  </div>
+
 </div><!-- end .content -->
 
 <div class="footer">최종 업데이트: 2026-04-27</div>
@@ -665,6 +842,7 @@ function switchTab(idx) {
   if (idx === 6 && !window._contribInit) { initContribCharts(); window._contribInit = true; }
   if (idx === 7 && !window._compareInit) { initCompareCharts(); window._compareInit = true; }
   if (idx === 8 && !window._utilInit) { initUtilCharts(); window._utilInit = true; }
+  if (idx === 9 && !window._holidayInit) { initHolidayChart(); window._holidayInit = true; }
 }
 
 const COLORS = { april: '#2563eb', eb2w: '#10b981', eb4w: '#f59e0b' };
@@ -1395,6 +1573,111 @@ function initUtilCharts() {
       + '<td>' + (d.cp_h/1000).toFixed(0) + 'K</td>'
       + '<td>' + d.cp_util.toFixed(1) + '%</td>'
       + '</tr>';
+  });
+}
+
+// === Tab 9: 연휴 얼리버드 ===
+function initHolidayChart() {
+  const INV_H = 14259 * 24; // 342,216h
+  const labels = ['5/1 (금)', '5/2 (토)', '5/3 (일)', '5/4 (월) 예정', '5/5 (화) 예정'];
+  const cntData = [64, 1148, 1640, 137, 11];
+  const hoursData = [2401, 40338, 76861, 7314, 729];
+  const occPct = hoursData.map(h => +(h / INV_H * 100).toFixed(2));
+
+  new Chart(document.getElementById('chartHoliday'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: '반납건수',
+          data: cntData,
+          backgroundColor: ['rgba(148,163,184,.5)','rgba(245,158,11,.7)','rgba(239,68,68,.8)','rgba(139,92,246,.6)','rgba(148,163,184,.4)'],
+          borderColor:     ['#94a3b8','#f59e0b','#ef4444','#8b5cf6','#94a3b8'],
+          borderWidth: 1,
+          borderRadius: 6,
+          yAxisID: 'y',
+          order: 2
+        },
+        {
+          label: '일 점유율 (%)',
+          data: occPct,
+          type: 'line',
+          borderColor: '#2563eb',
+          backgroundColor: 'rgba(37,99,235,.12)',
+          borderWidth: 2.5,
+          pointBackgroundColor: '#2563eb',
+          pointRadius: 5,
+          tension: 0.3,
+          yAxisID: 'y1',
+          order: 1,
+          fill: false
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'top', labels: { usePointStyle: true, padding: 16 } },
+        tooltip: {
+          callbacks: {
+            afterBody: items => {
+              const i = items[0].dataIndex;
+              return ['이용시간: ' + hoursData[i].toLocaleString() + 'h'];
+            }
+          }
+        }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 12 } } },
+        y: { beginAtZero: true, grid: { color: '#f1f5f9' }, title: { display: true, text: '반납건수' }, ticks: { font: { size: 11 } } },
+        y1: { beginAtZero: true, position: 'right', grid: { display: false }, title: { display: true, text: '점유율 (%)' }, ticks: { callback: v => v + '%', font: { size: 11 } } }
+      }
+    }
+  });
+
+  // 차종별 stacked bar
+  const carLabels = ['5/1 (금)', '5/2 (토)', '5/3 (일)', '5/4 (월) 예정', '5/5 (화) 예정'];
+  const carData = {
+    '준중형':   [21, 560, 766, 62, 4],
+    '소형SUV':  [13, 341, 498, 51, 4],
+    '경형':     [9,  170, 193, 16, 0],
+    'RV':       [5,  19,  49,  2,  0],
+    '기타':     [16,  58, 134,  6,  3],
+  };
+  const carColors = ['#2563eb','#10b981','#f59e0b','#ef4444','#94a3b8'];
+
+  new Chart(document.getElementById('chartHolidayCar'), {
+    type: 'bar',
+    data: {
+      labels: carLabels,
+      datasets: Object.entries(carData).map(([model, data], i) => ({
+        label: model,
+        data,
+        backgroundColor: carColors[i],
+        borderRadius: i === Object.keys(carData).length - 1 ? 4 : 0,
+        stack: 'car'
+      }))
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'top', labels: { usePointStyle: true, padding: 14 } },
+        tooltip: {
+          callbacks: {
+            footer: items => '합계: ' + items.reduce((s, i) => s + i.parsed.y, 0) + '건'
+          }
+        }
+      },
+      scales: {
+        x: { stacked: true, grid: { display: false }, ticks: { font: { size: 12 } } },
+        y: { stacked: true, beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { font: { size: 11 } } }
+      }
+    }
   });
 }
 

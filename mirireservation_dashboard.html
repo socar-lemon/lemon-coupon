@@ -29,13 +29,6 @@
   .card.may .value { color: #3b82f6; }
   .card.jun .value { color: #f59e0b; }
   .up { color: #10b981; } .down { color: #ef4444; }
-  .coupon-list { background: white; border-radius: 12px; padding: 16px 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); margin-bottom: 20px; }
-  .coupon-list h4 { font-size: 12px; font-weight: 700; color: #6b7280; margin-bottom: 10px; letter-spacing: 0.3px; }
-  .coupon-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-  .tag { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; }
-  .tag-blue { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
-  .tag-amber { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
-  .tag-green { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
   .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
   .chart-card { background: white; border-radius: 12px; padding: 22px 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
   .chart-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 16px; color: #1a1a2e; display: flex; align-items: center; gap: 8px; }
@@ -56,16 +49,17 @@
   .tag-weekend { display: inline-block; background: #fee2e2; color: #ef4444; font-size: 10px; padding: 1px 6px; border-radius: 4px; margin-left: 4px; font-weight: 500; }
   .tag-holiday { display: inline-block; background: #fde68a; color: #92400e; font-size: 10px; padding: 1px 6px; border-radius: 4px; margin-left: 4px; font-weight: 500; }
   tfoot td { font-weight: 700; background: #f8f9fc; border-top: 2px solid #e5e7eb; }
-  .insight-box { background: linear-gradient(135deg, #f0fdf4, #fffbeb); border: 1px solid #86efac; border-radius: 10px; padding: 16px 20px; margin-bottom: 16px; font-size: 13px; line-height: 1.8; color: #14532d; }
+  .insight-box { background: linear-gradient(135deg, #eff6ff, #fef9ec); border: 1px solid #bfdbfe; border-radius: 10px; padding: 16px 20px; margin-bottom: 16px; font-size: 13px; line-height: 1.8; color: #1e40af; }
   .insight-box .point { margin-bottom: 2px; }
   .insight-box .point::before { content: "• "; }
+  .note { font-size: 11px; color: #9ca3af; margin-top: 12px; text-align: right; }
 </style>
 </head>
 <body>
 <div class="header">
   <div>
     <h1>미리예약 쿠폰 첫 주 반납 추이 비교</h1>
-    <div class="subtitle">전체 미리예약 쿠폰 24종 (16117·16118 + 고정금액 22종) — end_at 기준</div>
+    <div class="subtitle">쿠폰명 "미리예약" 포함 전체 (96종) — end_at 기준 | coupon_info state=1</div>
   </div>
   <div class="badge">기준일: 2026-06-01 현재</div>
 </div>
@@ -73,8 +67,8 @@
   <div class="summary-grid">
     <div class="card may">
       <div class="label">5월 첫 주 반납 (실적)</div>
-      <div class="value">1,251건</div>
-      <div class="sub">57,320시간</div>
+      <div class="value">4,558건</div>
+      <div class="sub">190,247시간</div>
     </div>
     <div class="card jun">
       <div class="label">6월 첫 주 반납 (예정)</div>
@@ -83,39 +77,32 @@
     </div>
     <div class="card">
       <div class="label">건수 증감 (6월 vs 5월)</div>
-      <div class="value up">+473건</div>
-      <div class="diff up">+37.8%</div>
+      <div class="value down">-2,834건</div>
+      <div class="diff down">-62.2%</div>
     </div>
     <div class="card">
       <div class="label">시간 증감 (6월 vs 5월)</div>
-      <div class="value up">+10,817h</div>
-      <div class="diff up">+18.9%</div>
+      <div class="value down">-122,110h</div>
+      <div class="diff down">-64.2%</div>
     </div>
     <div class="card">
       <div class="label">건당 평균 대여시간</div>
       <div class="value" style="font-size:18px;">
-        <span style="color:#3b82f6;">45.8h</span>
+        <span style="color:#3b82f6;">41.7h</span>
         <span style="font-size:13px;color:#ccc;margin:0 4px;">/</span>
         <span style="color:#f59e0b;">39.5h</span>
       </div>
       <div class="sub" style="font-size:11px;">5월 / 6월</div>
     </div>
   </div>
-  <div class="coupon-list">
-    <h4>집계 대상 미리예약 쿠폰 (24종)</h4>
-    <div class="coupon-tags">
-      <span class="tag tag-blue">16117 · 2주 미리예약 55%할인 (24시간이상/배달무료)</span>
-      <span class="tag tag-blue">16118 · 4주 미리예약 65%할인 (24시간이상/배달무료)</span>
-      <span class="tag tag-amber">16274~16283 · 미리예약 2일/3일 고정금액 10종 (만료 2026-05-30)</span>
-      <span class="tag tag-green">16425~16436 · 미리예약 2일/3일/4일 고정금액 12종 (만료 2026-06-29)</span>
-    </div>
-  </div>
+
   <div class="insight-box">
-    <div class="point"><strong>6월이 5월 대비 +37.8% 증가:</strong> 고정금액 쿠폰(16425~16436) 12종이 6월 추가되어 예약 모수 확대. 5월은 16117/16118 + 10종(16274~16283)만 존재</div>
-    <div class="point"><strong>6/7 단일일 840건 집중:</strong> 전체 6월 첫 주의 49%. 주말(6/6+6/7) 합산 1,099건(64%) — 6월은 주말 쏠림이 더 극명함</div>
-    <div class="point"><strong>황금연휴 vs 일반 주말 비교:</strong> 5월 연휴(5/2~5/5) 4일 합계 1,041건 vs 6월 주말(6/6~6/7) 2일 합계 1,099건으로 오히려 주말 예약이 더 많음</div>
-    <div class="point"><strong>건당 평균 시간 감소 (45.8h → 39.5h):</strong> 고정금액 단기(2일/3일) 쿠폰 비중 확대로 평균 대여 시간 단축</div>
+    <div class="point"><strong>황금연휴 효과가 압도적:</strong> 5/2(토)~5/5(어린이날) 4일에 4,312건(94.6%) 집중. 특히 5/3(일) 하루만 1,625건으로 6월 전체 첫 주(1,724건)에 육박</div>
+    <div class="point"><strong>6월은 정상 주간 패턴:</strong> D+0~D+4 주중 평탄(78~171건/일), 6/7(일)에 840건 집중 — 5월 연휴 대비 주말 단순 수요임</div>
+    <div class="point"><strong>연휴 제외 비교 시:</strong> 5월 비연휴(5/1+5/6+5/7) 합계 246건 vs 6월 주중(6/1~6/5) 합계 625건 → 일반 주중 수요는 6월이 더 높음</div>
+    <div class="point"><strong>건당 평균 시간 유사 (41.7h vs 39.5h):</strong> 예약 길이 자체는 비슷 — 5월 볼륨 차이는 수요 집중도의 차이</div>
   </div>
+
   <div class="charts-grid">
     <div class="chart-card">
       <h3><span class="dot-may"></span>&nbsp;5월&nbsp;&nbsp;<span class="dot-jun"></span>&nbsp;6월 — 일별 반납 건수</h3>
@@ -140,27 +127,28 @@
         </tr>
       </thead>
       <tbody>
-        <tr><td>D+0</td><td>5/1 (금)</td><td class="highlight-may">48</td><td>1,626</td><td>6/1 (월)</td><td class="highlight-jun">78</td><td>3,661</td><td class="up">+30</td></tr>
-        <tr><td>D+1</td><td>5/2 (토) <span class="tag-weekend">주말</span></td><td class="highlight-may">208</td><td>6,930</td><td>6/2 (화)</td><td class="highlight-jun">106</td><td>4,278</td><td class="down">-102</td></tr>
-        <tr><td>D+2</td><td>5/3 (일) <span class="tag-weekend">주말</span></td><td class="highlight-may">386</td><td>17,605</td><td>6/3 (수)</td><td class="highlight-jun">132</td><td>5,332</td><td class="down">-254</td></tr>
-        <tr><td>D+3</td><td>5/4 (월) <span class="tag-holiday">대체공휴일</span></td><td class="highlight-may">253</td><td>13,358</td><td>6/4 (목)</td><td class="highlight-jun">138</td><td>5,326</td><td class="down">-115</td></tr>
-        <tr><td>D+4</td><td>5/5 (화) <span class="tag-holiday">어린이날</span></td><td class="highlight-may">194</td><td>11,223</td><td>6/5 (금)</td><td class="highlight-jun">171</td><td>7,238</td><td class="down">-23</td></tr>
-        <tr><td>D+5</td><td>5/6 (수)</td><td class="highlight-may">89</td><td>3,968</td><td>6/6 (토) <span class="tag-weekend">주말</span></td><td class="highlight-jun">259</td><td>10,822</td><td class="up">+170</td></tr>
-        <tr><td>D+6</td><td>5/7 (목)</td><td class="highlight-may">73</td><td>2,610</td><td>6/7 (일) <span class="tag-weekend">주말</span></td><td class="highlight-jun">840</td><td>31,480</td><td class="up">+767</td></tr>
+        <tr><td>D+0</td><td>5/1 (금)</td><td class="highlight-may">81</td><td>1,821</td><td>6/1 (월)</td><td class="highlight-jun">78</td><td>3,661</td><td class="down">-3</td></tr>
+        <tr><td>D+1</td><td>5/2 (토) <span class="tag-weekend">주말</span></td><td class="highlight-may">1,150</td><td>36,408</td><td>6/2 (화)</td><td class="highlight-jun">106</td><td>4,278</td><td class="down">-1,044</td></tr>
+        <tr><td>D+2</td><td>5/3 (일) <span class="tag-weekend">주말</span></td><td class="highlight-may">1,625</td><td>71,935</td><td>6/3 (수)</td><td class="highlight-jun">132</td><td>5,332</td><td class="down">-1,493</td></tr>
+        <tr><td>D+3</td><td>5/4 (월) <span class="tag-holiday">대체공휴일</span></td><td class="highlight-may">871</td><td>40,999</td><td>6/4 (목)</td><td class="highlight-jun">138</td><td>5,326</td><td class="down">-733</td></tr>
+        <tr><td>D+4</td><td>5/5 (화) <span class="tag-holiday">어린이날</span></td><td class="highlight-may">666</td><td>32,336</td><td>6/5 (금)</td><td class="highlight-jun">171</td><td>7,238</td><td class="down">-495</td></tr>
+        <tr><td>D+5</td><td>5/6 (수)</td><td class="highlight-may">92</td><td>4,139</td><td>6/6 (토) <span class="tag-weekend">주말</span></td><td class="highlight-jun">259</td><td>10,822</td><td class="up">+167</td></tr>
+        <tr><td>D+6</td><td>5/7 (목)</td><td class="highlight-may">73</td><td>2,609</td><td>6/7 (일) <span class="tag-weekend">주말</span></td><td class="highlight-jun">840</td><td>31,480</td><td class="up">+767</td></tr>
       </tbody>
       <tfoot>
-        <tr><td colspan="2">합계</td><td class="highlight-may">1,251건</td><td>57,320h</td><td></td><td class="highlight-jun">1,724건</td><td>68,137h</td><td class="up">+473 (+37.8%)</td></tr>
+        <tr><td colspan="2">합계</td><td class="highlight-may">4,558건</td><td>190,247h</td><td></td><td class="highlight-jun">1,724건</td><td>68,137h</td><td class="down">-2,834 (-62.2%)</td></tr>
       </tfoot>
     </table>
+    <div class="note">* 집계 기준: coupon_policy.name LIKE '%미리예약%' 전체 (96종) + coupon_info state=1 + reservation_info end_at 기준</div>
   </div>
 </div>
 <script>
 const labels = ['D+0','D+1','D+2','D+3','D+4','D+5','D+6'];
 const subMay = ['5/1(금)','5/2(토)','5/3(일)','5/4(월공)','5/5(화공)','5/6(수)','5/7(목)'];
 const subJun = ['6/1(월)','6/2(화)','6/3(수)','6/4(목)','6/5(금)','6/6(토)','6/7(일)'];
-const mayCnt = [48,208,386,253,194,89,73];
+const mayCnt = [81,1150,1625,871,666,92,73];
 const junCnt = [78,106,132,138,171,259,840];
-const mayHr  = [1626,6930,17605,13358,11223,3968,2610];
+const mayHr  = [1821,36408,71935,40999,32336,4139,2609];
 const junHr  = [3661,4278,5332,5326,7238,10822,31480];
 const mayCum = mayCnt.map((_,i,a)=>a.slice(0,i+1).reduce((s,v)=>s+v,0));
 const junCum = junCnt.map((_,i,a)=>a.slice(0,i+1).reduce((s,v)=>s+v,0));

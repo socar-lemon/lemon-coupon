@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>미리예약 쿠폰 첫 주 반납 추이 비교</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; background: #f0f2f5; color: #1a1a2e; }
+
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: white;
+    padding: 28px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+  .header .subtitle { font-size: 13px; color: #8899bb; margin-top: 4px; }
+  .header .badge {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 12px;
+    color: #c8d8f0;
+  }
+
+  .main { padding: 28px 40px; max-width: 1300px; margin: 0 auto; }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 18px 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  }
+  .card .label { font-size: 11px; color: #8891a5; font-weight: 500; letter-spacing: 0.3px; margin-bottom: 8px; }
+  .card .value { font-size: 24px; font-weight: 700; line-height: 1; }
+  .card .sub { font-size: 12px; margin-top: 6px; color: #6b7280; }
+  .card .diff { font-size: 12px; margin-top: 4px; font-weight: 600; }
+  .card.may .value { color: #3b82f6; }
+  .card.jun .value { color: #f59e0b; }
+  .up { color: #10b981; }
+  .down { color: #ef4444; }
+
+  .charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .chart-card {
+    background: white;
+    border-radius: 12px;
+    padding: 22px 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  }
+  .chart-card h3 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #1a1a2e;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .dot-may { width: 10px; height: 10px; border-radius: 50%; background: #3b82f6; display: inline-block; }
+  .dot-jun { width: 10px; height: 10px; border-radius: 50%; background: #f59e0b; display: inline-block; }
+  .chart-wrap { position: relative; height: 260px; }
+
+  .chart-full {
+    background: white;
+    border-radius: 12px;
+    padding: 22px 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    margin-bottom: 16px;
+  }
+  .chart-full h3 { font-size: 14px; font-weight: 700; margin-bottom: 16px; }
+  .chart-full-wrap { position: relative; height: 240px; }
+
+  .table-card {
+    background: white;
+    border-radius: 12px;
+    padding: 22px 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  }
+  .table-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 16px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    background: #f8f9fc;
+    padding: 10px 14px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 11px;
+    color: #6b7280;
+    letter-spacing: 0.3px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  td {
+    padding: 11px 14px;
+    text-align: center;
+    border-bottom: 1px solid #f3f4f6;
+    color: #374151;
+  }
+  tr:last-child td { border-bottom: none; }
+  .highlight-may { color: #3b82f6; font-weight: 700; }
+  .highlight-jun { color: #f59e0b; font-weight: 700; }
+  .tag-weekend {
+    display: inline-block;
+    background: #fee2e2;
+    color: #ef4444;
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin-left: 4px;
+    font-weight: 500;
+  }
+  .tag-holiday {
+    display: inline-block;
+    background: #fde68a;
+    color: #92400e;
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin-left: 4px;
+    font-weight: 500;
+  }
+  tfoot td {
+    font-weight: 700;
+    background: #f8f9fc;
+    border-top: 2px solid #e5e7eb;
+  }
+
+  .insight-box {
+    background: linear-gradient(135deg, #eff6ff, #fef9ec);
+    border: 1px solid #bfdbfe;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    line-height: 1.8;
+    color: #1e40af;
+  }
+  .insight-box .point { margin-bottom: 2px; }
+  .insight-box .point::before { content: "• "; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>미리예약 쿠폰 첫 주 반납 추이 비교</h1>
+    <div class="subtitle">쿠폰 16117 (2주 미리예약 55%) · 16118 (4주 미리예약 65%) — end_at 기준 | coupon_info state=1</div>
+  </div>
+  <div class="badge">기준일: 2026-06-01 현재</div>
+</div>
+
+<div class="main">
+
+  <div class="summary-grid">
+    <div class="card may">
+      <div class="label">5월 첫 주 반납 (실적)</div>
+      <div class="value">1,153건</div>
+      <div class="sub">53,965시간</div>
+    </div>
+    <div class="card jun">
+      <div class="label">6월 첫 주 반납 (예정)</div>
+      <div class="value">919건</div>
+      <div class="sub">35,014시간</div>
+    </div>
+    <div class="card">
+      <div class="label">건수 증감 (6월 vs 5월)</div>
+      <div class="value down">-234건</div>
+      <div class="diff down">-20.3%</div>
+    </div>
+    <div class="card">
+      <div class="label">시간 증감 (6월 vs 5월)</div>
+      <div class="value down">-18,951h</div>
+      <div class="diff down">-35.1%</div>
+    </div>
+    <div class="card">
+      <div class="label">건당 평균 대여시간</div>
+      <div class="value" style="font-size:18px;">
+        <span style="color:#3b82f6;">46.8h</span>
+        <span style="font-size:13px;color:#ccc;margin:0 4px;">/</span>
+        <span style="color:#f59e0b;">38.1h</span>
+      </div>
+      <div class="sub" style="font-size:11px;">5월 / 6월</div>
+    </div>
+  </div>
+
+  <div class="insight-box">
+    <div class="point"><strong>5월 황금연휴 집중:</strong> 5/2(토)~5/5(어린이날) 4일간 1,038건 — 전체의 90%. 미리예약 수요가 연휴 기간에 극도로 집중되는 구조</div>
+    <div class="point"><strong>6월 패턴 전망:</strong> 주중(D+0~D+4) 누적 368건으로 분산 평탄, 6/6(토)~6/7(일) 551건(60%) 집중 예상. 5월 대비 주말 집중도는 유사</div>
+    <div class="point"><strong>황금연휴 보정 시:</strong> 5월에서 연휴 4일 제외 시 주말 반납 231건 → 6월 주말 예정 551건으로 오히려 <strong>+138% 증가</strong></div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h3>
+        <span class="dot-may"></span>&nbsp;5월&nbsp;&nbsp;
+        <span class="dot-jun"></span>&nbsp;6월 — 일별 반납 건수
+      </h3>
+      <div class="chart-wrap">
+        <canvas id="cntChart"></canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <h3>
+        <span class="dot-may"></span>&nbsp;5월&nbsp;&nbsp;
+        <span class="dot-jun"></span>&nbsp;6월 — 일별 대여 시간 (h)
+      </h3>
+      <div class="chart-wrap">
+        <canvas id="hrChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-full">
+    <h3>누적 반납 건수 추이 — 5월(실적) vs 6월(예정)</h3>
+    <div class="chart-full-wrap">
+      <canvas id="cumChart"></canvas>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <h3>일자별 상세 비교</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>D+</th>
+          <th>5월 날짜</th>
+          <th>5월 반납건수</th>
+          <th>5월 대여시간(h)</th>
+          <th>6월 날짜</th>
+          <th>6월 반납건수</th>
+          <th>6월 대여시간(h)</th>
+          <th>건수 증감</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>D+0</td>
+          <td>5/1 (금)</td>
+          <td class="highlight-may">48</td>
+          <td>1,626</td>
+          <td>6/1 (월)</td>
+          <td class="highlight-jun">71</td>
+          <td>3,317</td>
+          <td class="up">+23</td>
+        </tr>
+        <tr>
+          <td>D+1</td>
+          <td>5/2 (토) <span class="tag-weekend">주말</span></td>
+          <td class="highlight-may">208</td>
+          <td>6,930</td>
+          <td>6/2 (화)</td>
+          <td class="highlight-jun">72</td>
+          <td>3,206</td>
+          <td class="down">-136</td>
+        </tr>
+        <tr>
+          <td>D+2</td>
+          <td>5/3 (일) <span class="tag-weekend">주말</span></td>
+          <td class="highlight-may">386</td>
+          <td>17,605</td>
+          <td>6/3 (수)</td>
+          <td class="highlight-jun">76</td>
+          <td>3,081</td>
+          <td class="down">-310</td>
+        </tr>
+        <tr>
+          <td>D+3</td>
+          <td>5/4 (월) <span class="tag-holiday">대체공휴일</span></td>
+          <td class="highlight-may">252</td>
+          <td>13,351</td>
+          <td>6/4 (목)</td>
+          <td class="highlight-jun">73</td>
+          <td>2,552</td>
+          <td class="down">-179</td>
+        </tr>
+        <tr>
+          <td>D+4</td>
+          <td>5/5 (화) <span class="tag-holiday">어린이날</span></td>
+          <td class="highlight-may">192</td>
+          <td>11,206</td>
+          <td>6/5 (금)</td>
+          <td class="highlight-jun">76</td>
+          <td>3,174</td>
+          <td class="down">-116</td>
+        </tr>
+        <tr>
+          <td>D+5</td>
+          <td>5/6 (수)</td>
+          <td class="highlight-may">44</td>
+          <td>2,362</td>
+          <td>6/6 (토) <span class="tag-weekend">주말</span></td>
+          <td class="highlight-jun">129</td>
+          <td>5,044</td>
+          <td class="up">+85</td>
+        </tr>
+        <tr>
+          <td>D+6</td>
+          <td>5/7 (목)</td>
+          <td class="highlight-may">23</td>
+          <td>885</td>
+          <td>6/7 (일) <span class="tag-weekend">주말</span></td>
+          <td class="highlight-jun">422</td>
+          <td>14,640</td>
+          <td class="up">+399</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2">합계</td>
+          <td class="highlight-may">1,153건</td>
+          <td>53,965h</td>
+          <td></td>
+          <td class="highlight-jun">919건</td>
+          <td>35,014h</td>
+          <td class="down">-234 (-20.3%)</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+</div>
+
+<script>
+const labels = ['D+0', 'D+1', 'D+2', 'D+3', 'D+4', 'D+5', 'D+6'];
+const subMay = ['5/1(금)', '5/2(토)', '5/3(일)', '5/4(월공)', '5/5(화공)', '5/6(수)', '5/7(목)'];
+const subJun = ['6/1(월)', '6/2(화)', '6/3(수)', '6/4(목)', '6/5(금)', '6/6(토)', '6/7(일)'];
+
+const mayCnt = [48, 208, 386, 252, 192, 44, 23];
+const junCnt = [71, 72, 76, 73, 76, 129, 422];
+const mayHr  = [1626, 6930, 17605, 13351, 11206, 2362, 885];
+const junHr  = [3317, 3206, 3081, 2552, 3174, 5044, 14640];
+
+const mayCum = mayCnt.map((_, i, a) => a.slice(0, i+1).reduce((s, v) => s+v, 0));
+const junCum = junCnt.map((_, i, a) => a.slice(0, i+1).reduce((s, v) => s+v, 0));
+
+const MC = '#3b82f6', JC = '#f59e0b';
+const ML = 'rgba(59,130,246,0.13)', JL = 'rgba(245,158,11,0.13)';
+
+const baseScales = {
+  x: { grid: { display: false }, ticks: { font: { size: 11 }, color: '#9ca3af' } },
+  y: { grid: { color: '#f3f4f6' }, ticks: { font: { size: 11 }, color: '#9ca3af' } }
+};
+
+function barTooltip(subMayArr, subJunArr) {
+  return {
+    callbacks: {
+      title: (items) => {
+        const i = items[0].dataIndex;
+        return items[0].dataset.label === '5월' ? subMayArr[i] : subJunArr[i];
+      },
+      label: (item) => ` ${item.dataset.label}: ${item.raw.toLocaleString()}`
+    }
+  };
+}
+
+// 건수 차트
+new Chart(document.getElementById('cntChart'), {
+  type: 'bar',
+  data: {
+    labels,
+    datasets: [
+      { label: '5월', data: mayCnt, backgroundColor: ML, borderColor: MC, borderWidth: 2, borderRadius: 5 },
+      { label: '6월', data: junCnt, backgroundColor: JL, borderColor: JC, borderWidth: 2, borderRadius: 5 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: barTooltip(subMay, subJun) },
+    scales: baseScales
+  }
+});
+
+// 시간 차트
+new Chart(document.getElementById('hrChart'), {
+  type: 'bar',
+  data: {
+    labels,
+    datasets: [
+      { label: '5월', data: mayHr, backgroundColor: ML, borderColor: MC, borderWidth: 2, borderRadius: 5 },
+      { label: '6월', data: junHr, backgroundColor: JL, borderColor: JC, borderWidth: 2, borderRadius: 5 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: barTooltip(subMay, subJun) },
+    scales: baseScales
+  }
+});
+
+// 누적 라인 차트
+new Chart(document.getElementById('cumChart'), {
+  type: 'line',
+  data: {
+    labels,
+    datasets: [
+      {
+        label: '5월 누적 (실적)',
+        data: mayCum,
+        borderColor: MC, backgroundColor: ML,
+        fill: true, tension: 0.3, borderWidth: 2.5,
+        pointRadius: 5, pointBackgroundColor: MC
+      },
+      {
+        label: '6월 누적 (예정)',
+        data: junCum,
+        borderColor: JC, backgroundColor: JL,
+        fill: true, tension: 0.3, borderWidth: 2.5,
+        borderDash: [6, 3],
+        pointRadius: 5, pointBackgroundColor: JC
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: true, position: 'top',
+        labels: { font: { size: 12 }, color: '#374151', usePointStyle: true, pointStyleWidth: 14 }
+      },
+      tooltip: {
+        callbacks: {
+          label: (item) => ` ${item.dataset.label}: ${item.raw.toLocaleString()}건`
+        }
+      }
+    },
+    scales: baseScales
+  }
+});
+</script>
+</body>
+</html>
